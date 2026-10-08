@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fichier invalide</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 812px">
+<main class="defile" style="gap: 28px">
+  <h1 class="display t-ecran" style="padding-top: 8px">Réglages</h1>
+  <section aria-labelledby="r-sauv" style="display: flex; flex-direction: column; gap: 10px">
+    <h2 id="r-sauv" class="etiq">Sauvegarde</h2>
+    <div class="bloc" style="display: flex; flex-direction: column; gap: 14px">
+      <div class="alerte a-erreur" role="alert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <p><strong>« courses-octobre.json » n’est pas une sauvegarde de l’app.</strong></p>
+          <p class="petit">Choisissez un fichier créé avec « Exporter mes données ». Vos recettes n’ont pas été modifiées.</p>
+        </div>
+      </div>
+      <p class="petit"><strong>Dernier export : 21 septembre</strong> <span class="doux">(il y a 17 jours)</span></p>
+      <button class="btn btn-encre btn-large" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Exporter mes données</button>
+      <a class="btn btn-ligne btn-large" href="ImportChoix.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V5M7 10l5-5 5 5M5 20h14"/></svg>Choisir un autre fichier</a>
+    </div>
+  </section>
+  <section aria-labelledby="r-perso" style="display: flex; flex-direction: column; gap: 10px">
+    <h2 id="r-perso" class="etiq">Légumes perso · 1</h2>
+    <div class="bloc" style="padding: 4px 6px 4px 18px">
+      <div class="ligne">
+        <div style="display: flex; align-items: center; gap: 12px"><img class="vig" src="./icons/citron.svg" alt=""><div><p class="label">Yuzu</p><p class="petit doux">Fruits · toute l’année · 1 recette</p></div></div>
+        <button class="ico" type="button" aria-label="Supprimer le légume yuzu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/></svg></button>
+      </div>
+    </div>
+  </section>
+</main>
+<nav class="barre" aria-label="Navigation principale">
+  <a class="onglet" href="Main.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>Semaine</a>
+  <a class="onglet" href="Recettes.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5v17M12 8h4M12 11.5h4"/></svg></span>Recettes</a>
+  <a class="onglet" href="Calendrier.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v-8"/><path d="M12 12c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></svg></span>Saisons</a>
+  <a class="onglet" href="Reglages.dc.html" aria-current="page"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>Réglages</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":812}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

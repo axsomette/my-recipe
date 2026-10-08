@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nouvelle recette</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 1500px">
+<header class="entete" style="padding: 12px 12px 4px 8px">
+  <a class="ico" href="Recettes.dc.html" aria-label="Annuler et revenir à mes recettes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></a>
+  <h1 class="display" style="font-size: 20px; flex: 1">Nouvelle recette</h1>
+</header>
+<main class="defile" style="padding-top: 12px; gap: 26px">
+  <div class="champ">
+    <label for="nom">Nom</label>
+    <input id="nom" class="input" type="text" value="Risotto de courge et sauge">
+  </div>
+
+  <section aria-labelledby="t-leg" style="display: flex; flex-direction: column; gap: 14px">
+    <div class="entete">
+      <h2 id="t-leg" class="label">Légumes</h2>
+      <span class="compteur">3 CHOISIS</span>
+    </div>
+    <ul class="nue chips" aria-label="Légumes choisis">
+      <li><button class="chip chip-retire" type="button" aria-label="Retirer courge"><img class="vig vig-s" src="./icons/courge.svg" alt="">Courge<span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg></span></button></li>
+      <li><button class="chip chip-retire" type="button" aria-label="Retirer oignon"><img class="vig vig-s" src="./icons/oignon.svg" alt="">Oignon<span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg></span></button></li>
+      <li><button class="chip chip-retire" type="button" aria-label="Retirer sauge"><img class="vig vig-s" src="./icons/sauge.svg" alt="">Sauge<span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg></span></button></li>
+    </ul>
+    <div class="bloc" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; background: transparent" aria-live="polite">
+      <div class="frise mini" role="img" aria-label="Saison calculée : de septembre à janvier">
+        <span class="mois s100"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>F</b></span><span class="mois s50"><span class="case"><i></i></span><b>M</b></span><span class="mois s50"><span class="case"><i></i></span><b>A</b></span><span class="mois s0"><span class="case"><i></i></span><b>M</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s0"><span class="case"><i></i></span><b>A</b></span><span class="mois s100"><span class="case"><i></i></span><b>S</b></span><span class="mois s100 ici"><span class="case"><i></i></span><b>O</b></span><span class="mois s100"><span class="case"><i></i></span><b>N</b></span><span class="mois s100"><span class="case"><i></i></span><b>D</b></span>
+      </div>
+      <p class="petit">De saison <strong>de septembre à janvier</strong>. <span class="doux">La sauge, disponible toute l’année, n’entre pas dans le calcul.</span></p>
+    </div>
+
+    <div class="recherche">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+      <label class="sr" for="qleg">Chercher un légume, un fruit ou une herbe</label>
+      <input id="qleg" class="input" type="search" placeholder="Légume, fruit, herbe…">
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div class="groupe-tete" style="min-height: 28px">
+        <h3 class="etiq" style="color: var(--saison-texte)">De saison en octobre</h3>
+        <span class="compteur">33</span>
+      </div>
+      <div class="chips" role="group" aria-label="De saison en octobre">
+        <button class="chip saison" type="button" aria-pressed="true"><img class="vig vig-s" src="./icons/courge.svg" alt="">Courge</button>
+        <button class="chip saison" type="button" aria-pressed="true"><img class="vig vig-s" src="./icons/oignon.svg" alt="">Oignon</button>
+        <button class="chip saison" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/poireau.svg" alt="">Poireau</button>
+        <button class="chip saison" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/potiron.svg" alt="">Potiron</button>
+        <button class="chip saison" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/celeri.svg" alt="">Céleri</button>
+        <button class="chip saison" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/panais.svg" alt="">Panais</button>
+        <button class="chip saison" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/chou.svg" alt="">Chou</button>
+        <button class="chip saison" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/chataigne.svg" alt="">Châtaigne</button>
+        <button class="chip saison" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/epinard.svg" alt="">Épinard</button>
+        <button class="chip" type="button" aria-pressed="false" style="border-style: dashed">Voir les 33</button>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column">
+      <button class="groupe-tete" type="button" aria-expanded="false" style="background: none; border: 0; border-top: 1px solid var(--trait); padding: 0; font: inherit; color: inherit; width: 100%">
+        <span class="label">Légumes</span><span style="display: flex; align-items: center; gap: 10px"><span class="compteur">34</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button>
+      <button class="groupe-tete" type="button" aria-expanded="false" style="background: none; border: 0; border-top: 1px solid var(--trait); padding: 0; font: inherit; color: inherit; width: 100%">
+        <span class="label">Fruits</span><span style="display: flex; align-items: center; gap: 10px"><span class="compteur">35</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button>
+      <button class="groupe-tete" type="button" aria-expanded="true" style="background: none; border: 0; border-top: 1px solid var(--trait); padding: 0; font: inherit; color: inherit; width: 100%">
+        <span class="label">Herbes et aromates</span><span style="display: flex; align-items: center; gap: 10px"><span class="compteur">11</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></span></button>
+      <div class="chips" role="group" aria-label="Herbes et aromates" style="padding: 4px 0 16px">
+        <button class="chip saison" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/ail.svg" alt="">Ail</button>
+        <button class="chip" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/basilic.svg" alt="">Basilic</button>
+        <button class="chip" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/ciboulette.svg" alt="">Ciboulette</button>
+        <button class="chip" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/coriandre.svg" alt="">Coriandre</button>
+        <button class="chip" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/gingembre.svg" alt="">Gingembre</button>
+        <button class="chip" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/laurier.svg" alt="">Laurier</button>
+        <button class="chip" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/menthe.svg" alt="">Menthe</button>
+        <button class="chip" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/persil.svg" alt="">Persil</button>
+        <button class="chip" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/romarin.svg" alt="">Romarin</button>
+        <button class="chip" type="button" aria-pressed="true"><img class="vig vig-s" src="./icons/sauge.svg" alt="">Sauge</button>
+        <button class="chip" type="button" aria-pressed="false"><img class="vig vig-s" src="./icons/thym.svg" alt="">Thym</button>
+      </div>
+      <button class="groupe-tete" type="button" aria-expanded="false" style="background: none; border: 0; border-top: 1px solid var(--trait); padding: 0; font: inherit; color: inherit; width: 100%">
+        <span class="label">Pommes de terre et tubercules</span><span style="display: flex; align-items: center; gap: 10px"><span class="compteur">3</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button>
+      <button class="groupe-tete" type="button" aria-expanded="false" style="background: none; border: 0; border-top: 1px solid var(--trait); padding: 0; font: inherit; color: inherit; width: 100%">
+        <span class="label">Fruits à coque</span><span style="display: flex; align-items: center; gap: 10px"><span class="compteur">4</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button>
+      <button class="groupe-tete" type="button" aria-expanded="false" style="background: none; border: 0; border-top: 1px solid var(--trait); border-bottom: 1px solid var(--trait); padding: 0; font: inherit; color: inherit; width: 100%">
+        <span class="label">Céréales</span><span style="display: flex; align-items: center; gap: 10px"><span class="compteur">1</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button>
+    </div>
+    <a class="chip chip-ajout" href="LegumePerso.dc.html" style="align-self: flex-start; text-decoration: none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter un légume perso</a>
+  </section>
+
+  <div class="champ">
+    <label for="notes">Notes <span class="doux" style="font-weight: 400">(facultatif)</span></label>
+    <textarea id="notes" class="input" placeholder="Temps de cuisson, astuces, variantes…"></textarea>
+  </div>
+</main>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 20px 24px; background: var(--carte); border-top: 1px solid var(--trait)">
+  <a class="btn btn-plein btn-large" href="RecetteDetail.dc.html">Enregistrer la recette</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

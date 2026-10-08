@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gratin de poireaux au comté</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 1000px">
+<main class="defile" style="gap: 28px">
+  <a class="retour" href="Recettes.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>Mes recettes</a>
+
+  <header style="display: flex; flex-direction: column; gap: 14px; margin-top: -12px">
+    <h1 class="display t-grand">Gratin de poireaux au comté</h1>
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+      <span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span>
+      <span class="petit doux">de septembre à décembre</span>
+    </div>
+  </header>
+
+  <section aria-labelledby="t-saison" style="display: flex; flex-direction: column; gap: 14px">
+    <h2 id="t-saison" class="etiq">Saison, mois par mois</h2>
+    <div class="frise grande" role="img" aria-label="Part des légumes de saison : janvier à avril 50 %, mai et juin 0 %, juillet et août 50 %, septembre à décembre 100 %">
+      <span class="mois s50"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>F</b></span><span class="mois s50"><span class="case"><i></i></span><b>M</b></span><span class="mois s50"><span class="case"><i></i></span><b>A</b></span><span class="mois s0"><span class="case"><i></i></span><b>M</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>A</b></span><span class="mois s100"><span class="case"><i></i></span><b>S</b></span><span class="mois s100 ici"><span class="case"><i></i></span><b>O</b></span><span class="mois s100"><span class="case"><i></i></span><b>N</b></span><span class="mois s100"><span class="case"><i></i></span><b>D</b></span>
+    </div>
+    <p class="petit"><strong>En octobre : 2 légumes de saison sur 2.</strong> <span class="doux">La pomme de terre, disponible toute l’année, n’entre pas dans le calcul.</span></p>
+  </section>
+
+  <section aria-labelledby="t-legumes" style="display: flex; flex-direction: column; gap: 12px">
+    <h2 id="t-legumes" class="etiq">Légumes · 3</h2>
+    <ul class="nue chips">
+      <li class="chip lecture"><img class="vig vig-s" src="./icons/poireau.svg" alt="">Poireau<span class="pt marq" aria-hidden="true"></span><span class="sr"> (de saison en octobre)</span></li>
+      <li class="chip lecture"><img class="vig vig-s" src="./icons/ail.svg" alt="">Ail<span class="pt marq" aria-hidden="true"></span><span class="sr"> (de saison en octobre)</span></li>
+      <li class="chip lecture"><img class="vig vig-s" src="./icons/pommedeterre.svg" alt="">Pomme de terre<svg class="marq" viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7c0-1.4 1-2.3 2.1-2.3C6.6 4.7 7.4 9.3 9.4 9.3c1.1 0 2.1-.9 2.1-2.3s-1-2.3-2.1-2.3C7.4 4.7 6.6 9.3 4.6 9.3 3.5 9.3 2.5 8.4 2.5 7z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="sr"> (toute l’année)</span></li>
+    </ul>
+    <p class="petit doux" style="display: flex; gap: 14px; flex-wrap: wrap">
+      <span style="display: inline-flex; align-items: center; gap: 6px"><span class="pt" style="width: 7px; height: 7px; border-radius: 4px; background: var(--saison); display: inline-block"></span>de saison en octobre</span>
+      <span style="display: inline-flex; align-items: center; gap: 6px"><svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><path d="M2.5 7c0-1.4 1-2.3 2.1-2.3C6.6 4.7 7.4 9.3 9.4 9.3c1.1 0 2.1-.9 2.1-2.3s-1-2.3-2.1-2.3C7.4 4.7 6.6 9.3 4.6 9.3 3.5 9.3 2.5 8.4 2.5 7z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>toute l’année</span>
+    </p>
+  </section>
+
+  <section aria-labelledby="t-notes" style="display: flex; flex-direction: column; gap: 10px">
+    <h2 id="t-notes" class="etiq">Notes</h2>
+    <p style="white-space: pre-line">Blanchir les poireaux 8 min, bien égoutter.
+Comté 18 mois, sinon gruyère.
+Four à 200 °C, 25 min.</p>
+  </section>
+
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <a class="btn btn-ligne btn-large" href="RecetteEdition.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>Modifier la recette</a>
+    <a class="btn btn-danger-texte" href="Suppression.dc.html" style="align-self: center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/></svg>Supprimer</a>
+  </div>
+  <p class="petit doux" style="text-align: center">Ajoutée le 14 septembre · modifiée le 2 octobre</p>
+</main>
+<nav class="barre" aria-label="Navigation principale">
+  <a class="onglet" href="Main.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>Semaine</a>
+  <a class="onglet" href="Recettes.dc.html" aria-current="page"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5v17M12 8h4M12 11.5h4"/></svg></span>Recettes</a>
+  <a class="onglet" href="Calendrier.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v-8"/><path d="M12 12c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></svg></span>Saisons</a>
+  <a class="onglet" href="Reglages.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>Réglages</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

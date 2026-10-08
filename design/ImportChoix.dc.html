@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Importer une sauvegarde</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 812px">
+<div class="defile" style="gap: 28px" aria-hidden="true">
+  <p class="display t-ecran" style="padding-top: 8px">Réglages</p>
+  <p class="etiq">Repas à générer</p>
+  <div class="bloc" style="height: 180px"></div>
+</div>
+<div class="voile"></div>
+<section class="feuille" role="dialog" aria-modal="true" aria-labelledby="imp-titre">
+  <span class="poignee" aria-hidden="true"></span>
+  <h2 id="imp-titre" class="display" style="font-size: 24px">Importer cette sauvegarde ?</h2>
+  <div class="bloc" style="background: var(--papier); display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex: none; color: var(--encre-2)" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>
+    <div style="min-width: 0">
+      <p style="font-weight: 600; overflow-wrap: anywhere">recettes-de-saison-2026-09-21.json</p>
+      <p class="petit doux">12 recettes · 1 légume perso · 3 semaines</p>
+    </div>
+  </div>
+  <fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+    <legend class="label" style="padding: 0 0 8px">Que faire de vos données actuelles ?</legend>
+    <label class="radio on"><input class="sr" type="radio" name="mode-import" value="fusionner" checked><span class="rond" aria-hidden="true"></span><span><strong>Fusionner</strong><br><span class="petit doux">Ajoute ce qui manque. Si une recette existe des deux côtés, la plus récente est gardée.</span></span></label>
+    <label class="radio"><input class="sr" type="radio" name="mode-import" value="remplacer"><span class="rond" aria-hidden="true"></span><span><strong>Remplacer</strong><br><span class="petit doux">Vos 14 recettes actuelles sont effacées et remplacées par celles du fichier.</span></span></label>
+  </fieldset>
+  <div style="display: flex; gap: 8px">
+    <a class="btn btn-ligne" href="Reglages.dc.html" style="flex: 1">Annuler</a>
+    <a class="btn btn-plein" href="ImportReussi.dc.html" style="flex: 2">Fusionner</a>
+  </div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":812}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

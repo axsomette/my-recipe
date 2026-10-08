@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design system</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}
+.ds{display:block;padding:72px 72px 88px}
+.ds section{padding-top:44px;margin-top:44px;border-top:1px solid var(--trait);display:flex;flex-direction:column;gap:22px}
+.ds h2.titre{font-family:var(--display);font-weight:400;font-size:34px;margin:0}
+.g6{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.nuance{display:flex;flex-direction:column;gap:8px}
+.nuance .pav{height:84px;border-radius:14px;border:1px solid var(--trait)}
+.nuance b{font-weight:600}
+.code{font:500 13px/1.3 ui-monospace,'SF Mono',Menlo,monospace;color:var(--encre-2)}
+.saison-col{border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px;background:var(--papier);border:1px solid var(--trait)}
+.saison-col .grand{height:72px;border-radius:12px;background:var(--saison);color:var(--saison-sur);display:flex;align-items:flex-end;padding:10px 12px;font-weight:600}
+.saison-col .pale{border-radius:12px;background:var(--saison-pale);color:var(--saison-texte);padding:10px 12px;font-weight:600}
+.specimen{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--trait)}
+.case-demo{display:flex;flex-direction:column;gap:12px;background:var(--carte);border:1px solid var(--trait);border-radius:20px;padding:22px}
+.esp{display:flex;align-items:flex-end;gap:18px}
+.esp div{display:flex;flex-direction:column;align-items:center;gap:6px}
+.esp span.b{display:block;background:var(--saison);border-radius:2px}
+.mvt{display:grid;grid-template-columns:240px minmax(0,1fr) 160px;gap:20px;padding:14px 0;border-bottom:1px solid var(--trait);align-items:baseline}
+</style>
+</helmet>
+<div class="ecran ds {{saison}} {{theme}}" style="width: 1440px">
+  <header style="display: flex; flex-direction: column; gap: 14px; max-width: 900px">
+    <p class="etiq">Recettes de saison · design system</p>
+    <h1 class="display" style="font-size: 72px">Un carnet qui suit le calendrier</h1>
+    <p style="font-size: 19px; line-height: 1.5" class="doux">Fond papier gris-vert, encre aubergine, et un seul accent qui change avec la saison. La frise des 12 mois, empruntée au dos des sachets de graines, est la signature : on la retrouve de la carte au calendrier.</p>
+  </header>
+
+  <section aria-labelledby="ds-coul">
+    <h2 id="ds-coul" class="titre">Couleurs</h2>
+    <p class="etiq">Base · clair</p>
+    <div class="g6">
+      <div class="nuance"><div class="pav" style="background: #EEF0E7"></div><b>Papier</b><span class="code">#EEF0E7 · fond</span></div>
+      <div class="nuance"><div class="pav" style="background: #F9FAF5"></div><b>Carte</b><span class="code">#F9FAF5 · surfaces</span></div>
+      <div class="nuance"><div class="pav" style="background: #E3E6DA"></div><b>Creux</b><span class="code">#E3E6DA · cases vides</span></div>
+      <div class="nuance"><div class="pav" style="background: #221A20"></div><b>Encre</b><span class="code">#221A20 · 14,8:1</span></div>
+      <div class="nuance"><div class="pav" style="background: #5A5158"></div><b>Encre douce</b><span class="code">#5A5158 · 6,6:1</span></div>
+      <div class="nuance"><div class="pav" style="background: #7E8076"></div><b>Trait fort</b><span class="code">#7E8076 · bords 3,5:1</span></div>
+    </div>
+    <p class="etiq" style="margin-top: 8px">L’accent suit la saison (clair, puis sombre)</p>
+    <div class="g4">
+      <div class="saison-col automne"><p class="label">Automne · potimarron</p><div class="grand">Blanc 5,8:1</div><div class="pale">Texte sur pâle 5,8:1</div><span class="code">#A9480F · #8E3B0B · #F2DECB</span></div>
+      <div class="saison-col hiver"><p class="label">Hiver · chou rouge</p><div class="grand">Blanc 9,7:1</div><div class="pale">Texte sur pâle 7,3:1</div><span class="code">#6E2A63 · #EADBE6</span></div>
+      <div class="saison-col printemps"><p class="label">Printemps · petit pois</p><div class="grand">Blanc 6,3:1</div><div class="pale">Texte sur pâle 6,0:1</div><span class="code">#3B6B1F · #335E1A · #DCE9CF</span></div>
+      <div class="saison-col ete"><p class="label">Été · tomate</p><div class="grand">Blanc 6,5:1</div><div class="pale">Texte sur pâle 5,9:1</div><span class="code">#B3261E · #9C2019 · #F4D8D3</span></div>
+    </div>
+    <div class="g4">
+      <div class="ecran sombre automne saison-col" style="display: flex"><p class="label">Automne · sombre</p><div class="grand">Encre 7,7:1</div><div class="pale">Texte sur pâle 7,7:1</div><span class="code">#F09A5B · #161217</span></div>
+      <div class="ecran sombre hiver saison-col" style="display: flex"><p class="label">Hiver · sombre</p><div class="grand">Encre 8,0:1</div><div class="pale">Texte sur pâle 8,4:1</div><span class="code">#D9A0CC · #161217</span></div>
+      <div class="ecran sombre printemps saison-col" style="display: flex"><p class="label">Printemps · sombre</p><div class="grand">Encre 9,7:1</div><div class="pale">Texte sur pâle 8,7:1</div><span class="code">#A6D17E · #161217</span></div>
+      <div class="ecran sombre ete saison-col" style="display: flex"><p class="label">Été · sombre</p><div class="grand">Encre 6,9:1</div><div class="pale">Texte sur pâle 7,6:1</div><span class="code">#F2877C · #161217</span></div>
+    </div>
+    <p class="petit doux">Saisons : hiver = déc. à févr., printemps = mars à mai, été = juin à août, automne = sept. à nov. Tous les textes passent l’AA (4,5:1), les bords et icônes au moins 3:1.</p>
+  </section>
+
+  <section aria-labelledby="ds-typo">
+    <h2 id="ds-typo" class="titre">Typographie</h2>
+    <div>
+      <div class="specimen"><span class="code">Young Serif · 56 / titres de mois</span><span class="display" style="font-size: 56px">Octobre</span></div>
+      <div class="specimen"><span class="code">Young Serif · 34 · 30 · 20</span><span class="display" style="font-size: 34px">Gratin de poireaux au comté</span></div>
+      <div class="specimen"><span class="code">Young Serif · 22 / liste du marché</span><span class="marche">Courge, poireau, céleri, chou de Bruxelles <span>et 26 autres.</span></span></div>
+      <div class="specimen"><span class="code">Hanken Grotesk · 16 / 400–700</span><span style="font-size: 16px">Les repas gardés restent en place quand vous générez la semaine. <strong>Gras pour l’essentiel.</strong></span></div>
+      <div class="specimen"><span class="code">Hanken Grotesk · 14 / secondaire</span><span class="petit doux">Ajoutée le 14 septembre · modifiée le 2 octobre</span></div>
+      <div class="specimen"><span class="code">Sofia Sans Extra Condensed · 14 caps</span><span class="etiq">Saison, mois par mois · J F M A M J J A S O N D</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="ds-esp">
+    <h2 id="ds-esp" class="titre">Espacements, rayons, cibles</h2>
+    <div class="g3">
+      <div class="esp">
+        <div><span class="b" style="width: 4px; height: 4px"></span><span class="code">4</span></div>
+        <div><span class="b" style="width: 8px; height: 8px"></span><span class="code">8</span></div>
+        <div><span class="b" style="width: 12px; height: 12px"></span><span class="code">12</span></div>
+        <div><span class="b" style="width: 16px; height: 16px"></span><span class="code">16</span></div>
+        <div><span class="b" style="width: 20px; height: 20px"></span><span class="code">20</span></div>
+        <div><span class="b" style="width: 24px; height: 24px"></span><span class="code">24</span></div>
+        <div><span class="b" style="width: 32px; height: 32px"></span><span class="code">32</span></div>
+      </div>
+      <p class="petit">Rayons : <strong>3–6</strong> cases de frise · <strong>14</strong> champs · <strong>16–20</strong> cartes et slots · <strong>22–24</strong> chips et boutons · <strong>26</strong> feuilles.</p>
+      <p class="petit">Cibles tactiles <strong>44 px minimum</strong> (chips, icônes, onglets), boutons principaux <strong>48 px</strong>. Marges latérales <strong>20 px</strong> sur téléphone.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="ds-comp">
+    <h2 id="ds-comp" class="titre">Composants</h2>
+    <div class="g3">
+      <div class="case-demo" style="grid-column: span 2">
+        <p class="etiq">Frise 12 mois — la signature</p>
+        <div class="frise grande" style="max-width: 640px">
+          <span class="mois s50"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>F</b></span><span class="mois s50"><span class="case"><i></i></span><b>M</b></span><span class="mois s50"><span class="case"><i></i></span><b>A</b></span><span class="mois s0"><span class="case"><i></i></span><b>M</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>A</b></span><span class="mois s100"><span class="case"><i></i></span><b>S</b></span><span class="mois s100 ici"><span class="case"><i></i></span><b>O</b></span><span class="mois s100"><span class="case"><i></i></span><b>N</b></span><span class="mois s100"><span class="case"><i></i></span><b>D</b></span>
+        </div>
+        <div style="display: grid; grid-template-columns: 300px 200px; gap: 32px; align-items: end">
+          <div class="frise"><span class="mois s100"><span class="case"><i></i></span><b>J</b></span><span class="mois s100"><span class="case"><i></i></span><b>F</b></span><span class="mois s100"><span class="case"><i></i></span><b>M</b></span><span class="mois s33"><span class="case"><i></i></span><b>A</b></span><span class="mois s0"><span class="case"><i></i></span><b>M</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s0"><span class="case"><i></i></span><b>A</b></span><span class="mois s67"><span class="case"><i></i></span><b>S</b></span><span class="mois s100 ici"><span class="case"><i></i></span><b>O</b></span><span class="mois s100"><span class="case"><i></i></span><b>N</b></span><span class="mois s100"><span class="case"><i></i></span><b>D</b></span></div>
+          <div class="frise mini"><span class="mois s100"><span class="case"><i></i></span></span><span class="mois s50"><span class="case"><i></i></span></span><span class="mois s50"><span class="case"><i></i></span></span><span class="mois s50"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s100"><span class="case"><i></i></span></span><span class="mois s100 ici"><span class="case"><i></i></span></span><span class="mois s100"><span class="case"><i></i></span></span><span class="mois s100"><span class="case"><i></i></span></span></div>
+        </div>
+        <p class="petit doux">Hauteur remplie = part des légumes de la recette qui sont de saison ce mois-là. Cadre = mois en cours. L’information passe par la hauteur, jamais par la seule couleur ; chaque frise porte un texte alternatif.</p>
+      </div>
+      <div class="case-demo">
+        <p class="etiq">Badge de saison (mois en cours)</p>
+        <span class="badge b-pleine" style="align-self: flex-start"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span>
+        <span class="badge b-partie" style="align-self: flex-start"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 2a5 5 0 0 1 0 10z" fill="currentColor"/></svg>En partie de saison</span>
+        <span class="badge b-hors" style="align-self: flex-start"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Hors saison</span>
+        <span class="badge b-toutes" style="align-self: flex-start"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7c0-1.4 1-2.3 2.1-2.3C6.6 4.7 7.4 9.3 9.4 9.3c1.1 0 2.1-.9 2.1-2.3s-1-2.3-2.1-2.3C7.4 4.7 6.6 9.3 4.6 9.3 3.5 9.3 2.5 8.4 2.5 7z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Toutes saisons</span>
+        <p class="petit doux">Score ≥ 0,75 · 0,25 à 0,74 · &lt; 0,25 · aucun légume saisonnier (joker). Forme du pictogramme + texte : jamais la couleur seule.</p>
+      </div>
+      <div class="case-demo">
+        <p class="etiq">Chip légume</p>
+        <div class="chips">
+          <button class="chip" type="button" aria-pressed="false">Radis</button>
+          <button class="chip saison" type="button" aria-pressed="false">Poireau</button>
+          <button class="chip saison" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Courge</button>
+          <button class="chip chip-retire" type="button" aria-label="Retirer sauge">Sauge<span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg></span></button>
+          <span class="chip lecture"><span class="pt" aria-hidden="true"></span>Ail</span>
+          <span class="chip chip-ajout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Légume perso</span>
+        </div>
+        <p class="petit doux">Défaut · de saison ce mois · choisi · à retirer · lecture · ajout perso.</p>
+      </div>
+      <div class="case-demo">
+        <p class="etiq">Boutons</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px">
+          <button class="btn btn-plein" type="button">Générer ma semaine</button>
+          <button class="btn btn-encre" type="button">Exporter</button>
+          <button class="btn btn-ligne" type="button">Modifier</button>
+          <button class="btn btn-texte" type="button">Voir tout</button>
+          <button class="btn btn-danger" type="button">Supprimer la recette</button>
+          <button class="btn btn-ligne focus-demo" type="button">Focus clavier</button>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center">
+          <button class="ico" type="button" aria-pressed="false" aria-label="Garder ce repas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></button>
+          <button class="ico" type="button" aria-pressed="true" aria-label="Garder ce repas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+          <button class="ico" type="button" aria-disabled="true" aria-label="Changer de recette (indisponible)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></button>
+          <span class="petit doux">garder · gardé · indisponible</span>
+        </div>
+      </div>
+      <div class="case-demo">
+        <p class="etiq">Carte recette</p>
+        <div class="carte">
+          <h3 class="display t-recette">Soupe panais-carotte au gingembre</h3>
+          <div style="display: flex; flex-direction: column; gap: 4px"><span class="etal" aria-hidden="true" style="flex-wrap: nowrap; gap: 2px"><img class="vig vig-s" src="./icons/panais.svg" alt=""><img class="vig vig-s" src="./icons/carotte.svg" alt=""><img class="vig vig-s" src="./icons/oignon.svg" alt=""><img class="vig vig-s" src="./icons/gingembre.svg" alt=""></span><p class="legs">Panais, carotte, oignon, gingembre</p></div>
+          <div class="pied"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span>
+            <div class="frise mini"><span class="mois s100"><span class="case"><i></i></span></span><span class="mois s100"><span class="case"><i></i></span></span><span class="mois s100"><span class="case"><i></i></span></span><span class="mois s33"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s67"><span class="case"><i></i></span></span><span class="mois s100 ici"><span class="case"><i></i></span></span><span class="mois s100"><span class="case"><i></i></span></span><span class="mois s100"><span class="case"><i></i></span></span></div></div>
+        </div>
+      </div>
+      <div class="case-demo">
+        <p class="etiq">Illustration produit</p>
+        <div style="display: flex; align-items: center; gap: 14px">
+          <img class="vig vig-l" src="./icons/potiron.svg" alt="">
+          <img class="vig vig-l" src="./icons/persil.svg" alt="">
+          <img class="vig vig-l" src="./icons/champignon.svg" alt="">
+          <img class="vig vig-l" src="./icons/panier.svg" alt="">
+          <span class="ecran sombre automne" style="display: inline-flex; background: #161217; padding: 8px; border-radius: 14px"><img class="vig" src="./icons/potiron.svg" alt=""></span>
+        </div>
+        <p class="petit doux">91 illustrations dessinées pour l’app : contour épais vert-de-gris #1E3B36, aplats francs, un reflet blanc. Un légume perso reçoit l’illustration la plus proche (« potimarron » → potiron, « cèpe » → champignon), sinon le panier ; on peut la changer. En sombre, posée sur une assiette claire. Tailles 28, 40, 64.</p>
+      </div>
+      <div class="case-demo">
+        <p class="etiq">Slot de repas</p>
+        <div class="slot"><div class="corps"><span class="nom">Risotto de courge et sauge</span><div class="meta"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span></div></div><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></span><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></span></div>
+        <div class="slot garde"><div class="corps"><span class="nom">Velouté de potiron aux châtaignes</span><div class="meta"><span class="petit doux">Gardé</span></div></div><span class="ico" style="background: var(--encre); color: var(--papier)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span></div>
+        <div class="slot vide"><p class="doux">Pas de recette disponible</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="ds-mvt">
+    <h2 id="ds-mvt" class="titre">Mouvement</h2>
+    <p class="doux" style="max-width: 760px">Peu de mouvement, et toujours pour dire ce qui a changé. Sous <span class="code">prefers-reduced-motion</span>, tout devient un fondu de 120 ms sans déplacement.</p>
+    <div>
+      <div class="mvt"><b>Changer un repas</b><span>L’ancienne recette glisse de 8 px et s’efface, la nouvelle arrive du même côté. On voit que seul ce repas a bougé.</span><span class="code">120 + 180 ms · ease-out</span></div>
+      <div class="mvt"><b>Générer la semaine</b><span>Les repas non gardés se remplacent jour après jour, en cascade ; les repas gardés ne bougent pas.</span><span class="code">40 ms entre jours</span></div>
+      <div class="mvt"><b>Enregistrer une recette</b><span>Les cases de la frise montent à leur hauteur : la saison calculée « se remplit ».</span><span class="code">240 ms · 15 ms par mois</span></div>
+      <div class="mvt"><b>Feuilles et dialogues</b><span>La feuille monte du bas, le voile apparaît en fondu ; fermeture deux fois plus rapide.</span><span class="code">220 ms / 140 ms</span></div>
+      <div class="mvt"><b>Choisir un légume</b><span>La chip passe à l’encre et la coche apparaît ; la frise d’aperçu se met à jour.</span><span class="code">120 ms</span></div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":3820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

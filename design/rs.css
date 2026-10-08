@@ -1,0 +1,231 @@
+/* Recettes de saison — tokens et composants de la maquette */
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0}
+.ecran{
+  --papier:#EEF0E7;--carte:#F9FAF5;--creux:#E3E6DA;--encre:#221A20;--encre-2:#5A5158;
+  --trait:#D6D9CD;--trait-fort:#7E8076;--danger:#A3201A;--danger-pale:#F6DCD8;--ok:#2F6A3A;--ok-pale:#DCEBD9;
+  --display:'Young Serif',Georgia,serif;--texte:'Hanken Grotesk',system-ui,sans-serif;--etiq:'Sofia Sans Extra Condensed','Arial Narrow',sans-serif;
+  font-family:var(--texte);font-size:16px;line-height:1.45;color:var(--encre);background:var(--papier);
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+}
+.automne{--saison:#A9480F;--saison-texte:#8E3B0B;--saison-pale:#F2DECB;--saison-sur:#FFFFFF}
+.hiver{--saison:#6E2A63;--saison-texte:#6E2A63;--saison-pale:#EADBE6;--saison-sur:#FFFFFF}
+.printemps{--saison:#3B6B1F;--saison-texte:#335E1A;--saison-pale:#DCE9CF;--saison-sur:#FFFFFF}
+.ete{--saison:#B3261E;--saison-texte:#9C2019;--saison-pale:#F4D8D3;--saison-sur:#FFFFFF}
+.sombre{--papier:#161217;--carte:#211B22;--creux:#2B242C;--encre:#ECEAE1;--encre-2:#ADA5AD;--trait:#3A333B;--trait-fort:#857D86;--danger:#F2948B;--danger-pale:#3D1F1D;--ok:#9DD3A2;--ok-pale:#1E3322}
+.sombre.automne{--saison:#F09A5B;--saison-texte:#F5B184;--saison-pale:#3A271B;--saison-sur:#221A20}
+.sombre.hiver{--saison:#D9A0CC;--saison-texte:#E3B6D8;--saison-pale:#35203A;--saison-sur:#221A20}
+.sombre.printemps{--saison:#A6D17E;--saison-texte:#B7DB96;--saison-pale:#24331B;--saison-sur:#221A20}
+.sombre.ete{--saison:#F2877C;--saison-texte:#F6A59C;--saison-pale:#3D1F1D;--saison-sur:#221A20}
+
+/* Typo */
+.display{font-family:var(--display);font-weight:400;letter-spacing:-.01em;line-height:1.05;margin:0}
+.etiq{font-family:var(--etiq);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:14px;line-height:1.2;color:var(--encre-2)}
+.t-mois{font-size:56px}
+.t-ecran{font-size:30px}
+.t-recette{font-size:20px;line-height:1.15}
+.t-grand{font-size:34px;line-height:1.08}
+.t-section{font-size:21px}
+.doux{color:var(--encre-2)}
+.petit{font-size:14px;line-height:1.4}
+p{margin:0}
+h1,h2,h3{margin:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Structure téléphone */
+.defile{flex:1;overflow:hidden;padding:20px 20px 108px;display:flex;flex-direction:column;gap:24px}
+.defile>*,.col-liste>*,.col-detail>*{flex-shrink:0}
+.barre{position:absolute;left:0;right:0;bottom:0;height:84px;padding:6px 8px 18px;background:var(--carte);border-top:1px solid var(--trait);display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.onglet{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:56px;border-radius:14px;color:var(--encre-2);text-decoration:none;font-size:12.5px;font-weight:600}
+.onglet svg{width:24px;height:24px}
+.onglet[aria-current="page"]{color:var(--saison-texte)}
+.onglet[aria-current="page"] .pastille{background:var(--saison-pale)}
+.pastille{display:flex;align-items:center;justify-content:center;width:56px;height:30px;border-radius:15px}
+
+/* Structure tablette */
+.tablette{flex-direction:row}
+.rail{width:96px;flex:none;background:var(--carte);border-right:1px solid var(--trait);display:flex;flex-direction:column;align-items:center;padding:20px 8px;gap:6px}
+.rail .marque{font-family:var(--display);font-size:22px;color:var(--saison-texte);margin-bottom:18px;line-height:1;text-align:center}
+.rail .onglet{width:80px;min-height:64px}
+.zone{flex:1;min-width:0;display:flex;overflow:hidden}
+.col-liste{width:400px;flex:none;border-right:1px solid var(--trait);padding:28px 24px;display:flex;flex-direction:column;gap:20px;overflow:hidden}
+.col-detail{flex:1;min-width:0;padding:32px 40px;display:flex;flex-direction:column;gap:24px;overflow:hidden}
+
+/* Boutons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:24px;border:0;font:600 16px/1 var(--texte);text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn svg{width:20px;height:20px;flex:none}
+.btn-plein{background:var(--saison);color:var(--saison-sur)}
+.btn-encre{background:var(--encre);color:var(--papier)}
+.btn-ligne{background:transparent;color:var(--encre);box-shadow:inset 0 0 0 1.5px var(--trait-fort)}
+.btn-texte{background:transparent;color:var(--saison-texte);padding:0 12px}
+.btn-danger{background:var(--danger);color:#fff}
+.sombre .btn-danger{color:#221A20}
+.btn-danger-texte{background:transparent;color:var(--danger);padding:0 12px}
+.btn-large{width:100%}
+.ico{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:22px;border:0;background:transparent;color:var(--encre-2);cursor:pointer;flex:none}
+.ico svg{width:22px;height:22px}
+.ico[aria-pressed="true"]{background:var(--encre);color:var(--papier)}
+.fab{position:absolute;right:20px;bottom:100px;box-shadow:0 6px 18px rgba(34,26,32,.22)}
+
+/* Badge saison */
+.badge{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px 0 8px;border-radius:14px;font-size:13.5px;font-weight:600;white-space:nowrap}
+.badge svg{width:14px;height:14px;flex:none}
+.b-pleine{background:var(--saison-pale);color:var(--saison-texte)}
+.b-partie{background:var(--creux);color:var(--encre)}
+.b-hors{background:transparent;color:var(--encre-2);box-shadow:inset 0 0 0 1px var(--trait-fort)}
+.b-toutes{background:var(--creux);color:var(--encre-2)}
+
+/* Frise 12 mois — calendrier de sachet de graines */
+.frise{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;align-items:end}
+.mois{display:flex;flex-direction:column;align-items:center;gap:4px}
+.case{position:relative;width:100%;height:18px;border-radius:3px;background:var(--creux);overflow:hidden}
+.case i{position:absolute;left:0;right:0;bottom:0;background:var(--saison);display:block}
+.mois b{font:700 11px/1 var(--etiq);color:var(--encre-2);letter-spacing:.04em}
+.mois.ici .case{box-shadow:0 0 0 2px var(--papier),0 0 0 3.5px var(--encre)}
+.mois.ici b{color:var(--encre)}
+.frise.grande{gap:6px}
+.frise.grande .case{height:64px;border-radius:6px}
+.frise.grande .mois b{font-size:15px}
+.frise.grande .mois{gap:8px}
+.frise.mini{gap:2px}
+.frise.mini .case{height:10px;border-radius:2px}
+.frise.mini .mois b{display:none}
+.frise.mini .mois.ici .case{box-shadow:0 0 0 1.5px var(--encre)}
+.s0 i{height:0}.s17 i{height:17%}.s25 i{height:25%}.s33 i{height:33%}.s50 i{height:50%}.s67 i{height:67%}.s75 i{height:75%}.s83 i{height:83%}.s100 i{height:100%}
+.on i{height:100%}
+
+/* Carte recette */
+.carte{background:var(--carte);border-radius:18px;padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;border:1px solid var(--trait)}
+.carte .haut{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.carte .pied{display:flex;align-items:center;gap:14px}
+.carte .pied .frise{flex:1}
+.carte .legs{font-size:14px;color:var(--encre-2);line-height:1.35}
+.carte.choisie{border-color:var(--encre);box-shadow:inset 0 0 0 1px var(--encre)}
+
+/* Chips légumes */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:22px;background:var(--carte);border:1.5px solid var(--trait-fort);color:var(--encre);font:500 15px/1 var(--texte);cursor:pointer;white-space:nowrap}
+.chip svg{width:16px;height:16px}
+.chip[aria-pressed="true"]{background:var(--encre);border-color:var(--encre);color:var(--papier)}
+.chip.saison:not([aria-pressed="true"]){border-color:var(--saison);background:var(--saison-pale)}
+.chip .pt{width:7px;height:7px;border-radius:4px;background:var(--saison);flex:none}
+.chip[aria-pressed="true"] .pt{background:var(--saison)}
+.chip-retire{background:var(--encre);border-color:var(--encre);color:var(--papier);padding-right:4px}
+.chip-retire .x{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:18px}
+.chip-ajout{border-style:dashed;color:var(--saison-texte);border-color:var(--saison)}
+.chip.lecture{cursor:default;background:var(--carte);border-color:var(--trait)}
+
+/* Slots de repas */
+.jour{display:flex;flex-direction:column;gap:6px}
+.jour .date{display:flex;align-items:baseline;gap:8px;padding:0 4px}
+.jour .date .num{font-family:var(--display);font-size:22px;line-height:1}
+.slot{background:transparent;border-style:solid}
+.jour.passe .date .num{color:var(--encre-2)}
+.jour.auj .date .num{color:var(--saison-texte)}
+.jour .auj-tag{align-self:center;font:700 11px/1 var(--etiq);letter-spacing:.08em;text-transform:uppercase;color:var(--saison-sur);background:var(--saison);padding:4px 5px 3px;border-radius:5px}
+.ico[aria-disabled="true"]{opacity:.35;cursor:not-allowed}
+ol.slots,.nue{list-style:none;margin:0;padding:0}
+.slot{background:var(--carte);border:1px solid var(--trait);border-radius:16px;padding:12px 6px 12px 14px;display:flex;align-items:center;gap:6px;min-height:72px}
+.slot .corps{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.slot .nom{font-family:var(--display);font-size:18px;line-height:1.15;color:var(--encre);text-decoration:none}
+.slot .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.slot.garde{border-color:var(--encre);border-width:1.5px}
+.slot.vide{background:transparent;border:1.5px dashed var(--trait-fort)}
+.slots{display:flex;flex-direction:column;gap:8px}
+.moment{font:700 12px/1 var(--etiq);letter-spacing:.08em;text-transform:uppercase;color:var(--encre-2)}
+
+/* Saisie */
+.champ{display:flex;flex-direction:column;gap:8px}
+.champ label,.label{font-weight:600;font-size:15px}
+.input{height:52px;border-radius:14px;border:1.5px solid var(--trait-fort);background:var(--carte);padding:0 16px;font:400 16px var(--texte);color:var(--encre);width:100%}
+.input.foc{border-color:var(--encre);box-shadow:0 0 0 3px var(--saison-pale)}
+textarea.input{height:auto;min-height:96px;padding:14px 16px;line-height:1.45;resize:none}
+.recherche{position:relative}
+.recherche svg{position:absolute;left:16px;top:16px;width:20px;height:20px;color:var(--encre-2)}
+.recherche .input{padding-left:46px}
+.filtres{display:flex;gap:8px;overflow:hidden}
+.filtre{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:20px;border:1.5px solid var(--trait-fort);background:transparent;font:600 14px/1 var(--texte);color:var(--encre);white-space:nowrap}
+.filtre svg{width:16px;height:16px}
+.filtre[aria-pressed="true"]{background:var(--encre);color:var(--papier);border-color:var(--encre)}
+
+/* Blocs */
+.bloc{background:var(--carte);border:1px solid var(--trait);border-radius:20px;padding:18px}
+.ligne{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px}
+.sep{height:1px;background:var(--trait);border:0;margin:0}
+.entete{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.retour{display:inline-flex;align-items:center;gap:4px;min-height:44px;color:var(--encre);text-decoration:none;font-weight:600;margin-left:-8px;padding-right:8px}
+.retour svg{width:22px;height:22px}
+.marche{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--encre)}
+.marche span{color:var(--encre-2)}
+.alerte{display:flex;gap:12px;align-items:flex-start;border-radius:16px;padding:14px 16px;font-size:15px;line-height:1.4}
+.alerte svg{width:22px;height:22px;flex:none;margin-top:1px}
+.a-info{background:var(--saison-pale);color:var(--encre)}
+.a-erreur{background:var(--danger-pale);color:var(--encre)}
+.a-erreur svg{color:var(--danger)}
+.a-ok{background:var(--ok-pale);color:var(--encre)}
+.a-ok svg{color:var(--ok)}
+.voile{position:absolute;inset:0;background:rgba(22,18,23,.45)}
+.feuille{position:absolute;left:0;right:0;bottom:0;background:var(--carte);border-radius:26px 26px 0 0;padding:10px 20px 28px;display:flex;flex-direction:column;gap:18px}
+.feuille .poignee{width:40px;height:5px;border-radius:3px;background:var(--trait-fort);align-self:center;opacity:.5}
+.dialogue{position:absolute;left:20px;right:20px;top:50%;transform:translateY(-50%);background:var(--carte);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:16px}
+.toast{position:absolute;left:16px;right:16px;bottom:100px;background:var(--encre);color:var(--papier);border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:center;font-size:15px}
+.toast svg{width:22px;height:22px;flex:none;color:var(--papier)}
+.radio{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:16px;border:1.5px solid var(--trait-fort)}
+.radio.on{border-color:var(--encre);box-shadow:inset 0 0 0 1px var(--encre)}
+.rond{width:22px;height:22px;border-radius:11px;border:2px solid var(--trait-fort);flex:none;margin-top:1px}
+.radio.on .rond{border:7px solid var(--encre)}
+.case-a-cocher{display:flex;align-items:center;gap:12px;min-height:52px}
+.coche{width:24px;height:24px;border-radius:7px;border:2px solid var(--trait-fort);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.coche.on{background:var(--encre);border-color:var(--encre);color:var(--papier)}
+.coche svg{width:16px;height:16px}
+.stepper{display:flex;align-items:center;gap:4px;border-radius:24px;box-shadow:inset 0 0 0 1.5px var(--trait-fort);padding:2px}
+.stepper output{min-width:28px;text-align:center;font-weight:700;font-size:17px}
+.groupe-tete{display:flex;align-items:center;justify-content:space-between;min-height:48px}
+.compteur{font:700 13px/1 var(--etiq);letter-spacing:.06em;color:var(--encre-2)}
+
+/* Tablette */
+.tablette .jour{display:grid;grid-template-columns:60px minmax(0,1fr);gap:12px;align-items:center}
+.tablette .jour .date{flex-direction:column;align-items:center;gap:3px;padding:0}
+.tablette .jour .date .num{font-size:26px}
+.tablette .slot{min-height:64px;padding-top:10px;padding-bottom:10px}
+.slot.choisi{background:var(--saison-pale);border-color:var(--saison);border-width:1.5px}
+.rail .marque .etiq{display:block;font-size:12px;margin-top:4px;color:var(--encre-2)}
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cal{border-collapse:separate;border-spacing:0;width:100%}
+.cal th,.cal td{padding:0;height:40px;text-align:center;border-bottom:1px solid var(--trait)}
+.cal thead th{font:700 13px/1 var(--etiq);letter-spacing:.06em;color:var(--encre-2);height:36px}
+.cal th[scope=row]{text-align:left;font:500 15px/1.2 var(--texte);color:var(--encre);padding-right:12px;white-space:nowrap}
+.cal .ici{background:var(--saison-pale)}
+.cal thead .ici{color:var(--encre)}
+.cal .on span{display:block;margin:0 4px;height:22px;border-radius:5px;background:var(--saison)}
+.cal .an span{display:block;margin:0 4px;height:22px;border-radius:5px;background:var(--creux);font:600 13px/22px var(--texte);color:var(--encre-2)}
+.cal abbr{text-decoration:none}
+.ecran :focus-visible,.focus-demo{outline:3px solid var(--encre);outline-offset:3px}
+
+/* Passe accessibilité */
+.filtre{min-height:44px}
+.slot{position:relative}
+.slot .nom::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.slot .ico{position:relative;z-index:1}
+.input::placeholder{color:var(--encre-2);opacity:1}
+.sr:focus-visible+.rond,.sr:focus-visible+.coche{outline:3px solid var(--encre);outline-offset:3px}
+.radio,.case-a-cocher{cursor:pointer}
+
+/* Vignettes produit : icône ADEME ou photo Wikipédia */
+.vig{width:40px;height:40px;flex:none;display:block;object-fit:contain}
+.vig.photo{border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px var(--trait)}
+.vig.mono{border-radius:50%;background:var(--saison-pale);color:var(--saison-texte);display:inline-flex;align-items:center;justify-content:center;font:400 18px/1 var(--display)}
+.vig-s{width:28px;height:28px}
+.vig-l{width:64px;height:64px}
+.sombre .vig:not(.photo):not(.mono){background:#ECEAE1;border-radius:50%;padding:3px}
+.chip .vig{margin-left:-8px}
+.chip.chip-retire .vig{margin-left:-10px}
+.etal{display:flex;gap:4px;flex-wrap:wrap}
+.etal .vig{width:42px;height:42px}
+.prod .nomprod{display:flex;align-items:center;gap:10px}
+.cal th[scope=row] .vig{display:inline-block;vertical-align:middle;margin-right:8px}
+.chip .marq{display:inline-flex;margin-left:2px}
+.chip[aria-pressed="true"] .vig:not(.photo),.chip-retire .vig:not(.photo){background:#ECEAE1;border-radius:50%;padding:2px}
+.trouve{display:flex;gap:14px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--papier);border:1px solid var(--trait)}
+.source{display:inline-flex;align-items:center;gap:6px;font:700 12px/1 var(--etiq);letter-spacing:.06em;text-transform:uppercase;color:var(--saison-texte);background:var(--saison-pale);padding:5px 8px 4px;border-radius:6px}
+.carte .etal .vig{width:32px;height:32px}

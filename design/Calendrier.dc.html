@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendrier des saisons</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}
+.histo{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;align-items:end;height:64px}
+.histo span{display:block;background:var(--trait);border-radius:3px 3px 0 0}
+.histo span.ici{background:var(--saison)}
+.histo-l{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;text-align:center;font:700 11px/1 var(--etiq);color:var(--encre-2)}
+.histo-l .ici{color:var(--encre)}
+.prod{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;border-bottom:1px solid var(--trait)}
+.prod .frise{width:132px;flex:none}
+.mois-l{width:132px;flex:none;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:2px;text-align:center;font:700 11px/1 var(--etiq);color:var(--encre-2)}
+.mois-l .ici{color:var(--encre);text-decoration:underline;text-underline-offset:3px}
+.entete-mois h2{margin:0}
+.legende{display:flex;gap:14px;flex-wrap:wrap}
+.legende span{display:inline-flex;align-items:center;gap:6px}
+.legende i{display:inline-block;width:12px;height:12px;border-radius:3px}
+.lg-on{background:var(--saison)}
+.lg-off{background:var(--creux)}
+.lg-ici{box-shadow:inset 0 0 0 2px var(--encre)}
+.tag{white-space:nowrap;font:700 12px/1 var(--etiq);letter-spacing:.06em;text-transform:uppercase;color:var(--saison-texte);margin-left:8px}
+</style>
+</helmet>
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 1000px">
+<main class="defile" style="gap: 20px">
+  <h1 class="display t-ecran" style="padding-top: 8px">Calendrier des saisons</h1>
+
+  <div class="bloc" style="display: flex; flex-direction: column; gap: 14px; padding: 14px 10px 16px">
+    <div class="entete">
+      <button class="ico" type="button" aria-label="Mois précédent : septembre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button>
+      <div style="text-align: center" aria-live="polite">
+        <p class="display" style="font-size: 26px">Octobre</p>
+        <p class="petit doux">33 produits de saison</p>
+      </div>
+      <button class="ico" type="button" aria-label="Mois suivant : novembre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+    </div>
+    <div style="padding: 0 6px; display: flex; flex-direction: column; gap: 6px" role="img" aria-label="Nombre de produits de saison par mois : de 11 en avril à 34 en septembre">
+      <div class="histo"><span style="height: 85%"></span><span style="height: 74%"></span><span style="height: 56%"></span><span style="height: 32%"></span><span style="height: 38%"></span><span style="height: 71%"></span><span style="height: 74%"></span><span style="height: 76%"></span><span style="height: 100%"></span><span class="ici" style="height: 97%"></span><span style="height: 97%"></span><span style="height: 82%"></span></div>
+      <div class="histo-l"><span>J</span><span>F</span><span>M</span><span>A</span><span>M</span><span>J</span><span>J</span><span>A</span><span>S</span><span class="ici">O</span><span>N</span><span>D</span></div>
+    </div>
+  </div>
+
+  <div class="filtres" role="group" aria-label="Catégorie">
+    <button class="filtre" type="button" aria-pressed="true">Tout</button>
+    <button class="filtre" type="button" aria-pressed="false">Légumes · 22</button>
+    <button class="filtre" type="button" aria-pressed="false">Fruits · 7</button>
+    <button class="filtre" type="button" aria-pressed="false">Fruits à coque · 3</button>
+  </div>
+
+  <section aria-labelledby="c-leg" style="display: flex; flex-direction: column">
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <p class="petit doux legende"><span><i class="lg-on"></i>de saison</span><span><i class="lg-off"></i>hors saison</span><span><i class="lg-ici"></i>octobre</span></p>
+      <div class="prod entete-mois" style="min-height: 28px; border-bottom: 1px solid var(--trait)">
+        <h2 id="c-leg" class="etiq">Légumes · 22</h2>
+        <div class="mois-l" aria-hidden="true"><span>J</span><span>F</span><span>M</span><span>A</span><span>M</span><span>J</span><span>J</span><span>A</span><span>S</span><span class="ici">O</span><span>N</span><span>D</span></div>
+      </div>
+    </div>
+    <ul class="nue">
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/betterave.svg" alt="">Betterave</span><div class="frise mini" role="img" aria-label="janvier à mars, octobre à décembre"><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/blette.svg" alt="">Blette</span><div class="frise mini" role="img" aria-label="juin à novembre"><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/brocoli.svg" alt="">Brocoli</span><div class="frise mini" role="img" aria-label="septembre à novembre"><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/carotte.svg" alt="">Carotte</span><div class="frise mini" role="img" aria-label="janvier à mars, septembre à décembre"><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/celeri.svg" alt="">Céleri</span><div class="frise mini" role="img" aria-label="janvier à mars, octobre à décembre"><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/chou.svg" alt="">Chou</span><div class="frise mini" role="img" aria-label="janvier à mars, octobre à décembre"><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/choudebruxelles.svg" alt="">Chou de Bruxelles</span><div class="frise mini" role="img" aria-label="janvier à mars, octobre à décembre"><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/choufleur.svg" alt="">Chou-fleur</span><div class="frise mini" role="img" aria-label="janvier à mars, septembre à décembre"><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/concombre.svg" alt="">Concombre<span class="tag">dernier mois</span></span><div class="frise mini" role="img" aria-label="mai à octobre"><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/courge.svg" alt="">Courge</span><div class="frise mini" role="img" aria-label="janvier, septembre à décembre"><span class="mois on"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/courgette.svg" alt="">Courgette<span class="tag">dernier mois</span></span><div class="frise mini" role="img" aria-label="mai à octobre"><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span></div></li>
+      <li class="prod"><span class="nomprod"><img class="vig" src="./icons/echalote.svg" alt="">Échalote</span><div class="frise mini" role="img" aria-label="octobre à décembre"><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois s0"><span class="case"><i></i></span></span><span class="mois on ici"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span><span class="mois on"><span class="case"><i></i></span></span></div></li>
+    </ul>
+  </section>
+</main>
+<nav class="barre" aria-label="Navigation principale">
+  <a class="onglet" href="Main.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>Semaine</a>
+  <a class="onglet" href="Recettes.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5v17M12 8h4M12 11.5h4"/></svg></span>Recettes</a>
+  <a class="onglet" href="Calendrier.dc.html" aria-current="page"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v-8"/><path d="M12 12c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></svg></span>Saisons</a>
+  <a class="onglet" href="Reglages.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>Réglages</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

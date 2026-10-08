@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Légume perso — inconnu</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}
+select.input{appearance:none;background-image:none}
+</style>
+</helmet>
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 812px">
+<header class="entete" style="padding: 12px 12px 4px 8px">
+  <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span>
+  <p class="display" style="font-size: 20px; flex: 1">Nouvelle recette</p>
+</header>
+<div class="defile" style="padding-top: 12px; gap: 16px" aria-hidden="true">
+  <div class="recherche">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input class="input foc" type="search" value="oca du Pérou" tabindex="-1">
+  </div>
+</div>
+<div class="voile"></div>
+<section class="feuille" role="dialog" aria-modal="true" aria-labelledby="lh-titre" style="gap: 16px">
+  <span class="poignee" aria-hidden="true"></span>
+  <h2 id="lh-titre" class="display" style="font-size: 24px">Nouveau légume perso</h2>
+  <div class="trouve" role="status">
+    <img class="vig vig-l" src="./icons/panier.svg" alt="">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <p class="label">Produit inconnu de nos calendriers</p>
+      <p class="petit doux">Il prend l’illustration du panier. Indiquez vous-même quand il est de saison.</p>
+      <button class="btn btn-texte" type="button" style="align-self: flex-start; min-height: 44px; margin-left: -12px">Changer l’illustration</button>
+    </div>
+  </div>
+  <div class="champ">
+    <label for="lh-nom">Nom</label>
+    <input id="lh-nom" class="input" type="text" value="Oca du Pérou">
+  </div>
+  <div class="champ">
+    <label for="lh-cat">Catégorie</label>
+    <div style="position: relative">
+      <select id="lh-cat" class="input"><option>Légumes</option><option>Fruits</option><option>Herbes et aromates</option></select>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 16px; top: 16px; pointer-events: none" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </div>
+  </div>
+  <fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+    <legend class="label" style="padding: 0 0 8px">Quand est-il de saison ?</legend>
+    <div class="filtres" role="radiogroup" aria-label="Disponibilité">
+      <button class="filtre" type="button" role="radio" aria-checked="true" style="background: var(--encre); color: var(--papier); border-color: var(--encre)">Toute l’année</button>
+      <button class="filtre" type="button" role="radio" aria-checked="false">Certains mois</button>
+    </div>
+    <p class="petit doux">Aucune suggestion : ce produit n’est ni dans le calendrier ADEME, ni dans l’Agenda des Chefs METRO.</p>
+  </fieldset>
+  <div style="display: flex; gap: 8px">
+    <button class="btn btn-ligne" type="button" style="flex: 1">Annuler</button>
+    <button class="btn btn-plein" type="button" style="flex: 2">Ajouter le légume</button>
+  </div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":812}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

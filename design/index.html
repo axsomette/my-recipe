@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette — Recettes de saison</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./rs.css">
+<style>
+  body{margin:0;background:#EEF0E7}
+  .page{display:block;max-width:1100px;margin:0 auto;padding:48px 20px 72px}
+  .page h2{font:400 26px/1.1 var(--display);margin:40px 0 14px}
+  .grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+  .grille a{display:flex;flex-direction:column;gap:4px;padding:14px 16px;border-radius:16px;background:var(--carte);border:1px solid var(--trait);color:var(--encre);text-decoration:none;min-height:44px}
+  .grille a:hover{border-color:var(--encre)}
+  .grille small{color:var(--encre-2)}
+  .options{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+  .options a{text-decoration:none}
+</style>
+</head>
+<body>
+<main class="ecran page automne">
+  <p class="etiq">Référence visuelle validée le 8 octobre 2026</p>
+  <h1 class="display" style="font-size: 48px; margin-top: 8px">Recettes de saison — maquette</h1>
+  <p class="doux" style="max-width: 640px; margin-top: 12px">Ouvrez un écran à la taille d’un téléphone (375 px) ou d’une tablette. Les liens entre écrans fonctionnent. Les boutons ci-dessous changent la saison et le thème pour toute la visite.</p>
+  <div class="options" role="group" aria-label="Aperçu">
+    <a class="filtre" href="?saison=automne&amp;sombre=0">Automne</a>
+    <a class="filtre" href="?saison=hiver&amp;sombre=0">Hiver</a>
+    <a class="filtre" href="?saison=printemps&amp;sombre=0">Printemps</a>
+    <a class="filtre" href="?saison=ete&amp;sombre=0">Été</a>
+    <a class="filtre" href="?sombre=1">Mode sombre</a>
+  </div>
+
+  <h2>Système</h2>
+  <div class="grille"><a href="DesignSystem.dc.html">Design system<small>couleurs, typo, composants, mouvement</small></a></div>
+
+  <h2>Téléphone</h2>
+  <div class="grille">
+    <a href="Main.dc.html">Ma semaine<small>accueil</small></a>
+    <a href="Recettes.dc.html">Mes recettes</a>
+    <a href="RecetteDetail.dc.html">Détail d’une recette</a>
+    <a href="RecetteEdition.dc.html">Ajout / édition</a>
+    <a href="Calendrier.dc.html">Calendrier des saisons</a>
+    <a href="Reglages.dc.html">Réglages</a>
+  </div>
+
+  <h2>États</h2>
+  <div class="grille">
+    <a href="Onboarding.dc.html">Premier lancement</a>
+    <a href="SemaineIncomplete.dc.html">Pas assez de recettes</a>
+    <a href="LegumePerso.dc.html">Légume perso reconnu<small>illustration + mois suggérés</small></a>
+    <a href="LegumePersoHorsLigne.dc.html">Légume perso inconnu</a>
+    <a href="Suppression.dc.html">Confirmation de suppression</a>
+    <a href="ImportChoix.dc.html">Import : fusionner ou remplacer</a>
+    <a href="ImportReussi.dc.html">Import réussi</a>
+    <a href="ImportInvalide.dc.html">Fichier invalide</a>
+    <a href="SemaineSombre.dc.html">Ma semaine, mode sombre</a>
+    <a href="DetailSombre.dc.html">Détail, mode sombre</a>
+  </div>
+
+  <h2>Tablette</h2>
+  <div class="grille">
+    <a href="TabletteSemaine.dc.html">Ma semaine<small>paysage, liste + détail</small></a>
+    <a href="TabletteSemainePortrait.dc.html">Ma semaine<small>portrait, midi et soir</small></a>
+    <a href="TabletteRecettes.dc.html">Recettes + détail<small>paysage</small></a>
+    <a href="TabletteEdition.dc.html">Ajout / édition<small>portrait</small></a>
+    <a href="TabletteCalendrier.dc.html">Calendrier<small>paysage, tableau</small></a>
+    <a href="TabletteReglages.dc.html">Réglages<small>portrait</small></a>
+  </div>
+
+  <p class="petit doux" style="margin-top: 40px">Illustrations dessinées pour l’app. Canevas d’origine : Claude Design.</p>
+</main>
+<script src="./support.js"></script>
+</body>
+</html>

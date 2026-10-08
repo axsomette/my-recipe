@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mes recettes — tablette</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ecran tablette {{saison}} {{theme}}" style="width: 1194px; height: 834px">
+<nav class="rail" aria-label="Navigation principale">
+  <p class="marque">oct.<span class="etiq">automne</span></p>
+  <a class="onglet" href="TabletteSemaine.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>Semaine</a>
+  <a class="onglet" href="TabletteRecettes.dc.html" aria-current="page"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5v17M12 8h4M12 11.5h4"/></svg></span>Recettes</a>
+  <a class="onglet" href="TabletteCalendrier.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v-8"/><path d="M12 12c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></svg></span>Saisons</a>
+  <a class="onglet" href="TabletteReglages.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>Réglages</a>
+</nav>
+<div class="zone">
+  <main class="col-liste" style="width: 430px; gap: 14px">
+    <header class="entete">
+      <h1 class="display t-ecran">Mes recettes</h1>
+      <a class="btn btn-plein" href="TabletteEdition.dc.html" style="padding: 0 16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter</a>
+    </header>
+    <div class="recherche">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+      <label class="sr" for="q">Chercher une recette ou un légume</label>
+      <input id="q" class="input" type="search" placeholder="Recette ou légume…">
+    </div>
+    <div class="filtres" role="group" aria-label="Filtrer par saison">
+      <button class="filtre" type="button" aria-pressed="false">Toutes · 14</button>
+      <button class="filtre" type="button" aria-pressed="true">De saison en octobre · 8</button>
+      <button class="filtre" type="button" aria-pressed="false">Autre mois<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+    </div>
+    <ul class="nue" style="display: flex; flex-direction: column; gap: 8px">
+      <li><a class="carte" href="TabletteRecettes.dc.html">
+        <h2 class="display t-recette">Velouté de potiron aux châtaignes</h2>
+        <div style="display: flex; flex-direction: column; gap: 4px"><span class="etal" aria-hidden="true" style="flex-wrap: nowrap; gap: 2px"><img class="vig vig-s" src="./icons/potiron.svg" alt=""><img class="vig vig-s" src="./icons/chataigne.svg" alt=""><img class="vig vig-s" src="./icons/oignon.svg" alt=""><img class="vig vig-s" src="./icons/ail.svg" alt=""></span><p class="legs">Potiron, châtaigne, oignon, ail</p></div>
+        <div class="pied"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span>
+          <div class="frise mini" role="img" aria-label="De saison de septembre à décembre"><span class="mois s50"><span class="case"><i></i></span><b>J</b></span><span class="mois s25"><span class="case"><i></i></span><b>F</b></span><span class="mois s25"><span class="case"><i></i></span><b>M</b></span><span class="mois s25"><span class="case"><i></i></span><b>A</b></span><span class="mois s0"><span class="case"><i></i></span><b>M</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s25"><span class="case"><i></i></span><b>J</b></span><span class="mois s25"><span class="case"><i></i></span><b>A</b></span><span class="mois s75"><span class="case"><i></i></span><b>S</b></span><span class="mois s100 ici"><span class="case"><i></i></span><b>O</b></span><span class="mois s100"><span class="case"><i></i></span><b>N</b></span><span class="mois s75"><span class="case"><i></i></span><b>D</b></span></div></div>
+      </a></li>
+      <li><a class="carte choisie" href="TabletteRecettes.dc.html" aria-current="true">
+        <h2 class="display t-recette">Gratin de poireaux au comté</h2>
+        <div style="display: flex; flex-direction: column; gap: 4px"><span class="etal" aria-hidden="true" style="flex-wrap: nowrap; gap: 2px"><img class="vig vig-s" src="./icons/poireau.svg" alt=""><img class="vig vig-s" src="./icons/ail.svg" alt=""><img class="vig vig-s" src="./icons/pommedeterre.svg" alt=""></span><p class="legs">Poireau, ail, pomme de terre</p></div>
+        <div class="pied"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span>
+          <div class="frise mini" role="img" aria-label="De saison de septembre à décembre"><span class="mois s50"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>F</b></span><span class="mois s50"><span class="case"><i></i></span><b>M</b></span><span class="mois s50"><span class="case"><i></i></span><b>A</b></span><span class="mois s0"><span class="case"><i></i></span><b>M</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>A</b></span><span class="mois s100"><span class="case"><i></i></span><b>S</b></span><span class="mois s100 ici"><span class="case"><i></i></span><b>O</b></span><span class="mois s100"><span class="case"><i></i></span><b>N</b></span><span class="mois s100"><span class="case"><i></i></span><b>D</b></span></div></div>
+      </a></li>
+      <li><a class="carte" href="TabletteRecettes.dc.html">
+        <h2 class="display t-recette">Soupe panais-carotte au gingembre</h2>
+        <div style="display: flex; flex-direction: column; gap: 4px"><span class="etal" aria-hidden="true" style="flex-wrap: nowrap; gap: 2px"><img class="vig vig-s" src="./icons/panais.svg" alt=""><img class="vig vig-s" src="./icons/carotte.svg" alt=""><img class="vig vig-s" src="./icons/oignon.svg" alt=""><img class="vig vig-s" src="./icons/gingembre.svg" alt=""></span><p class="legs">Panais, carotte, oignon, gingembre</p></div>
+        <div class="pied"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span>
+          <div class="frise mini" role="img" aria-label="De saison d’octobre à mars"><span class="mois s100"><span class="case"><i></i></span><b>J</b></span><span class="mois s100"><span class="case"><i></i></span><b>F</b></span><span class="mois s100"><span class="case"><i></i></span><b>M</b></span><span class="mois s33"><span class="case"><i></i></span><b>A</b></span><span class="mois s0"><span class="case"><i></i></span><b>M</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s0"><span class="case"><i></i></span><b>A</b></span><span class="mois s67"><span class="case"><i></i></span><b>S</b></span><span class="mois s100 ici"><span class="case"><i></i></span><b>O</b></span><span class="mois s100"><span class="case"><i></i></span><b>N</b></span><span class="mois s100"><span class="case"><i></i></span><b>D</b></span></div></div>
+      </a></li>
+      <li><a class="carte" href="TabletteRecettes.dc.html">
+        <h2 class="display t-recette">Curry de chou-fleur et épinards</h2>
+        <div style="display: flex; flex-direction: column; gap: 4px"><span class="etal" aria-hidden="true" style="flex-wrap: nowrap; gap: 2px"><img class="vig vig-s" src="./icons/choufleur.svg" alt=""><img class="vig vig-s" src="./icons/epinard.svg" alt=""><img class="vig vig-s" src="./icons/oignon.svg" alt=""><img class="vig vig-s" src="./icons/coriandre.svg" alt=""></span><p class="legs">Chou-fleur, épinard, oignon, coriandre, gingembre</p></div>
+        <div class="pied"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span>
+          <div class="frise mini" role="img" aria-label="De saison de septembre à mars"><span class="mois s100"><span class="case"><i></i></span><b>J</b></span><span class="mois s100"><span class="case"><i></i></span><b>F</b></span><span class="mois s100"><span class="case"><i></i></span><b>M</b></span><span class="mois s67"><span class="case"><i></i></span><b>A</b></span><span class="mois s33"><span class="case"><i></i></span><b>M</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s0"><span class="case"><i></i></span><b>A</b></span><span class="mois s100"><span class="case"><i></i></span><b>S</b></span><span class="mois s100 ici"><span class="case"><i></i></span><b>O</b></span><span class="mois s100"><span class="case"><i></i></span><b>N</b></span><span class="mois s100"><span class="case"><i></i></span><b>D</b></span></div></div>
+      </a></li>
+    </ul>
+  </main>
+  <article class="col-detail" aria-labelledby="d-titre" style="gap: 26px">
+    <div class="entete" style="justify-content: flex-end; gap: 8px; margin-bottom: -12px">
+      <a class="btn btn-ligne" href="TabletteEdition.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>Modifier</a>
+      <button class="btn btn-danger-texte" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/></svg>Supprimer</button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <h2 id="d-titre" class="display" style="font-size: 40px; line-height: 1.05">Gratin de poireaux au comté</h2>
+      <div style="display: flex; align-items: center; gap: 10px"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span><span class="petit doux">de septembre à décembre</span></div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <h3 class="etiq">Saison, mois par mois</h3>
+      <div class="frise grande" role="img" aria-label="Part des légumes de saison : janvier à avril 50 %, mai et juin 0 %, juillet et août 50 %, septembre à décembre 100 %">
+        <span class="mois s50"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>F</b></span><span class="mois s50"><span class="case"><i></i></span><b>M</b></span><span class="mois s50"><span class="case"><i></i></span><b>A</b></span><span class="mois s0"><span class="case"><i></i></span><b>M</b></span><span class="mois s0"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>J</b></span><span class="mois s50"><span class="case"><i></i></span><b>A</b></span><span class="mois s100"><span class="case"><i></i></span><b>S</b></span><span class="mois s100 ici"><span class="case"><i></i></span><b>O</b></span><span class="mois s100"><span class="case"><i></i></span><b>N</b></span><span class="mois s100"><span class="case"><i></i></span><b>D</b></span>
+      </div>
+      <p class="petit"><strong>En octobre : 2 légumes de saison sur 2.</strong> <span class="doux">La pomme de terre, disponible toute l’année, n’entre pas dans le calcul.</span></p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <h3 class="etiq">Légumes · 3</h3>
+        <ul class="nue chips">
+          <li class="chip lecture"><img class="vig vig-s" src="./icons/poireau.svg" alt="">Poireau<span class="pt marq" aria-hidden="true"></span></li>
+          <li class="chip lecture"><img class="vig vig-s" src="./icons/ail.svg" alt="">Ail<span class="pt marq" aria-hidden="true"></span></li>
+          <li class="chip lecture"><img class="vig vig-s" src="./icons/pommedeterre.svg" alt="">Pomme de terre<svg class="marq" viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7c0-1.4 1-2.3 2.1-2.3C6.6 4.7 7.4 9.3 9.4 9.3c1.1 0 2.1-.9 2.1-2.3s-1-2.3-2.1-2.3C7.4 4.7 6.6 9.3 4.6 9.3 3.5 9.3 2.5 8.4 2.5 7z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></li>
+        </ul>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <h3 class="etiq">Notes</h3>
+        <p style="white-space: pre-line">Blanchir les poireaux 8 min, bien égoutter.
+Comté 18 mois, sinon gruyère.
+Four à 200 °C, 25 min.</p>
+      </div>
+    </div>
+    <p class="petit doux">Ajoutée le 14 septembre · modifiée le 2 octobre</p>
+  </article>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":1194,"height":834}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

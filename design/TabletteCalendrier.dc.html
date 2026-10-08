@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendrier des saisons — tablette</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ecran tablette {{saison}} {{theme}}" style="width: 1194px; height: 834px">
+<nav class="rail" aria-label="Navigation principale">
+  <p class="marque">oct.<span class="etiq">automne</span></p>
+  <a class="onglet" href="TabletteSemaine.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>Semaine</a>
+  <a class="onglet" href="TabletteRecettes.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5v17M12 8h4M12 11.5h4"/></svg></span>Recettes</a>
+  <a class="onglet" href="TabletteCalendrier.dc.html" aria-current="page"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v-8"/><path d="M12 12c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></svg></span>Saisons</a>
+  <a class="onglet" href="TabletteReglages.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>Réglages</a>
+</nav>
+<main class="col-detail" style="padding: 28px 36px; gap: 18px">
+  <header class="entete" style="align-items: flex-end">
+    <div>
+      <h1 class="display t-ecran">Calendrier des saisons</h1>
+      <p class="doux" style="margin-top: 6px">En octobre : 33 produits de saison, dont 22 légumes.</p>
+    </div>
+    <div class="filtres" role="group" aria-label="Catégorie">
+      <button class="filtre" type="button" aria-pressed="false">Tout</button>
+      <button class="filtre" type="button" aria-pressed="true">Légumes</button>
+      <button class="filtre" type="button" aria-pressed="false">Fruits</button>
+      <button class="filtre" type="button" aria-pressed="false">Herbes</button>
+      <button class="filtre" type="button" aria-pressed="false">Tubercules</button>
+      <button class="filtre" type="button" aria-pressed="false">Fruits à coque</button>
+    </div>
+  </header>
+  <table class="cal">
+    <caption class="sr">Légumes de saison, mois par mois. Le mois en cours est octobre.</caption>
+    <thead>
+      <tr><th scope="col" style="width: 200px; text-align: left">Légume</th><th scope="col"><abbr title="janvier">J</abbr></th><th scope="col"><abbr title="février">F</abbr></th><th scope="col"><abbr title="mars">M</abbr></th><th scope="col"><abbr title="avril">A</abbr></th><th scope="col"><abbr title="mai">M</abbr></th><th scope="col"><abbr title="juin">J</abbr></th><th scope="col"><abbr title="juillet">J</abbr></th><th scope="col"><abbr title="août">A</abbr></th><th scope="col"><abbr title="septembre">S</abbr></th><th scope="col" class="ici" aria-current="date"><abbr title="octobre">O</abbr></th><th scope="col"><abbr title="novembre">N</abbr></th><th scope="col"><abbr title="décembre">D</abbr></th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/artichaut.svg" alt="">Artichaut</th><td></td><td></td><td></td><td></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="ici"></td><td></td><td></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/asperge.svg" alt="">Asperge</th><td></td><td></td><td></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td></td><td></td><td></td><td class="ici"></td><td></td><td></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/aubergine.svg" alt="">Aubergine</th><td></td><td></td><td></td><td></td><td></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="ici"></td><td></td><td></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/avocat.svg" alt="">Avocat</th><td colspan="12" class="an"><span>toute l’année</span></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/betterave.svg" alt="">Betterave</th><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="on ici"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/blette.svg" alt="">Blette</th><td></td><td></td><td></td><td></td><td></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on ici"><span></span></td><td class="on"><span></span></td><td></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/brocoli.svg" alt="">Brocoli</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="on"><span></span></td><td class="on ici"><span></span></td><td class="on"><span></span></td><td></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/carotte.svg" alt="">Carotte</th><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td></td><td></td><td></td><td></td><td></td><td class="on"><span></span></td><td class="on ici"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/celeri.svg" alt="">Céleri</th><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="on ici"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/champignonmorille.svg" alt="">Champignon (morille)</th><td colspan="12" class="an"><span>toute l’année</span></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/chou.svg" alt="">Chou</th><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="on ici"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/choudebruxelles.svg" alt="">Chou de Bruxelles</th><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="on ici"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/choufleur.svg" alt="">Chou-fleur</th><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td></td><td></td><td></td><td></td><td></td><td class="on"><span></span></td><td class="on ici"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/concombre.svg" alt="">Concombre</th><td></td><td></td><td></td><td></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on ici"><span></span></td><td></td><td></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/courge.svg" alt="">Courge</th><td class="on"><span></span></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="on"><span></span></td><td class="on ici"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td></tr>
+      <tr><th scope="row"><img class="vig vig-s" src="./icons/courgette.svg" alt="">Courgette</th><td></td><td></td><td></td><td></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on"><span></span></td><td class="on ici"><span></span></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":1194,"height":834}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>
