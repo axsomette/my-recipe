@@ -1,24 +1,15 @@
 import { useState } from 'preact/hooks';
 import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
-import { NOMS_CATEGORIES } from '../components/FeuilleLegumePerso';
 import { Icone } from '../components/Icone';
 import { Frise } from '../components/Saison';
 import { Vignette } from '../components/Vignette';
 import { INITIALES_MOIS, NOMS_MOIS, majuscule, moisCourant } from '../lib/calendrier';
 import { deSaison } from '../lib/catalogue';
+import { NOMS_CATEGORIES, NOMS_COURTS_CATEGORIES, ORDRE_CATEGORIES } from '../lib/categories';
 import { plagesDeMois } from '../lib/saison';
 import type { CategorieId, Legume } from '../lib/types';
 import { useLarge } from '../lib/useLarge';
 
-const ORDRE: CategorieId[] = ['legumes', 'fruits', 'herbes', 'tubercules', 'fruits-a-coque', 'cereales'];
-const enUnMot: Record<CategorieId, string> = {
-  legumes: 'Légumes',
-  fruits: 'Fruits',
-  herbes: 'Herbes',
-  tubercules: 'Tubercules',
-  'fruits-a-coque': 'Fruits à coque',
-  cereales: 'Céréales',
-};
 
 const moisSuivant = (m: number) => (m === 12 ? 1 : m + 1);
 const moisPrecedent = (m: number) => (m === 1 ? 12 : m - 1);
@@ -53,9 +44,9 @@ function Filtres({ choix, onChoisir, compte }: { choix: CategorieId | 'tout'; on
       <button type="button" class="filtre" aria-pressed={choix === 'tout'} onClick={() => onChoisir('tout')}>
         Tout
       </button>
-      {ORDRE.filter((c) => compte(c) > 0).map((c) => (
+      {ORDRE_CATEGORIES.filter((c) => compte(c) > 0).map((c) => (
         <button key={c} type="button" class="filtre" aria-pressed={choix === c} onClick={() => onChoisir(c)}>
-          {enUnMot[c]} · {compte(c)}
+          {NOMS_COURTS_CATEGORIES[c]} · {compte(c)}
         </button>
       ))}
     </div>
@@ -70,7 +61,7 @@ function ParMois({ monde }: { monde: Monde }) {
   const duMois = deSaison(monde.legumes, mois);
   const parMois = Array.from({ length: 12 }, (_, i) => saisonniers.filter((l) => l.mois.includes(i + 1)).length);
   const maximum = Math.max(...parMois, 1);
-  const categories = ORDRE.filter((c) => (categorie === 'tout' || c === categorie) && duMois.some((l) => l.categorie === c));
+  const categories = ORDRE_CATEGORIES.filter((c) => (categorie === 'tout' || c === categorie) && duMois.some((l) => l.categorie === c));
   const toutelannee = monde.legumes.filter((l) => l.touteLannee && (categorie === 'tout' || l.categorie === categorie));
 
   return (

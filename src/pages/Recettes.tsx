@@ -7,6 +7,7 @@ import { useDonnees } from '../lib/donnees';
 import { normaliser } from '../lib/recettes';
 import { lien } from '../lib/routeur';
 import { niveauSaison } from '../lib/saison';
+import { pluriel } from '../lib/texte';
 import type { Recette } from '../lib/types';
 import { useLarge } from '../lib/useLarge';
 import { DetailRecette } from './RecetteDetail';
@@ -15,6 +16,12 @@ type Filtre = { type: 'toutes' } | { type: 'mois'; mois: number };
 
 // Une recette « toutes saisons » se range entre les pleinement et les partiellement de saison.
 const scorePourTri = (r: Recette, mois: number) => (r.scoreParMois ? (r.scoreParMois[mois - 1] ?? 0) : 0.6);
+
+function etatListe(nombre: number, recherche: string, mois: number): string {
+  if (nombre > 0) return `Les plus de saison en ${NOMS_MOIS[mois - 1]} d’abord.`;
+  if (recherche.trim()) return `Aucune recette ne correspond à « ${recherche.trim()} ».`;
+  return `Aucune recette n’est de saison en ${NOMS_MOIS[mois - 1]}.`;
+}
 
 function ListeRecettes({ monde, idActif, large = false }: { monde: Monde; idActif?: string; large?: boolean }) {
   const { donnees } = useDonnees();
@@ -52,7 +59,7 @@ function ListeRecettes({ monde, idActif, large = false }: { monde: Monde; idActi
         ) : (
           total > 0 && (
             <span class="text-sm text-encre-2">
-              {total} recette{total > 1 ? 's' : ''}
+              {pluriel(total, 'recette')}
             </span>
           )
         )}
@@ -98,8 +105,7 @@ function ListeRecettes({ monde, idActif, large = false }: { monde: Monde; idActi
             <label class="relative">
               <span class="sr-only">De saison en un autre mois</span>
               <select
-                class="filtre appearance-none pr-9"
-                aria-pressed={autreMois !== null}
+                class={`filtre appearance-none pr-9 ${autreMois !== null ? 'filtre-actif' : ''}`}
                 value={autreMois ?? ''}
                 onChange={(e) => {
                   const m = Number(e.currentTarget.value);
@@ -117,11 +123,7 @@ function ListeRecettes({ monde, idActif, large = false }: { monde: Monde; idActi
             </label>
           </div>
           <p class="text-sm text-encre-2" aria-live="polite">
-            {affichees.length === 0
-              ? recherche
-                ? `Aucune recette ne correspond à « ${recherche.trim()} ».`
-                : `Aucune recette n’est de saison en ${NOMS_MOIS[moisTri - 1]}.`
-              : `Les plus de saison en ${NOMS_MOIS[moisTri - 1]} d’abord.`}
+            {etatListe(affichees.length, recherche, moisTri)}
           </p>
           <ul class="flex flex-col gap-2.5">
             {affichees.map((r) => (

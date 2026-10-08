@@ -37,3 +37,15 @@ function fermerLancement() {
 }
 
 fermerLancement();
+
+// Hors connexion : service worker (en production seulement, le serveur de dev sert des fichiers non figés).
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, { scope: import.meta.env.BASE_URL }).catch(() => {
+      /* sans service worker, l'app marche en ligne comme avant */
+    });
+  });
+}
+
+// Demande au navigateur de ne pas effacer les données sous pression de stockage (accordé surtout aux apps installées).
+navigator.storage?.persist?.().catch(() => undefined);

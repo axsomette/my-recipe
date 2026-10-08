@@ -1,6 +1,7 @@
 // Seul module à toucher au localStorage. Les données sont versionnées :
 // toute évolution du format passe par une migration ci-dessous.
-import type { Donnees, Legume, Moment, Planning, Recette, Reglages, Slot } from './types';
+import { ORDRE_CATEGORIES } from './categories';
+import type { CategorieId, Donnees, Legume, Moment, Planning, Recette, Reglages, Slot } from './types';
 
 const CLE = 'recettes-de-saison';
 const CLE_SECOURS = `${CLE}:illisible`;
@@ -27,7 +28,6 @@ const estObjet = (v: unknown): v is Record<string, unknown> => typeof v === 'obj
 const estTexte = (v: unknown): v is string => typeof v === 'string';
 const estMois = (v: unknown) => Number.isInteger(v) && (v as number) >= 1 && (v as number) <= 12;
 const estMoment = (v: unknown): v is Moment => v === 'midi' || v === 'soir';
-const CATEGORIES = ['legumes', 'fruits', 'herbes', 'tubercules', 'fruits-a-coque', 'cereales'];
 
 function estRecette(v: unknown): v is Recette {
   if (!estObjet(v)) return false;
@@ -46,7 +46,7 @@ function estLegumePerso(v: unknown): v is Legume {
   if (!estObjet(v)) return false;
   const { id, nom, categorie, mois, source, touteLannee, icone } = v;
   return (
-    estTexte(id) && id.length > 0 && estTexte(nom) && CATEGORIES.includes(categorie as string) &&
+    estTexte(id) && id.length > 0 && estTexte(nom) && ORDRE_CATEGORIES.includes(categorie as CategorieId) &&
     Array.isArray(mois) && mois.every(estMois) && source === 'perso' &&
     typeof touteLannee === 'boolean' && estTexte(icone)
   );

@@ -9,6 +9,7 @@ import { useDonnees } from '../lib/donnees';
 import { supprimerRecette } from '../lib/recettes';
 import { lien, naviguer } from '../lib/routeur';
 import { libelleSaison, niveauSaison } from '../lib/saison';
+import { listeNaturelle, pluriel } from '../lib/texte';
 import type { Legume } from '../lib/types';
 
 const dateCourte = (iso: string) => {
@@ -17,8 +18,12 @@ const dateCourte = (iso: string) => {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', ...(memeAnnee ? {} : { year: 'numeric' }) });
 };
 
-const listeNoms = (noms: string[]) =>
-  noms.length <= 1 ? (noms[0] ?? '') : `${noms.slice(0, -1).join(', ')} et ${noms[noms.length - 1]}`;
+/** Ce que la pastille ou le symbole « ∞ » disent visuellement, pour les lecteurs d'écran. */
+function precisionSaison(l: Legume, maintenant: boolean, mois: number): string {
+  if (maintenant) return ` (de saison en ${NOMS_MOIS[mois - 1]})`;
+  if (l.touteLannee) return ' (toute l’année)';
+  return ' (hors saison ce mois-ci)';
+}
 
 export function DetailRecette({ id, monde, enColonne = false }: { id: string; monde: Monde; enColonne?: boolean }) {
   const { donnees, modifier } = useDonnees();
@@ -89,11 +94,11 @@ export function DetailRecette({ id, monde, enColonne = false }: { id: string; mo
             <Frise variante="grande" valeurs={scores} mois={mois} description={decrireScores(scores)} />
             <p class="text-sm">
               <strong>
-                En {NOMS_MOIS[mois - 1]} : {deSaisonMaintenant.length} légume{deSaisonMaintenant.length > 1 ? 's' : ''} de saison sur {saisonniers.length}.
+                En {NOMS_MOIS[mois - 1]} : {pluriel(deSaisonMaintenant.length, 'légume')} de saison sur {saisonniers.length}.
               </strong>{' '}
               {toutelannee.length > 0 && (
                 <span class="text-encre-2">
-                  {`${listeNoms(toutelannee.map((l) => l.nom))}, disponible${toutelannee.length > 1 ? 's' : ''} toute l’année, n’${
+                  {`${listeNaturelle(toutelannee.map((l) => l.nom))}, disponible${toutelannee.length > 1 ? 's' : ''} toute l’année, n’${
                     toutelannee.length > 1 ? 'entrent' : 'entre'
                   } pas dans le calcul.`}
                 </span>
@@ -121,9 +126,7 @@ export function DetailRecette({ id, monde, enColonne = false }: { id: string; mo
                   {l.nom}
                   {maintenant && <span class="ml-0.5 size-[7px] rounded-full bg-saison" aria-hidden="true" />}
                   {l.touteLannee && <PictoToutelAnnee />}
-                  <span class="sr-only">
-                    {maintenant ? ` (de saison en ${NOMS_MOIS[mois - 1]})` : l.touteLannee ? ' (toute l’année)' : ' (hors saison ce mois-ci)'}
-                  </span>
+                  <span class="sr-only">{precisionSaison(l, maintenant, mois)}</span>
                 </li>
               );
             })}

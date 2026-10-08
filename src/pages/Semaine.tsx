@@ -3,17 +3,17 @@ import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
 import { Icone } from '../components/Icone';
 import { BadgeSaison } from '../components/Saison';
 import { Vignette } from '../components/Vignette';
-import { MOIS_ABREGES, NOMS_MOIS, NOMS_SAISONS, majuscule, moisCourant, saisonDuMois, semaineIso } from '../lib/calendrier';
+import { MOIS_ABREGES, NOMS_JOURS, NOMS_MOIS, NOMS_SAISONS, majuscule, moisCourant, saisonDuMois, semaineIso } from '../lib/calendrier';
 import { deSaison } from '../lib/catalogue';
 import { useDonnees } from '../lib/donnees';
 import { alignerPlanning, basculerGarde, changerRecette, genererSemaine, rangerPlanning, semainePrecedente } from '../lib/planning';
 import { lien } from '../lib/routeur';
 import { niveauSaison } from '../lib/saison';
 import type { Legume, Moment, Planning, Slot } from '../lib/types';
+import { pluriel } from '../lib/texte';
 import { useLarge } from '../lib/useLarge';
 import { DetailRecette } from './RecetteDetail';
 
-const JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 const MOMENTS: Record<Moment, string> = { midi: 'Midi', soir: 'Soir' };
 const NB_A_LA_UNE = 7;
 
@@ -78,17 +78,6 @@ function PremierLancement() {
   );
 }
 
-const ICONE_GARDER_OUVERT = '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/>';
-const ICONE_GARDER_FERME = '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>';
-const ICONE_CHANGER =
-  '<path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/>';
-
-function Pictogramme({ trace }: { trace: string }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" dangerouslySetInnerHTML={{ __html: trace }} />
-  );
-}
-
 interface PropsRepas {
   slot: Slot;
   mois: number;
@@ -145,7 +134,7 @@ function Repas({ slot, mois, libelle, afficherMoment, delai, peutChanger, choisi
         aria-label={`Garder le repas de ${libelle}`}
         onClick={onGarder}
       >
-        <Pictogramme trace={slot.verrouille ? ICONE_GARDER_FERME : ICONE_GARDER_OUVERT} />
+        <Icone nom={slot.verrouille ? 'garde' : 'garder'} taille={22} />
       </button>
       <button
         type="button"
@@ -154,7 +143,7 @@ function Repas({ slot, mois, libelle, afficherMoment, delai, peutChanger, choisi
         aria-label={`Changer la recette de ${libelle}${slot.verrouille ? ' (repas gardé)' : !peutChanger ? ' (aucune autre recette disponible)' : ''}`}
         onClick={() => !changementImpossible && onChanger()}
       >
-        <Pictogramme trace={ICONE_CHANGER} />
+        <Icone nom="changer" taille={22} />
       </button>
     </div>
   );
@@ -186,7 +175,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   const disponiblesPourChanger = donnees.recettes.length > planning.slots.filter((s) => s.recetteId).length;
   const dimanche = new Date(lundi);
   dimanche.setDate(lundi.getDate() + donnees.reglages.jours - 1);
-  const libelleJour = (s: Slot) => `${JOURS[s.jour]} ${deuxMoments ? (s.moment === 'midi' ? 'midi' : 'soir') : s.moment}`;
+  const libelleJour = (s: Slot) => `${NOMS_JOURS[s.jour]} ${s.moment}`;
   const enregistrer = (p: Planning) => modifier((d) => ({ ...d, plannings: rangerPlanning(d.plannings, p, precedente) }));
 
   const generer = () => {
@@ -232,7 +221,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
 
       <div class="flex flex-col gap-2">
         <button type="button" class="btn btn-plein w-full" onClick={generer}>
-          <Pictogramme trace={ICONE_CHANGER} />
+          <Icone nom="changer" taille={22} />
           Générer ma semaine
         </button>
         {gardes > 0 && (
@@ -252,9 +241,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
           <Icone nom="info" taille={22} class="mt-px shrink-0" />
           <div class="flex flex-col gap-1">
             <p>
-              <strong>
-                Il manque {vides} recette{vides > 1 ? 's' : ''} pour remplir la semaine.
-              </strong>{' '}
+              <strong>Il manque {pluriel(vides, 'recette')} pour remplir la semaine.</strong>{' '}
               Vous en avez {donnees.recettes.length} pour {nbRepas} repas, et une recette ne revient pas deux fois.
             </p>
             <div class="-ml-3 flex flex-wrap">
@@ -282,7 +269,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
                   <span class={`display text-[22px] leading-none ${j === aujourdHui ? 'text-saison-texte' : passe ? 'text-encre-2' : ''}`}>
                     {date.getDate()}
                   </span>
-                  <span class="etiq">{JOURS[j]}</span>
+                  <span class="etiq">{NOMS_JOURS[j]}</span>
                   {j === aujourdHui && (
                     <span class="self-center rounded-[5px] bg-saison px-1.5 pt-1 pb-[3px] font-etiq text-[11px] leading-none font-bold tracking-[0.08em] text-sur-saison uppercase">
                       aujourd’hui

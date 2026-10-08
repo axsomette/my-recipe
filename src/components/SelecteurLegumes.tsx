@@ -1,16 +1,15 @@
 import { useMemo, useState } from 'preact/hooks';
 import { NOMS_MOIS, moisCourant } from '../lib/calendrier';
+import { NOMS_CATEGORIES, ORDRE_CATEGORIES } from '../lib/categories';
 import { legumeExistant, legumesDansLeNom, normaliser } from '../lib/recettes';
 import { calculerScores, libelleSaison } from '../lib/saison';
-import type { CategorieId, Legume } from '../lib/types';
+import type { Legume } from '../lib/types';
 import type { Monde } from './AvecCatalogue';
-import { NOMS_CATEGORIES } from './FeuilleLegumePerso';
 import { Icone } from './Icone';
 import { Frise, decrireScores } from './Saison';
 import { Vignette } from './Vignette';
 
 const NB_SAISON_VISIBLES = 9;
-const ORDRE_CATEGORIES: CategorieId[] = ['legumes', 'fruits', 'herbes', 'tubercules', 'fruits-a-coque', 'cereales'];
 
 interface Props {
   monde: Monde;
@@ -178,11 +177,9 @@ export function SelecteurLegumes({ monde, nomRecette, choisis, onChange, onCreer
                       </span>
                     </button>
                   </h3>
-                  {ouvert && (
-                    <div id={`groupe-${g.id}`} class="flex flex-wrap gap-2 pt-1 pb-4" role="group" aria-label={g.titre}>
-                      {g.legumes.map(chip)}
-                    </div>
-                  )}
+                  <div id={`groupe-${g.id}`} hidden={!ouvert} class="flex flex-wrap gap-2 pt-1 pb-4" role="group" aria-label={g.titre}>
+                    {ouvert && g.legumes.map(chip)}
+                  </div>
                 </div>
               );
             })}

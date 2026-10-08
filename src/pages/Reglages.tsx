@@ -1,24 +1,26 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
 import { Dialogue } from '../components/Dialogue';
-import { NOMS_CATEGORIES } from '../components/FeuilleLegumePerso';
 import { Icone } from '../components/Icone';
 import { Vignette } from '../components/Vignette';
-import { MOIS_ABREGES } from '../lib/calendrier';
+import { MOIS_ABREGES, NOMS_JOURS } from '../lib/calendrier';
+import { NOMS_CATEGORIES } from '../lib/categories';
 import { useDonnees } from '../lib/donnees';
 import { useInstallation } from '../lib/installation';
 import { plagesDeMois } from '../lib/saison';
 import { analyserImport, contenuExport, fusionner, nomFichierExport, remplacer, supprimerLegumePerso, type AnalyseImport } from '../lib/sauvegarde';
+import { pluriel } from '../lib/texte';
 import type { Legume, Moment } from '../lib/types';
 
-const JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 const UN_JOUR = 24 * 3600 * 1000;
 
 const dateLongue = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 
-function ilYa(iso: string) {
+function ilYa(iso: string): string {
   const jours = Math.floor((Date.now() - new Date(iso).getTime()) / UN_JOUR);
-  return jours <= 0 ? 'aujourd’hui' : jours === 1 ? 'hier' : `il y a ${jours} jours`;
+  if (jours <= 0) return 'aujourd’hui';
+  if (jours === 1) return 'hier';
+  return `il y a ${jours} jours`;
 }
 
 const resumeMois = (l: Legume) =>
@@ -63,13 +65,11 @@ function RepasAGenerer() {
             <p class="font-semibold" id="l-jours">
               Jours planifiés
             </p>
-            <p class="text-sm text-encre-2">du lundi au {JOURS[jours - 1]}</p>
+            <p class="text-sm text-encre-2">du lundi au {NOMS_JOURS[jours - 1]}</p>
           </div>
           <div class="flex items-center gap-1 rounded-3xl p-0.5 shadow-[inset_0_0_0_1.5px_var(--trait-fort)]" role="group" aria-labelledby="l-jours">
             <button type="button" class={`ico ${jours <= 1 ? 'opacity-35' : ''}`} aria-disabled={jours <= 1} aria-label="Un jour de moins" onClick={() => jours > 1 && changer({ jours: jours - 1 })}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-                <path d="M6 12h12" />
-              </svg>
+              <Icone nom="moins" taille={22} epaisseur={2} />
             </button>
             <output class="min-w-7 text-center text-[17px] font-bold" aria-live="polite">
               {jours}
@@ -149,6 +149,12 @@ function Installer() {
   );
 }
 
+function messageImport(mode: 'fusionner' | 'remplacer', { ajoutees, misesAJour }: { ajoutees: number; misesAJour: number }): string {
+  if (mode === 'remplacer') return `Import terminé : ${pluriel(ajoutees, 'recette')}.`;
+  if (ajoutees + misesAJour === 0) return 'Import terminé : rien de nouveau dans ce fichier.';
+  return `Import terminé : ${pluriel(ajoutees, 'recette')} ${ajoutees > 1 ? 'ajoutées' : 'ajoutée'}, ${misesAJour} ${misesAJour > 1 ? 'mises' : 'mise'} à jour.`;
+}
+
 type EtatImport = { fichier: string; analyse: Extract<AnalyseImport, { ok: true }> } | null;
 
 function Sauvegarde({ monde, onSucces }: { monde: Monde; onSucces: (m: string) => void }) {
@@ -188,14 +194,7 @@ function Sauvegarde({ monde, onSucces }: { monde: Monde; onSucces: (m: string) =
       return resultat.donnees;
     });
     setAImporter(null);
-    const pluriel = (n: number, mot: string) => `${n} ${mot}${n > 1 ? 's' : ''}`;
-    onSucces(
-      mode === 'remplacer'
-        ? `Import terminé : ${pluriel(bilan.ajoutees, 'recette')}.`
-        : bilan.ajoutees + bilan.misesAJour === 0
-          ? 'Import terminé : rien de nouveau dans ce fichier.'
-          : `Import terminé : ${pluriel(bilan.ajoutees, 'recette')} ajoutée${bilan.ajoutees > 1 ? 's' : ''}, ${bilan.misesAJour} mise${bilan.misesAJour > 1 ? 's' : ''} à jour.`,
-    );
+    onSucces(messageImport(mode, bilan));
   };
 
   const nb = donnees.recettes.length;
@@ -209,10 +208,7 @@ function Sauvegarde({ monde, onSucces }: { monde: Monde; onSucces: (m: string) =
       <div class="bloc flex flex-col gap-3.5">
         {erreur && (
           <div role="alert" class="alerte bg-danger-pale">
-            <svg class="mt-px shrink-0 text-danger" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7.5v5.5M12 16.5v.01" />
-            </svg>
+            <Icone nom="alerte" taille={22} class="mt-px shrink-0 text-danger" />
             <div class="flex flex-col gap-1.5">
               <p class="font-semibold">
                 {erreur.raison === 'version' ? `« ${erreur.fichier} » vient d’une version plus récente de l’app.` : `« ${erreur.fichier} » n’est pas une sauvegarde de l’app.`}
@@ -237,15 +233,11 @@ function Sauvegarde({ monde, onSucces }: { monde: Monde; onSucces: (m: string) =
           {nb > 0 && ancien && <span class="text-encre-2"> Pensez à exporter : une sauvegarde par mois suffit.</span>}
         </p>
         <button type="button" class="btn btn-encre w-full" onClick={exporter}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
-          </svg>
+          <Icone nom="exporter" taille={20} />
           Exporter mes données
         </button>
         <button type="button" class="btn btn-ligne w-full" onClick={() => champ.current?.click()}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 16V5M7 10l5-5 5 5M5 20h14" />
-          </svg>
+          <Icone nom="importer" taille={20} />
           {erreur ? 'Choisir un autre fichier' : 'Importer une sauvegarde'}
         </button>
         <input
@@ -269,16 +261,12 @@ function Sauvegarde({ monde, onSucces }: { monde: Monde; onSucces: (m: string) =
             Importer cette sauvegarde ?
           </h2>
           <div class="flex items-start gap-3 rounded-2xl border border-trait bg-papier px-4 py-3.5">
-            <svg class="shrink-0 text-encre-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M6 3h8l4 4v14H6z" />
-              <path d="M14 3v4h4" />
-            </svg>
+            <Icone nom="fichier" taille={24} class="shrink-0 text-encre-2" />
             <div class="min-w-0">
               <p class="font-semibold [overflow-wrap:anywhere]">{aImporter?.fichier}</p>
               {resume && (
                 <p class="text-sm text-encre-2">
-                  {resume.recettes} recette{resume.recettes > 1 ? 's' : ''} · {resume.legumesPerso} légume{resume.legumesPerso > 1 ? 's' : ''} perso · {resume.semaines} semaine
-                  {resume.semaines > 1 ? 's' : ''}
+                  {pluriel(resume.recettes, 'recette')} · {pluriel(resume.legumesPerso, 'légume')} perso · {pluriel(resume.semaines, 'semaine')}
                 </p>
               )}
             </div>
@@ -337,7 +325,7 @@ function LegumesPerso({ monde, onSucces }: { monde: Monde; onSucces: (m: string)
                 <span>
                   <span class="block font-semibold">{l.nom}</span>
                   <span class="text-sm text-encre-2">
-                    {NOMS_CATEGORIES[l.categorie]} · {resumeMois(l)} · {u} recette{u > 1 ? 's' : ''}
+                    {NOMS_CATEGORIES[l.categorie]} · {resumeMois(l)} · {pluriel(u, 'recette')}
                   </span>
                 </span>
               </span>
@@ -354,7 +342,7 @@ function LegumesPerso({ monde, onSucces }: { monde: Monde; onSucces: (m: string)
             Supprimer « {aSupprimer?.nom} » ?
           </h2>
           <p>
-            {n > 0 ? `Il sera retiré de ${n} recette${n > 1 ? 's' : ''}, dont la saison sera recalculée. ` : ''}
+            {n > 0 ? `Il sera retiré de ${pluriel(n, 'recette')}, dont la saison sera recalculée. ` : ''}
             La suppression est définitive.
           </p>
           <div class="flex flex-col gap-2">

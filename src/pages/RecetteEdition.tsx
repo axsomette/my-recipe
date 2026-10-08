@@ -6,6 +6,7 @@ import { SelecteurLegumes } from '../components/SelecteurLegumes';
 import { useDonnees } from '../lib/donnees';
 import { ajouterLegumePerso, enregistrerRecette, indexerLegumes } from '../lib/recettes';
 import { lien, naviguer, type Route } from '../lib/routeur';
+import { pluriel } from '../lib/texte';
 import type { Recette } from '../lib/types';
 
 function Formulaire({ monde, existante }: { monde: Monde; existante?: Recette }) {
@@ -94,7 +95,7 @@ function Formulaire({ monde, existante }: { monde: Monde; existante?: Recette })
           <h2 id="titre-choix-legumes" class="font-semibold">
             Légumes
           </h2>
-          <span class="etiq">{legumes.length > 0 ? `${legumes.length} choisi${legumes.length > 1 ? 's' : ''}` : ''}</span>
+          <span class="etiq">{legumes.length > 0 ? pluriel(legumes.length, 'choisi') : ''}</span>
         </div>
         <SelecteurLegumes monde={monde} nomRecette={nom} choisis={legumes} onChange={setLegumes} onCreer={(n) => setPerso({ nom: n })} />
       </section>

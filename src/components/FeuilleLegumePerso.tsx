@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'preact/hooks';
 import { MOIS_ABREGES, NOMS_MOIS } from '../lib/calendrier';
+import { NOMS_CATEGORIES } from '../lib/categories';
 import { iconeProche, legumeExistant, nouvelIdPerso, toutesLesIcones, trouverSuggestion } from '../lib/recettes';
 import type { CategorieId, Legume } from '../lib/types';
 import type { Monde } from './AvecCatalogue';
@@ -7,16 +8,14 @@ import { Dialogue } from './Dialogue';
 import { Icone } from './Icone';
 import { Vignette } from './Vignette';
 
-export const NOMS_CATEGORIES: Record<CategorieId, string> = {
-  legumes: 'Légumes',
-  fruits: 'Fruits',
-  herbes: 'Herbes et aromates',
-  tubercules: 'Pommes de terre et tubercules',
-  'fruits-a-coque': 'Fruits à coque',
-  cereales: 'Céréales',
-};
 
 const TOUS_LES_MOIS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+function titreReconnaissance(nom: string, suggestion: string | undefined): string {
+  if (suggestion) return `Reconnu : ${suggestion}`;
+  if (nom.trim()) return 'Produit inconnu de nos calendriers';
+  return 'Nouveau produit';
+}
 
 interface Props {
   monde: Monde;
@@ -125,7 +124,7 @@ function Formulaire({ monde, nomInitial, onFermer, onChoisir }: Props) {
             </>
           ) : (
             <>
-              <p class="font-semibold">{suggestion ? `Reconnu : ${suggestion.nom}` : nom.trim() ? 'Produit inconnu de nos calendriers' : 'Nouveau produit'}</p>
+              <p class="font-semibold">{titreReconnaissance(nom, suggestion?.nom)}</p>
               <p class="text-sm text-encre-2">
                 {suggestion
                   ? 'Trouvé dans l’Agenda des Chefs METRO : illustration et mois proposés.'
@@ -179,13 +178,13 @@ function Formulaire({ monde, nomInitial, onFermer, onChoisir }: Props) {
 
       <fieldset class="flex flex-col gap-2">
         <legend class="mb-2 font-semibold">Quand est-il de saison ?</legend>
-        <div class="flex gap-2" role="radiogroup" aria-label="Disponibilité">
-          <button type="button" role="radio" class="filtre" aria-checked={touteLannee} onClick={() => setTouteLannee(true)}>
-            Toute l’année
-          </button>
-          <button type="button" role="radio" class="filtre" aria-checked={!touteLannee} onClick={() => setTouteLannee(false)}>
-            Certains mois
-          </button>
+        <div class="flex gap-2">
+          {([[true, 'Toute l’année'], [false, 'Certains mois']] as const).map(([valeur, libelle]) => (
+            <label key={libelle} class={`filtre ${touteLannee === valeur ? 'filtre-actif' : ''}`}>
+              <input type="radio" name="disponibilite" class="sr-only" checked={touteLannee === valeur} onChange={() => setTouteLannee(valeur)} />
+              {libelle}
+            </label>
+          ))}
         </div>
         {!touteLannee && (
           <div class="grid grid-cols-6 gap-1.5" role="group" aria-label="Mois de saison">

@@ -216,7 +216,8 @@
     border-radius: 22px; border: 1.5px solid var(--trait-fort); background: transparent;
     font: 600 14px/1 var(--font-texte); color: var(--encre); white-space: nowrap; cursor: pointer;
   }
-  .filtre[aria-pressed='true'], .filtre[aria-checked='true'] { background: var(--encre); color: var(--papier); border-color: var(--encre); }
+  .filtre[aria-pressed='true'], .filtre-actif { background: var(--encre); color: var(--papier); border-color: var(--encre); }
+  .filtre:has(input:focus-visible) { outline: 3px solid var(--encre); outline-offset: 3px; }
 
   .champ { width: 100%; min-height: 52px; border-radius: 14px; border: 1.5px solid var(--trait-fort); background: var(--carte); padding: 0 16px; font: 400 16px var(--font-texte); color: var(--encre); }
   .champ:focus { outline: none; border-color: var(--encre); box-shadow: 0 0 0 3px var(--saison-pale); }
