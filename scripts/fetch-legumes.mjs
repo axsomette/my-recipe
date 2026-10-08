@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Synchronise public/legumes.json avec les sources ouvertes.
 //
-//  - ADEME / Impact CO₂ : produits de saison et leurs mois (12 appels, un par mois).
+//  - ADEME / Impact CO₂ : produits de saison, leurs mois et leurs noms, lus dans le dépôt
+//    open source de l'ADEME (licence MIT) — la source même de leur API, sans clé ni compte.
 //  - Liste « base » : produits absents de l'ADEME (pomme de terre, aromates…),
 //    disponibles toute l'année.
 //  - Agenda des Chefs METRO (data.gouv.fr) : mois phares d'autres produits,
@@ -9,7 +10,7 @@
 //  - Illustrations : dessinées pour le projet, dans scripts/icones-maison/<id>.svg,
 //    copiées dans public/legumes/icones/. Aucune image n'est téléchargée.
 //
-// Usage : node scripts/fetch-legumes.mjs   (clé facultative : IMPACTCO2_API_KEY)
+// Usage : node scripts/fetch-legumes.mjs
 // Sans dépendance : Node 22+ (fetch natif, Object.groupBy).
 
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
@@ -22,7 +23,8 @@ const SORTIE = join(PUBLIC, 'legumes.json');
 const ICONES_SOURCE = join(RACINE, 'scripts', 'icones-maison');
 const ICONES_PUBLIC = join(PUBLIC, 'legumes', 'icones');
 
-const ADEME_API = 'https://impactco2.fr/api/v1/fruitsetlegumes';
+// Dépôt public de l'ADEME (https://github.com/incubateur-ademe/impactco2, licence MIT).
+const ADEME_DEPOT = 'https://raw.githubusercontent.com/incubateur-ademe/impactco2/main';
 const METRO_DATASET = 'https://www.data.gouv.fr/api/1/datasets/6ac3b2518a941afc6ea8e4b0/';
 const METRO_RESSOURCE = 'ffd48740-e61e-49fe-a564-d0c148234825'; // version JSON
 const USER_AGENT = 'recettes-de-saison/1.0 (https://github.com/axsomette/my-recipe)';
@@ -121,36 +123,44 @@ async function ecrireSiChange(chemin, contenu) {
   return true;
 }
 
+async function telechargerTexte(url) {
+  const reponse = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, signal: AbortSignal.timeout(20_000) });
+  if (!reponse.ok) throw new Error(`HTTP ${reponse.status} pour ${url}`);
+  return reponse.text();
+}
+
+// Nom français tel que l'ADEME l'affiche : « kg de ;pomme » → « Pomme », « [s] » = marque du pluriel.
+function nomAdeme(libelle) {
+  const nom = (libelle.includes(';') ? libelle.split(';')[1] : libelle).replace(/\[[^\]]*\]/g, '').trim();
+  return nom.charAt(0).toUpperCase() + nom.slice(1);
+}
+
 async function produitsAdeme() {
-  const cle = process.env.IMPACTCO2_API_KEY?.trim();
-  const entetes = cle ? { Authorization: `Bearer ${cle}` } : {};
-  const produits = new Map();
-  let avertissement;
+  const [donnees, categories, noms] = await Promise.all([
+    telechargerTexte(`${ADEME_DEPOT}/src/data/categories/fruitsetlegumes.ts`),
+    telechargerTexte(`${ADEME_DEPOT}/src/utils/fruitsetlegumes.ts`),
+    telechargerJson(`${ADEME_DEPOT}/src/utils/Equivalent/values.json`),
+  ]);
+  // fruitsetlegumes.ts : { slug: 'pomme', …, months: [0, 1, …] } — mois numérotés de 0 à 11.
+  const fiches = [...donnees.matchAll(/slug:\s*'([a-z0-9]+)'[^]*?months:\s*\[([\d,\s]*)\]/g)];
+  const nbSlugs = [...donnees.matchAll(/slug:\s*'/g)].length;
+  // utils/fruitsetlegumes.ts : pomme: 'fruits', …
+  const categorieDe = Object.fromEntries([...categories.matchAll(/^\s*([a-z0-9]+):\s*'([^']+)',?$/gm)].map((m) => [m[1], m[2]]));
 
-  for (const mois of TOUS_LES_MOIS) {
-    // `categories` (et non `category`, ignoré par l'API malgré sa doc Swagger).
-    const url = `${ADEME_API}?month=${mois}&language=fr&categories=1,2,3,4,5,6`;
-    const { data, warning } = await telechargerJson(url, { entetes });
-    if (!Array.isArray(data) || data.length === 0) throw new Error(`ADEME : aucun produit pour le mois ${mois}`);
-    avertissement ??= warning;
+  if (fiches.length !== nbSlugs) throw new Error('ADEME : format du fichier des fruits et légumes inattendu');
+  const produits = fiches.map(([, slug, mois]) => {
+    const categorie = CATEGORIES[categorieDe[slug]];
+    const libelle = noms[slug]?.fr;
+    const listeMois = mois.split(',').map((m) => m.trim()).filter(Boolean).map((m) => Number(m) + 1);
+    const valide = categorie && typeof libelle === 'string' && listeMois.length > 0 && listeMois.every((m) => Number.isInteger(m) && m >= 1 && m <= 12);
+    if (!valide) throw new Error(`ADEME : produit « ${slug} » incomplet`);
+    return { slug, nom: nettoyerNom(nomAdeme(libelle)), categorie, mois: [...new Set(listeMois)].sort((a, b) => a - b) };
+  });
 
-    for (const p of data) {
-      const categorie = CATEGORIES[p.category];
-      const valide =
-        typeof p.slug === 'string' && /^[a-z]+$/.test(p.slug) &&
-        typeof p.name === 'string' && p.name.length > 0 &&
-        Array.isArray(p.months) && p.months.every((m) => Number.isInteger(m) && m >= 1 && m <= 12) &&
-        categorie;
-      if (!valide) throw new Error(`ADEME : produit inattendu ${JSON.stringify(p)}`);
-      produits.set(p.slug, { slug: p.slug, nom: nettoyerNom(p.name), categorie, mois: [...new Set(p.months)].sort((a, b) => a - b) });
-    }
+  if (produits.length < MIN_PRODUITS_ADEME) {
+    throw new Error(`ADEME : seulement ${produits.length} produits, synchro annulée`);
   }
-
-  if (produits.size < MIN_PRODUITS_ADEME) {
-    throw new Error(`ADEME : seulement ${produits.size} produits, synchro annulée`);
-  }
-  if (avertissement) console.warn(`⚠️  ADEME : ${avertissement}`);
-  return [...produits.values()];
+  return produits;
 }
 
 // SVG d'une ligne : moins lourd, et les diffs git restent lisibles.
@@ -211,7 +221,7 @@ async function suggestionsMetro(idsConnus, idsIllustres) {
 }
 
 async function main() {
-  console.log('→ ADEME : 12 mois…');
+  console.log('→ ADEME (dépôt open source)…');
   const ademe = await produitsAdeme();
 
   // On repart d'un dossier propre : aucune icône orpheline ne reste publiée.
@@ -244,7 +254,7 @@ async function main() {
   const donnees = {
     version: 1,
     sources: [
-      { id: 'ademe', nom: 'ADEME – Impact CO₂', url: 'https://impactco2.fr', usage: 'mois de saison' },
+      { id: 'ademe', nom: 'ADEME – Impact CO₂', url: 'https://github.com/incubateur-ademe/impactco2', licence: 'MIT', usage: 'mois de saison' },
       { id: 'metro', nom: 'Agenda des Chefs – METRO France', url: 'https://www.data.gouv.fr/datasets/calendrier-des-produits-de-saison-pour-les-chefs-fruits-et-legumes-poissons-fromages', licence: 'Licence Ouverte 2.0', usage: 'suggestions de mois pour les légumes perso' },
     ],
     legumes,

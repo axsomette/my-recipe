@@ -7,8 +7,6 @@ ce qui est de saison ce mois-ci.
 Tout reste sur l'appareil : pas de compte, pas de serveur. Une sauvegarde s'exporte et
 s'importe en fichier JSON. L'app s'installe sur l'écran d'accueil et fonctionne hors ligne.
 
-En ligne : https://axsomette.github.io/my-recipe/
-
 ## Ce que fait l'app
 
 - **Ma semaine** : les repas de la semaine (jours et moments réglables), générés en privilégiant
@@ -93,7 +91,8 @@ Installée, l'app échappe à l'effacement des données de Safari après 7 jours
 ## Qualité
 
 - Lighthouse mobile (build de production) : performance 98 à 100, accessibilité 100,
-  bonnes pratiques 100, SEO 100 sur les quatre écrans principaux.
+  bonnes pratiques 100 sur les quatre écrans principaux.
+- Non référencé : la page demande aux moteurs de recherche de ne pas l'indexer (`noindex`).
 - Accessibilité : contrastes AA en clair et en sombre pour les quatre saisons, cibles tactiles de 44 px,
   navigation au clavier, focus visible et replacé à chaque écran, fenêtres en `<dialog>` natif,
   graphiques décrits pour les lecteurs d'écran, animations coupées si l'appareil le demande,
@@ -110,8 +109,9 @@ Chaque push sur `main` lance `.github/workflows/deploy.yml` : build, puis public
 `public/legumes.json` est la seule source de l'app : elle ne contacte aucune API.
 Le script `scripts/fetch-legumes.mjs` le régénère à partir de :
 
-- **ADEME — Impact CO₂** : les mois de saison de 76 fruits et légumes
-  (`https://impactco2.fr/api/v1/fruitsetlegumes?month=1…12`) ;
+- **ADEME — Impact CO₂** : les mois de saison de 76 fruits et légumes, lus directement dans le dépôt
+  open source de l'ADEME ([incubateur-ademe/impactco2](https://github.com/incubateur-ademe/impactco2),
+  licence MIT) — la source même de leur API, sans clé, sans compte, sans demande à faire ;
 - **une liste de base** de 12 produits courants absents de l'ADEME (pomme de terre, aromates…),
   disponibles toute l'année : ils n'entrent pas dans le calcul de saison ;
 - **l'Agenda des Chefs METRO** (data.gouv.fr, Licence Ouverte) : 58 autres produits dont les mois
@@ -125,12 +125,7 @@ le script s'arrête sans rien modifier.
 L'Action `.github/workflows/sync-legumes.yml` lance le script le 1er de chaque mois
 (et à la demande depuis l'onglet Actions), commite le JSON s'il a changé et relance le déploiement.
 
-Clé d'API facultative : l'API ADEME répond sans clé, mais peut couper l'accès anonyme.
-Une clé gratuite s'obtient auprès de impactco2@ademe.fr ; l'ajouter dans
-*Settings → Secrets and variables → Actions* sous le nom `IMPACTCO2_API_KEY`.
-
-Pièges de l'API vérifiés : le filtre de catégories s'appelle `categories` (le paramètre
-`category` de la documentation est ignoré), et il n'existe pas d'appel « tout le catalogue ».
+Aucune clé ni aucun secret n'est nécessaire : toutes les sources sont publiques et ouvertes.
 
 ## Illustrations
 

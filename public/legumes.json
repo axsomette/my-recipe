@@ -5,7 +5,8 @@
   {
    "id": "ademe",
    "nom": "ADEME – Impact CO₂",
-   "url": "https://impactco2.fr",
+   "url": "https://github.com/incubateur-ademe/impactco2",
+   "licence": "MIT",
    "usage": "mois de saison"
   },
   {
