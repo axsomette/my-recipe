@@ -1,0 +1,11 @@
+{
+  "name": "recettes-de-saison",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "sync:legumes": "node scripts/fetch-legumes.mjs"
+  }
+}

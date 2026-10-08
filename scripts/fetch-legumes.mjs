@@ -1,0 +1,270 @@
+#!/usr/bin/env node
+// Synchronise public/legumes.json avec les sources ouvertes.
+//
+//  - ADEME / Impact CO₂ : produits de saison et leurs mois (12 appels, un par mois).
+//  - Liste « base » : produits absents de l'ADEME (pomme de terre, aromates…),
+//    disponibles toute l'année.
+//  - Agenda des Chefs METRO (data.gouv.fr) : mois phares d'autres produits,
+//    utilisés seulement comme suggestion quand on ajoute un légume perso.
+//  - Illustrations : dessinées pour le projet, dans scripts/icones-maison/<id>.svg,
+//    copiées dans public/legumes/icones/. Aucune image n'est téléchargée.
+//
+// Usage : node scripts/fetch-legumes.mjs   (clé facultative : IMPACTCO2_API_KEY)
+// Sans dépendance : Node 22+ (fetch natif, Object.groupBy).
+
+import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const RACINE = join(dirname(fileURLToPath(import.meta.url)), '..');
+const PUBLIC = join(RACINE, 'public');
+const SORTIE = join(PUBLIC, 'legumes.json');
+const ICONES_SOURCE = join(RACINE, 'scripts', 'icones-maison');
+const ICONES_PUBLIC = join(PUBLIC, 'legumes', 'icones');
+
+const ADEME_API = 'https://impactco2.fr/api/v1/fruitsetlegumes';
+const METRO_DATASET = 'https://www.data.gouv.fr/api/1/datasets/6ac3b2518a941afc6ea8e4b0/';
+const METRO_RESSOURCE = 'ffd48740-e61e-49fe-a564-d0c148234825'; // version JSON
+const USER_AGENT = 'recettes-de-saison/1.0 (https://github.com/axsomette/my-recipe)';
+
+// Catégories ADEME → identifiants de l'app.
+const CATEGORIES = {
+  'légumes': 'legumes',
+  'fruits': 'fruits',
+  'herbes': 'herbes',
+  'pommes de terre et autres tubercules': 'tubercules',
+  'fruits à coque et graines oléagineuses': 'fruits-a-coque',
+  'pâtes, riz et céréales': 'cereales',
+};
+
+// Produits courants absents de l'ADEME. Toute l'année : ils n'entrent pas
+// dans le score de saison, on n'invente aucun mois.
+const BASE = [
+  { id: 'pommedeterre', nom: 'Pomme de terre', categorie: 'tubercules' },
+  { id: 'patatedouce', nom: 'Patate douce', categorie: 'tubercules' },
+  { id: 'persil', nom: 'Persil', categorie: 'herbes' },
+  { id: 'basilic', nom: 'Basilic', categorie: 'herbes' },
+  { id: 'ciboulette', nom: 'Ciboulette', categorie: 'herbes' },
+  { id: 'coriandre', nom: 'Coriandre', categorie: 'herbes' },
+  { id: 'thym', nom: 'Thym', categorie: 'herbes' },
+  { id: 'romarin', nom: 'Romarin', categorie: 'herbes' },
+  { id: 'laurier', nom: 'Laurier', categorie: 'herbes' },
+  { id: 'menthe', nom: 'Menthe', categorie: 'herbes' },
+  { id: 'sauge', nom: 'Sauge', categorie: 'herbes' },
+  { id: 'gingembre', nom: 'Gingembre', categorie: 'herbes' },
+];
+
+// Illustrations génériques, pour un produit sans dessin dédié.
+const ICONES_GENERIQUES = ['panier', 'champignon', 'herbe'];
+
+// Produits proches dont on reprend l'illustration (le nom ne contient pas l'id).
+const CORRESPONDANCES = {
+  potimarron: 'potiron', rutabaga: 'navet', crosne: 'topinambour', cardon: 'celeri',
+  feve: 'petitpois', bergamote: 'citron', kumquat: 'orange', pomelo: 'pamplemousse',
+  mirabelle: 'prune', truffe: 'champignon', girolle: 'champignon', cepe: 'champignon',
+  salade: 'laitue', roquette: 'laitue', yuzu: 'citron', butternut: 'courge',
+};
+
+const TOUS_LES_MOIS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+// Garde-fous : en dessous, on considère que l'API a mal répondu et on n'écrit rien.
+const MIN_PRODUITS_ADEME = 60;
+
+const slugifier = (texte) =>
+  texte
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z]/g, '');
+
+// « Haricot vert (cru) » → « Haricot vert », « Champignon (morille crue) » → « Champignon (morille) ».
+const nettoyerNom = (nom) => nom.replace(/\s*\(crue?\)$/, '').replace(/ crue?\)/, ')').trim();
+
+// JSON indenté, mais listes de nombres sur une ligne : diffs git lisibles.
+const formaterJson = (objet) =>
+  `${JSON.stringify(objet, null, 1).replace(/\[\s+([\d,\s]+?)\s+\]/g, (_, nombres) => `[${nombres.replace(/\s+/g, '')}]`)}\n`;
+
+const attendre = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function telechargerJson(url, { entetes = {}, essais = 3 } = {}) {
+  let derniereErreur;
+  for (let essai = 1; essai <= essais; essai++) {
+    try {
+      const reponse = await fetch(url, {
+        headers: { 'User-Agent': USER_AGENT, ...entetes },
+        signal: AbortSignal.timeout(20_000),
+      });
+      if (!reponse.ok) throw new Error(`HTTP ${reponse.status} pour ${url}`);
+      return await reponse.json();
+    } catch (erreur) {
+      derniereErreur = erreur;
+      if (essai < essais) await attendre(1000 * essai);
+    }
+  }
+  throw derniereErreur;
+}
+
+async function lireSiExiste(chemin, encodage) {
+  try {
+    return await readFile(chemin, encodage);
+  } catch {
+    return null;
+  }
+}
+
+// N'écrit que si le contenu change, pour que git ne voie que les vraies évolutions.
+async function ecrireSiChange(chemin, contenu) {
+  const actuel = await lireSiExiste(chemin);
+  const nouveau = typeof contenu === 'string' ? Buffer.from(contenu) : contenu;
+  if (actuel && Buffer.compare(actuel, nouveau) === 0) return false;
+  await mkdir(dirname(chemin), { recursive: true });
+  await writeFile(chemin, nouveau);
+  return true;
+}
+
+async function produitsAdeme() {
+  const cle = process.env.IMPACTCO2_API_KEY?.trim();
+  const entetes = cle ? { Authorization: `Bearer ${cle}` } : {};
+  const produits = new Map();
+  let avertissement;
+
+  for (const mois of TOUS_LES_MOIS) {
+    // `categories` (et non `category`, ignoré par l'API malgré sa doc Swagger).
+    const url = `${ADEME_API}?month=${mois}&language=fr&categories=1,2,3,4,5,6`;
+    const { data, warning } = await telechargerJson(url, { entetes });
+    if (!Array.isArray(data) || data.length === 0) throw new Error(`ADEME : aucun produit pour le mois ${mois}`);
+    avertissement ??= warning;
+
+    for (const p of data) {
+      const categorie = CATEGORIES[p.category];
+      const valide =
+        typeof p.slug === 'string' && /^[a-z]+$/.test(p.slug) &&
+        typeof p.name === 'string' && p.name.length > 0 &&
+        Array.isArray(p.months) && p.months.every((m) => Number.isInteger(m) && m >= 1 && m <= 12) &&
+        categorie;
+      if (!valide) throw new Error(`ADEME : produit inattendu ${JSON.stringify(p)}`);
+      produits.set(p.slug, { slug: p.slug, nom: nettoyerNom(p.name), categorie, mois: [...new Set(p.months)].sort((a, b) => a - b) });
+    }
+  }
+
+  if (produits.size < MIN_PRODUITS_ADEME) {
+    throw new Error(`ADEME : seulement ${produits.size} produits, synchro annulée`);
+  }
+  if (avertissement) console.warn(`⚠️  ADEME : ${avertissement}`);
+  return [...produits.values()];
+}
+
+// SVG d'une ligne : moins lourd, et les diffs git restent lisibles.
+const compacterSvg = (svg) => svg.replace(/>\s+</g, '><').replace(/\s{2,}/g, ' ').trim();
+
+// Copie l'illustration d'un produit ; sans dessin dédié, on prend le panier
+// et on le signale (annotation visible dans l'Action GitHub).
+async function icone(id) {
+  const svg = await lireSiExiste(join(ICONES_SOURCE, `${id}.svg`), 'utf8');
+  if (!svg) {
+    console.warn(`::warning::Pas d'illustration pour « ${id} » : panier en attendant (scripts/icones-maison/${id}.svg)`);
+    return icone('panier');
+  }
+  await ecrireSiChange(join(ICONES_PUBLIC, `${id}.svg`), compacterSvg(svg));
+  return `legumes/icones/${id}.svg`;
+}
+
+// Illustration la plus proche pour un nom libre : correspondance connue,
+// sinon l'id le plus long contenu dans le nom (« chou kale » → chou), sinon générique.
+function iconeProche(nom, idsIllustres, categorie) {
+  const slug = slugifier(nom);
+  const alias = Object.keys(CORRESPONDANCES).find((cle) => slug.includes(cle));
+  if (alias) return CORRESPONDANCES[alias];
+  const contenu = [...idsIllustres].filter((id) => slug.includes(id)).sort((a, b) => b.length - a.length)[0];
+  if (contenu) return contenu;
+  return categorie === 'champignons' ? 'champignon' : categorie === 'herbes' ? 'herbe' : 'panier';
+}
+
+async function suggestionsMetro(idsConnus, idsIllustres) {
+  const jeu = await telechargerJson(METRO_DATASET);
+  const ressource = jeu.resources?.find((r) => r.id === METRO_RESSOURCE);
+  if (!ressource?.url) throw new Error('METRO : ressource JSON introuvable sur data.gouv.fr');
+  const calendrier = await telechargerJson(ressource.url);
+  if (!Array.isArray(calendrier) || calendrier.length !== 12) throw new Error('METRO : calendrier inattendu');
+
+  const parProduit = new Map();
+  for (const { month, fruits_vegetables: produits = [] } of calendrier) {
+    for (const p of produits) {
+      const id = slugifier(p.product_fr);
+      if (!id || idsConnus.has(id)) continue;
+      const categorie = p.type_fr === 'Fruit' ? 'fruits' : 'legumes';
+      const entree = parProduit.get(id) ?? {
+        id,
+        nom: p.product_fr,
+        categorie,
+        mois: [],
+        icone: `legumes/icones/${iconeProche(p.product_fr, idsIllustres, p.type_fr === 'Champignon' ? 'champignons' : categorie)}.svg`,
+      };
+      entree.mois.push(month);
+      parProduit.set(id, entree);
+    }
+  }
+  return [...parProduit.values()]
+    .map((s) => ({ ...s, mois: [...new Set(s.mois)].sort((a, b) => a - b) }))
+    .sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+}
+
+async function main() {
+  console.log('→ ADEME : 12 mois…');
+  const ademe = await produitsAdeme();
+
+  // On repart d'un dossier propre : aucune icône orpheline ne reste publiée.
+  await rm(ICONES_PUBLIC, { recursive: true, force: true });
+
+  const legumes = [];
+  for (const p of ademe) {
+    legumes.push({
+      id: p.slug,
+      nom: p.nom,
+      categorie: p.categorie,
+      mois: p.mois,
+      source: 'ademe',
+      touteLannee: p.mois.length === 12,
+      icone: await icone(p.slug),
+    });
+  }
+  for (const b of BASE) {
+    if (legumes.some((l) => l.id === b.id)) continue; // l'ADEME l'a ajouté entre-temps : sa version prime
+    legumes.push({ ...b, mois: TOUS_LES_MOIS, source: 'base', touteLannee: true, icone: await icone(b.id) });
+  }
+  legumes.sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+  for (const id of ICONES_GENERIQUES) await icone(id);
+
+  console.log('→ Agenda des Chefs METRO…');
+  const illustres = new Set((await readdir(ICONES_SOURCE)).map((f) => f.replace(/\.svg$/, '')));
+  const suggestions = await suggestionsMetro(new Set(legumes.map((l) => l.id)), illustres);
+  for (const s of suggestions) await icone(s.icone.match(/icones\/(.+)\.svg$/)[1]);
+
+  const donnees = {
+    version: 1,
+    sources: [
+      { id: 'ademe', nom: 'ADEME – Impact CO₂', url: 'https://impactco2.fr', usage: 'mois de saison' },
+      { id: 'metro', nom: 'Agenda des Chefs – METRO France', url: 'https://www.data.gouv.fr/datasets/calendrier-des-produits-de-saison-pour-les-chefs-fruits-et-legumes-poissons-fromages', licence: 'Licence Ouverte 2.0', usage: 'suggestions de mois pour les légumes perso' },
+    ],
+    legumes,
+    suggestions,
+    correspondances: CORRESPONDANCES,
+  };
+
+  // La date ne change que si les données changent : pas de commit inutile chaque mois.
+  const actuel = JSON.parse((await lireSiExiste(SORTIE, 'utf8')) ?? 'null');
+  const { majLe: ancienneDate, ...ancien } = actuel ?? {};
+  const identique = JSON.stringify(ancien) === JSON.stringify(donnees);
+  const majLe = identique ? ancienneDate : new Date().toISOString().slice(0, 10);
+  const ecrit = await ecrireSiChange(SORTIE, formaterJson({ majLe, ...donnees }));
+
+  const parSource = Object.groupBy(legumes, (l) => l.source);
+  console.log(
+    `✓ ${legumes.length} légumes (ADEME ${parSource.ademe?.length ?? 0}, base ${parSource.base?.length ?? 0}), ` +
+    `${suggestions.length} suggestions METRO — ${ecrit ? `legumes.json mis à jour (${majLe})` : 'aucun changement'}`,
+  );
+}
+
+main().catch((erreur) => {
+  console.error(`✗ Synchro interrompue : ${erreur.message}`);
+  process.exit(1);
+});

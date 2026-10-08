@@ -1,0 +1,14 @@
+Copyright (c) 2026 Lucas Jimenez Boulot. Tous droits réservés.
+
+Le code source, les illustrations (scripts/icones-maison/, public/legumes/icones/),
+la maquette (design/) et les textes de ce dépôt ne sont pas placés sous licence libre.
+Toute reproduction, modification, distribution ou réutilisation, totale ou partielle,
+est interdite sans l'accord écrit préalable de l'auteur.
+
+La publication de ce dépôt sur GitHub permet seulement de le consulter et de le
+dupliquer (fork) dans les limites prévues par les conditions d'utilisation de GitHub.
+
+Données de tiers incluses dans public/legumes.json, qui restent sous leurs propres conditions :
+- mois de saison des fruits et légumes : ADEME, Impact CO₂ (https://impactco2.fr) ;
+- suggestions de saison : « L'Agenda des Chefs », METRO France, publié sur data.gouv.fr
+  sous Licence Ouverte 2.0 (https://www.etalab.gouv.fr/licence-ouverte-open-licence/).

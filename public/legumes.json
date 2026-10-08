@@ -1,0 +1,1239 @@
+{
+ "majLe": "2026-10-08",
+ "version": 1,
+ "sources": [
+  {
+   "id": "ademe",
+   "nom": "ADEME – Impact CO₂",
+   "url": "https://impactco2.fr",
+   "usage": "mois de saison"
+  },
+  {
+   "id": "metro",
+   "nom": "Agenda des Chefs – METRO France",
+   "url": "https://www.data.gouv.fr/datasets/calendrier-des-produits-de-saison-pour-les-chefs-fruits-et-legumes-poissons-fromages",
+   "licence": "Licence Ouverte 2.0",
+   "usage": "suggestions de mois pour les légumes perso"
+  }
+ ],
+ "legumes": [
+  {
+   "id": "abricot",
+   "nom": "Abricot",
+   "categorie": "fruits",
+   "mois": [6,7,8],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/abricot.svg"
+  },
+  {
+   "id": "ail",
+   "nom": "Ail",
+   "categorie": "herbes",
+   "mois": [7,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/ail.svg"
+  },
+  {
+   "id": "ananas",
+   "nom": "Ananas",
+   "categorie": "fruits",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": true,
+   "icone": "legumes/icones/ananas.svg"
+  },
+  {
+   "id": "artichaut",
+   "nom": "Artichaut",
+   "categorie": "legumes",
+   "mois": [5,6,7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/artichaut.svg"
+  },
+  {
+   "id": "asperge",
+   "nom": "Asperge",
+   "categorie": "legumes",
+   "mois": [4,5,6],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/asperge.svg"
+  },
+  {
+   "id": "aubergine",
+   "nom": "Aubergine",
+   "categorie": "legumes",
+   "mois": [6,7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/aubergine.svg"
+  },
+  {
+   "id": "avocat",
+   "nom": "Avocat",
+   "categorie": "legumes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": true,
+   "icone": "legumes/icones/avocat.svg"
+  },
+  {
+   "id": "banane",
+   "nom": "Banane",
+   "categorie": "fruits",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": true,
+   "icone": "legumes/icones/banane.svg"
+  },
+  {
+   "id": "basilic",
+   "nom": "Basilic",
+   "categorie": "herbes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/basilic.svg"
+  },
+  {
+   "id": "betterave",
+   "nom": "Betterave",
+   "categorie": "legumes",
+   "mois": [1,2,3,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/betterave.svg"
+  },
+  {
+   "id": "blette",
+   "nom": "Blette",
+   "categorie": "legumes",
+   "mois": [6,7,8,9,10,11],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/blette.svg"
+  },
+  {
+   "id": "brocoli",
+   "nom": "Brocoli",
+   "categorie": "legumes",
+   "mois": [9,10,11],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/brocoli.svg"
+  },
+  {
+   "id": "carambole",
+   "nom": "Carambole",
+   "categorie": "fruits",
+   "mois": [1,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/carambole.svg"
+  },
+  {
+   "id": "carotte",
+   "nom": "Carotte",
+   "categorie": "legumes",
+   "mois": [1,2,3,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/carotte.svg"
+  },
+  {
+   "id": "cassis",
+   "nom": "Cassis",
+   "categorie": "fruits",
+   "mois": [6,7,8],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/cassis.svg"
+  },
+  {
+   "id": "celeri",
+   "nom": "Céleri",
+   "categorie": "legumes",
+   "mois": [1,2,3,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/celeri.svg"
+  },
+  {
+   "id": "cerise",
+   "nom": "Cerise",
+   "categorie": "fruits",
+   "mois": [6,7],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/cerise.svg"
+  },
+  {
+   "id": "champignonmorille",
+   "nom": "Champignon (morille)",
+   "categorie": "legumes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": true,
+   "icone": "legumes/icones/champignonmorille.svg"
+  },
+  {
+   "id": "chataigne",
+   "nom": "Châtaigne",
+   "categorie": "fruits-a-coque",
+   "mois": [10,11],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/chataigne.svg"
+  },
+  {
+   "id": "chou",
+   "nom": "Chou",
+   "categorie": "legumes",
+   "mois": [1,2,3,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/chou.svg"
+  },
+  {
+   "id": "choudebruxelles",
+   "nom": "Chou de Bruxelles",
+   "categorie": "legumes",
+   "mois": [1,2,3,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/choudebruxelles.svg"
+  },
+  {
+   "id": "choufleur",
+   "nom": "Chou-fleur",
+   "categorie": "legumes",
+   "mois": [1,2,3,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/choufleur.svg"
+  },
+  {
+   "id": "ciboulette",
+   "nom": "Ciboulette",
+   "categorie": "herbes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/ciboulette.svg"
+  },
+  {
+   "id": "citron",
+   "nom": "Citron",
+   "categorie": "fruits",
+   "mois": [1,2],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/citron.svg"
+  },
+  {
+   "id": "clementine",
+   "nom": "Clémentine",
+   "categorie": "fruits",
+   "mois": [1,2,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/clementine.svg"
+  },
+  {
+   "id": "coing",
+   "nom": "Coing",
+   "categorie": "fruits",
+   "mois": [10],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/coing.svg"
+  },
+  {
+   "id": "concombre",
+   "nom": "Concombre",
+   "categorie": "legumes",
+   "mois": [5,6,7,8,9,10],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/concombre.svg"
+  },
+  {
+   "id": "coriandre",
+   "nom": "Coriandre",
+   "categorie": "herbes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/coriandre.svg"
+  },
+  {
+   "id": "courge",
+   "nom": "Courge",
+   "categorie": "legumes",
+   "mois": [1,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/courge.svg"
+  },
+  {
+   "id": "courgette",
+   "nom": "Courgette",
+   "categorie": "legumes",
+   "mois": [5,6,7,8,9,10],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/courgette.svg"
+  },
+  {
+   "id": "cresson",
+   "nom": "Cresson",
+   "categorie": "legumes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": true,
+   "icone": "legumes/icones/cresson.svg"
+  },
+  {
+   "id": "datte",
+   "nom": "Datte",
+   "categorie": "fruits",
+   "mois": [1,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/datte.svg"
+  },
+  {
+   "id": "echalote",
+   "nom": "Échalote",
+   "categorie": "legumes",
+   "mois": [10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/echalote.svg"
+  },
+  {
+   "id": "endive",
+   "nom": "Endive",
+   "categorie": "legumes",
+   "mois": [1,2,3,4,5,10],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/endive.svg"
+  },
+  {
+   "id": "epinard",
+   "nom": "Épinard",
+   "categorie": "legumes",
+   "mois": [1,2,3,4,5,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/epinard.svg"
+  },
+  {
+   "id": "fenouil",
+   "nom": "Fenouil",
+   "categorie": "legumes",
+   "mois": [4,6,7,8,9,10,11],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/fenouil.svg"
+  },
+  {
+   "id": "figue",
+   "nom": "Figue",
+   "categorie": "fruits",
+   "mois": [7,8,9,10],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/figue.svg"
+  },
+  {
+   "id": "fraise",
+   "nom": "Fraise",
+   "categorie": "fruits",
+   "mois": [5,6,7],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/fraise.svg"
+  },
+  {
+   "id": "framboise",
+   "nom": "Framboise",
+   "categorie": "fruits",
+   "mois": [6,7,8],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/framboise.svg"
+  },
+  {
+   "id": "fruitdelapassion",
+   "nom": "Fruit de la passion",
+   "categorie": "fruits",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": true,
+   "icone": "legumes/icones/fruitdelapassion.svg"
+  },
+  {
+   "id": "gingembre",
+   "nom": "Gingembre",
+   "categorie": "herbes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/gingembre.svg"
+  },
+  {
+   "id": "grenade",
+   "nom": "Grenade",
+   "categorie": "fruits",
+   "mois": [1,2,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/grenade.svg"
+  },
+  {
+   "id": "groseille",
+   "nom": "Groseille",
+   "categorie": "fruits",
+   "mois": [6,7,8],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/groseille.svg"
+  },
+  {
+   "id": "haricotvert",
+   "nom": "Haricot vert",
+   "categorie": "legumes",
+   "mois": [6,7,8,9,10],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/haricotvert.svg"
+  },
+  {
+   "id": "kaki",
+   "nom": "Kaki",
+   "categorie": "fruits",
+   "mois": [1,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/kaki.svg"
+  },
+  {
+   "id": "kiwi",
+   "nom": "Kiwi",
+   "categorie": "fruits",
+   "mois": [1,2,3,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/kiwi.svg"
+  },
+  {
+   "id": "laitue",
+   "nom": "Laitue",
+   "categorie": "legumes",
+   "mois": [5,6,7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/laitue.svg"
+  },
+  {
+   "id": "laurier",
+   "nom": "Laurier",
+   "categorie": "herbes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/laurier.svg"
+  },
+  {
+   "id": "mache",
+   "nom": "Mâche",
+   "categorie": "legumes",
+   "mois": [1,2,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/mache.svg"
+  },
+  {
+   "id": "mais",
+   "nom": "Maïs",
+   "categorie": "cereales",
+   "mois": [7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/mais.svg"
+  },
+  {
+   "id": "mandarine",
+   "nom": "Mandarine",
+   "categorie": "fruits",
+   "mois": [1,2,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/mandarine.svg"
+  },
+  {
+   "id": "mangue",
+   "nom": "Mangue (importée par avion)",
+   "categorie": "fruits",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": true,
+   "icone": "legumes/icones/mangue.svg"
+  },
+  {
+   "id": "manguebateau",
+   "nom": "Mangue (importée par bateau)",
+   "categorie": "fruits",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": true,
+   "icone": "legumes/icones/manguebateau.svg"
+  },
+  {
+   "id": "melon",
+   "nom": "Melon",
+   "categorie": "fruits",
+   "mois": [6,7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/melon.svg"
+  },
+  {
+   "id": "menthe",
+   "nom": "Menthe",
+   "categorie": "herbes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/menthe.svg"
+  },
+  {
+   "id": "mure",
+   "nom": "Mûre",
+   "categorie": "fruits",
+   "mois": [8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/mure.svg"
+  },
+  {
+   "id": "myrtille",
+   "nom": "Myrtille",
+   "categorie": "fruits",
+   "mois": [7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/myrtille.svg"
+  },
+  {
+   "id": "navet",
+   "nom": "Navet",
+   "categorie": "legumes",
+   "mois": [1,2,3,4,5,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/navet.svg"
+  },
+  {
+   "id": "nectarine",
+   "nom": "Nectarine",
+   "categorie": "fruits",
+   "mois": [8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/nectarine.svg"
+  },
+  {
+   "id": "noisette",
+   "nom": "Noisette",
+   "categorie": "fruits-a-coque",
+   "mois": [9,10,11],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/noisette.svg"
+  },
+  {
+   "id": "noix",
+   "nom": "Noix",
+   "categorie": "fruits-a-coque",
+   "mois": [9,10],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/noix.svg"
+  },
+  {
+   "id": "noixdecoco",
+   "nom": "Noix de coco",
+   "categorie": "fruits-a-coque",
+   "mois": [1,2,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/noixdecoco.svg"
+  },
+  {
+   "id": "oignon",
+   "nom": "Oignon",
+   "categorie": "legumes",
+   "mois": [1,2,3,4,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/oignon.svg"
+  },
+  {
+   "id": "orange",
+   "nom": "Orange",
+   "categorie": "fruits",
+   "mois": [1,2,3],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/orange.svg"
+  },
+  {
+   "id": "pamplemousse",
+   "nom": "Pamplemousse",
+   "categorie": "fruits",
+   "mois": [2,3,4,5,6],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/pamplemousse.svg"
+  },
+  {
+   "id": "panais",
+   "nom": "Panais",
+   "categorie": "legumes",
+   "mois": [1,2,3,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/panais.svg"
+  },
+  {
+   "id": "pasteque",
+   "nom": "Pastèque",
+   "categorie": "fruits",
+   "mois": [6,7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/pasteque.svg"
+  },
+  {
+   "id": "patatedouce",
+   "nom": "Patate douce",
+   "categorie": "tubercules",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/patatedouce.svg"
+  },
+  {
+   "id": "peche",
+   "nom": "Pêche",
+   "categorie": "fruits",
+   "mois": [6,7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/peche.svg"
+  },
+  {
+   "id": "persil",
+   "nom": "Persil",
+   "categorie": "herbes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/persil.svg"
+  },
+  {
+   "id": "petitpois",
+   "nom": "Petit pois",
+   "categorie": "legumes",
+   "mois": [5,6,7],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/petitpois.svg"
+  },
+  {
+   "id": "poire",
+   "nom": "Poire",
+   "categorie": "fruits",
+   "mois": [1,2,3,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/poire.svg"
+  },
+  {
+   "id": "poireau",
+   "nom": "Poireau",
+   "categorie": "legumes",
+   "mois": [1,2,3,4,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/poireau.svg"
+  },
+  {
+   "id": "poivron",
+   "nom": "Poivron",
+   "categorie": "legumes",
+   "mois": [6,7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/poivron.svg"
+  },
+  {
+   "id": "pomme",
+   "nom": "Pomme",
+   "categorie": "fruits",
+   "mois": [1,2,3,4,8,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/pomme.svg"
+  },
+  {
+   "id": "pommedeterre",
+   "nom": "Pomme de terre",
+   "categorie": "tubercules",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/pommedeterre.svg"
+  },
+  {
+   "id": "potiron",
+   "nom": "Potiron",
+   "categorie": "legumes",
+   "mois": [1,9,10,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/potiron.svg"
+  },
+  {
+   "id": "prune",
+   "nom": "Prune",
+   "categorie": "fruits",
+   "mois": [7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/prune.svg"
+  },
+  {
+   "id": "radis",
+   "nom": "Radis",
+   "categorie": "legumes",
+   "mois": [3,4,5,6],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/radis.svg"
+  },
+  {
+   "id": "raisin",
+   "nom": "Raisin",
+   "categorie": "fruits",
+   "mois": [9,10],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/raisin.svg"
+  },
+  {
+   "id": "reineclaude",
+   "nom": "Reine claude",
+   "categorie": "fruits",
+   "mois": [9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/reineclaude.svg"
+  },
+  {
+   "id": "rhubarbe",
+   "nom": "Rhubarbe",
+   "categorie": "fruits",
+   "mois": [4,5,6],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/rhubarbe.svg"
+  },
+  {
+   "id": "romarin",
+   "nom": "Romarin",
+   "categorie": "herbes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/romarin.svg"
+  },
+  {
+   "id": "salsifis",
+   "nom": "Salsifis",
+   "categorie": "legumes",
+   "mois": [1,2,3,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/salsifis.svg"
+  },
+  {
+   "id": "sauge",
+   "nom": "Sauge",
+   "categorie": "herbes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/sauge.svg"
+  },
+  {
+   "id": "thym",
+   "nom": "Thym",
+   "categorie": "herbes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/thym.svg"
+  },
+  {
+   "id": "tomate",
+   "nom": "Tomate",
+   "categorie": "legumes",
+   "mois": [6,7,8,9],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/tomate.svg"
+  },
+  {
+   "id": "topinambour",
+   "nom": "Topinambour",
+   "categorie": "tubercules",
+   "mois": [1,2,11,12],
+   "source": "ademe",
+   "touteLannee": false,
+   "icone": "legumes/icones/topinambour.svg"
+  }
+ ],
+ "suggestions": [
+  {
+   "id": "artichautpoivrade",
+   "nom": "Artichaut poivrade",
+   "categorie": "legumes",
+   "mois": [4],
+   "icone": "legumes/icones/artichaut.svg"
+  },
+  {
+   "id": "artichautviolet",
+   "nom": "Artichaut violet",
+   "categorie": "legumes",
+   "mois": [5],
+   "icone": "legumes/icones/artichaut.svg"
+  },
+  {
+   "id": "aspergeverte",
+   "nom": "Asperge verte",
+   "categorie": "legumes",
+   "mois": [4,5],
+   "icone": "legumes/icones/asperge.svg"
+  },
+  {
+   "id": "auberginegraffiti",
+   "nom": "Aubergine graffiti",
+   "categorie": "legumes",
+   "mois": [7,8],
+   "icone": "legumes/icones/aubergine.svg"
+  },
+  {
+   "id": "bergamote",
+   "nom": "Bergamote",
+   "categorie": "fruits",
+   "mois": [1],
+   "icone": "legumes/icones/citron.svg"
+  },
+  {
+   "id": "betteravechioggia",
+   "nom": "Betterave Chioggia",
+   "categorie": "legumes",
+   "mois": [2],
+   "icone": "legumes/icones/betterave.svg"
+  },
+  {
+   "id": "cardon",
+   "nom": "Cardon",
+   "categorie": "legumes",
+   "mois": [11,12],
+   "icone": "legumes/icones/celeri.svg"
+  },
+  {
+   "id": "carotteprimeur",
+   "nom": "Carotte primeur",
+   "categorie": "legumes",
+   "mois": [4,5],
+   "icone": "legumes/icones/carotte.svg"
+  },
+  {
+   "id": "carotteviolette",
+   "nom": "Carotte violette",
+   "categorie": "legumes",
+   "mois": [2],
+   "icone": "legumes/icones/carotte.svg"
+  },
+  {
+   "id": "celeribranche",
+   "nom": "Céleri branche",
+   "categorie": "legumes",
+   "mois": [2,9,10],
+   "icone": "legumes/icones/celeri.svg"
+  },
+  {
+   "id": "celerirave",
+   "nom": "Céleri-rave",
+   "categorie": "legumes",
+   "mois": [1],
+   "icone": "legumes/icones/celeri.svg"
+  },
+  {
+   "id": "champignoncepe",
+   "nom": "Champignon cèpe",
+   "categorie": "legumes",
+   "mois": [11],
+   "icone": "legumes/icones/champignon.svg"
+  },
+  {
+   "id": "champignongirolle",
+   "nom": "Champignon girolle",
+   "categorie": "legumes",
+   "mois": [9,10],
+   "icone": "legumes/icones/champignon.svg"
+  },
+  {
+   "id": "choufrise",
+   "nom": "Chou frisé",
+   "categorie": "legumes",
+   "mois": [1],
+   "icone": "legumes/icones/chou.svg"
+  },
+  {
+   "id": "choukale",
+   "nom": "Chou kale",
+   "categorie": "legumes",
+   "mois": [1],
+   "icone": "legumes/icones/chou.svg"
+  },
+  {
+   "id": "chouromanesco",
+   "nom": "Chou romanesco",
+   "categorie": "legumes",
+   "mois": [9],
+   "icone": "legumes/icones/chou.svg"
+  },
+  {
+   "id": "chourouge",
+   "nom": "Chou rouge",
+   "categorie": "legumes",
+   "mois": [11],
+   "icone": "legumes/icones/chou.svg"
+  },
+  {
+   "id": "courgebutternut",
+   "nom": "Courge butternut",
+   "categorie": "legumes",
+   "mois": [9,10,11,12],
+   "icone": "legumes/icones/courge.svg"
+  },
+  {
+   "id": "courgettefleur",
+   "nom": "Courgette fleur",
+   "categorie": "legumes",
+   "mois": [5,6],
+   "icone": "legumes/icones/courgette.svg"
+  },
+  {
+   "id": "courgettelongue",
+   "nom": "Courgette longue",
+   "categorie": "legumes",
+   "mois": [7],
+   "icone": "legumes/icones/courgette.svg"
+  },
+  {
+   "id": "crosne",
+   "nom": "Crosne",
+   "categorie": "legumes",
+   "mois": [1],
+   "icone": "legumes/icones/topinambour.svg"
+  },
+  {
+   "id": "endiverouge",
+   "nom": "Endive rouge",
+   "categorie": "legumes",
+   "mois": [1],
+   "icone": "legumes/icones/endive.svg"
+  },
+  {
+   "id": "feve",
+   "nom": "Fève",
+   "categorie": "legumes",
+   "mois": [4,6],
+   "icone": "legumes/icones/petitpois.svg"
+  },
+  {
+   "id": "fraisedemoiselle",
+   "nom": "Fraise Demoiselle",
+   "categorie": "fruits",
+   "mois": [4,5],
+   "icone": "legumes/icones/fraise.svg"
+  },
+  {
+   "id": "fraisegariguette",
+   "nom": "Fraise Gariguette",
+   "categorie": "fruits",
+   "mois": [4,5],
+   "icone": "legumes/icones/fraise.svg"
+  },
+  {
+   "id": "haricotvertfin",
+   "nom": "Haricot vert fin",
+   "categorie": "legumes",
+   "mois": [7,8],
+   "icone": "legumes/icones/haricotvert.svg"
+  },
+  {
+   "id": "kumquat",
+   "nom": "Kumquat",
+   "categorie": "fruits",
+   "mois": [1],
+   "icone": "legumes/icones/orange.svg"
+  },
+  {
+   "id": "meloncharentais",
+   "nom": "Melon charentais",
+   "categorie": "fruits",
+   "mois": [7,8],
+   "icone": "legumes/icones/melon.svg"
+  },
+  {
+   "id": "mirabelle",
+   "nom": "Mirabelle",
+   "categorie": "fruits",
+   "mois": [8],
+   "icone": "legumes/icones/prune.svg"
+  },
+  {
+   "id": "navetnouveau",
+   "nom": "Navet nouveau",
+   "categorie": "legumes",
+   "mois": [4,5],
+   "icone": "legumes/icones/navet.svg"
+  },
+  {
+   "id": "nectarineblanche",
+   "nom": "Nectarine blanche",
+   "categorie": "fruits",
+   "mois": [6],
+   "icone": "legumes/icones/nectarine.svg"
+  },
+  {
+   "id": "nectarinejaune",
+   "nom": "Nectarine jaune",
+   "categorie": "fruits",
+   "mois": [6],
+   "icone": "legumes/icones/nectarine.svg"
+  },
+  {
+   "id": "pecheblanche",
+   "nom": "Pêche blanche",
+   "categorie": "fruits",
+   "mois": [6],
+   "icone": "legumes/icones/peche.svg"
+  },
+  {
+   "id": "pechejaune",
+   "nom": "Pêche jaune",
+   "categorie": "fruits",
+   "mois": [6],
+   "icone": "legumes/icones/peche.svg"
+  },
+  {
+   "id": "pechesanguine",
+   "nom": "Pêche sanguine",
+   "categorie": "fruits",
+   "mois": [8],
+   "icone": "legumes/icones/peche.svg"
+  },
+  {
+   "id": "poireconference",
+   "nom": "Poire conférence",
+   "categorie": "fruits",
+   "mois": [11,12],
+   "icone": "legumes/icones/poire.svg"
+  },
+  {
+   "id": "poireguyot",
+   "nom": "Poire guyot",
+   "categorie": "fruits",
+   "mois": [9],
+   "icone": "legumes/icones/poire.svg"
+  },
+  {
+   "id": "poirerubisgold",
+   "nom": "Poire rubisgold",
+   "categorie": "fruits",
+   "mois": [10],
+   "icone": "legumes/icones/poire.svg"
+  },
+  {
+   "id": "poivronsweetpalermo",
+   "nom": "Poivron sweet palermo",
+   "categorie": "legumes",
+   "mois": [8],
+   "icone": "legumes/icones/poivron.svg"
+  },
+  {
+   "id": "pomelo",
+   "nom": "Pomelo",
+   "categorie": "fruits",
+   "mois": [3],
+   "icone": "legumes/icones/pamplemousse.svg"
+  },
+  {
+   "id": "pommegala",
+   "nom": "Pomme gala",
+   "categorie": "fruits",
+   "mois": [9],
+   "icone": "legumes/icones/pomme.svg"
+  },
+  {
+   "id": "pommepinklady",
+   "nom": "Pomme pink lady®",
+   "categorie": "fruits",
+   "mois": [2],
+   "icone": "legumes/icones/pomme.svg"
+  },
+  {
+   "id": "pommereinette",
+   "nom": "Pomme reinette",
+   "categorie": "fruits",
+   "mois": [10],
+   "icone": "legumes/icones/pomme.svg"
+  },
+  {
+   "id": "potimarron",
+   "nom": "Potimarron",
+   "categorie": "legumes",
+   "mois": [9,10],
+   "icone": "legumes/icones/potiron.svg"
+  },
+  {
+   "id": "radisnoir",
+   "nom": "Radis noir",
+   "categorie": "legumes",
+   "mois": [2,3],
+   "icone": "legumes/icones/radis.svg"
+  },
+  {
+   "id": "radisrosebotte",
+   "nom": "Radis rose botte",
+   "categorie": "legumes",
+   "mois": [4],
+   "icone": "legumes/icones/radis.svg"
+  },
+  {
+   "id": "raisinmuscat",
+   "nom": "Raisin muscat",
+   "categorie": "fruits",
+   "mois": [9],
+   "icone": "legumes/icones/raisin.svg"
+  },
+  {
+   "id": "rutabaga",
+   "nom": "Rutabaga",
+   "categorie": "legumes",
+   "mois": [2,11,12],
+   "icone": "legumes/icones/navet.svg"
+  },
+  {
+   "id": "saladejeunespoussesdepinard",
+   "nom": "Salade jeunes pousses d'épinard",
+   "categorie": "legumes",
+   "mois": [3],
+   "icone": "legumes/icones/laitue.svg"
+  },
+  {
+   "id": "saladejeunespoussesderoquette",
+   "nom": "Salade jeunes pousses de roquette",
+   "categorie": "legumes",
+   "mois": [4],
+   "icone": "legumes/icones/laitue.svg"
+  },
+  {
+   "id": "saladejeunespoussesexquis",
+   "nom": "Salade jeunes pousses exquis",
+   "categorie": "legumes",
+   "mois": [7],
+   "icone": "legumes/icones/laitue.svg"
+  },
+  {
+   "id": "salademelangedejeunespousses",
+   "nom": "Salade mélange de jeunes pousses",
+   "categorie": "legumes",
+   "mois": [6],
+   "icone": "legumes/icones/laitue.svg"
+  },
+  {
+   "id": "salademelangemultifeuilles",
+   "nom": "Salade mélange multifeuilles",
+   "categorie": "legumes",
+   "mois": [5],
+   "icone": "legumes/icones/laitue.svg"
+  },
+  {
+   "id": "tomateancienne",
+   "nom": "Tomate ancienne",
+   "categorie": "legumes",
+   "mois": [8],
+   "icone": "legumes/icones/tomate.svg"
+  },
+  {
+   "id": "tomateanciennegreenzebra",
+   "nom": "Tomate ancienne (Green Zebra)",
+   "categorie": "legumes",
+   "mois": [7],
+   "icone": "legumes/icones/tomate.svg"
+  },
+  {
+   "id": "tomatebelmandia",
+   "nom": "Tomate belmandia",
+   "categorie": "legumes",
+   "mois": [6],
+   "icone": "legumes/icones/tomate.svg"
+  },
+  {
+   "id": "truffeblanche",
+   "nom": "Truffe blanche",
+   "categorie": "legumes",
+   "mois": [10],
+   "icone": "legumes/icones/champignon.svg"
+  },
+  {
+   "id": "truffenoire",
+   "nom": "Truffe noire",
+   "categorie": "legumes",
+   "mois": [1,2,12],
+   "icone": "legumes/icones/champignon.svg"
+  }
+ ],
+ "correspondances": {
+  "potimarron": "potiron",
+  "rutabaga": "navet",
+  "crosne": "topinambour",
+  "cardon": "celeri",
+  "feve": "petitpois",
+  "bergamote": "citron",
+  "kumquat": "orange",
+  "pomelo": "pamplemousse",
+  "mirabelle": "prune",
+  "truffe": "champignon",
+  "girolle": "champignon",
+  "cepe": "champignon",
+  "salade": "laitue",
+  "roquette": "laitue",
+  "yuzu": "citron",
+  "butternut": "courge"
+ }
+}
