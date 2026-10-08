@@ -8,6 +8,14 @@ const TRACES = {
   fleche: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   retour: '<path d="m15 5-7 7 7 7"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
+  fermer: '<path d="M6 6l12 12M18 6 6 18"/>',
+  coche: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  recherche: '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>',
+  bas: '<path d="m6 9 6 6 6-6"/>',
+  haut: '<path d="m6 15 6-6 6 6"/>',
+  crayon: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+  poubelle: '<path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.5v.01"/>',
 } as const;
 
 export type NomIcone = keyof typeof TRACES;

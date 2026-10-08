@@ -129,6 +129,120 @@
   }
 }
 
+/* Composants de la maquette (design/rs.css), repris tels quels. */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 24px;
+    border: 0;
+    font: 600 16px/1 var(--font-texte);
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.12s, box-shadow 0.12s, color 0.12s;
+  }
+  .btn-plein { background: var(--saison); color: var(--sur-saison); }
+  .btn-encre { background: var(--encre); color: var(--papier); }
+  .btn-ligne { background: transparent; color: var(--encre); box-shadow: inset 0 0 0 1.5px var(--trait-fort); }
+  .btn-ligne:hover { box-shadow: inset 0 0 0 1.5px var(--encre); }
+  .btn-texte { background: transparent; color: var(--saison-texte); padding: 0 12px; }
+  .btn-danger { background: var(--danger); color: var(--sur-danger); }
+  .btn-danger-texte { background: transparent; color: var(--danger); padding: 0 12px; }
+  .ico {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; flex: none; border-radius: 22px; border: 0;
+    background: transparent; color: var(--encre-2); cursor: pointer;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 8px;
+    border-radius: 14px; font-size: 13.5px; font-weight: 600; white-space: nowrap;
+  }
+  .badge-pleine { background: var(--saison-pale); color: var(--saison-texte); }
+  .badge-partie { background: var(--creux); color: var(--encre); }
+  .badge-hors { background: transparent; color: var(--encre-2); box-shadow: inset 0 0 0 1px var(--trait-fort); }
+  .badge-toutes { background: var(--creux); color: var(--encre-2); }
+
+  /* Frise des 12 mois : la hauteur remplie dit la part de saison, le cadre marque le mois en cours. */
+  .frise { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px; align-items: end; }
+  .frise .mois { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .frise .case { position: relative; width: 100%; height: 18px; border-radius: 3px; background: var(--creux); overflow: hidden; }
+  .frise .case > i {
+    position: absolute; inset: auto 0 0 0; display: block; background: var(--saison);
+    transform-origin: bottom; animation: frise-monte 0.24s ease-out both;
+  }
+  .frise .lettre { font: 700 11px/1 var(--font-etiq); color: var(--encre-2); letter-spacing: 0.04em; }
+  .frise .ici .case { box-shadow: 0 0 0 2px var(--papier), 0 0 0 3.5px var(--encre); }
+  .frise .ici .lettre { color: var(--encre); }
+  .frise-grande { gap: 6px; }
+  .frise-grande .case { height: 64px; border-radius: 6px; }
+  .frise-grande .lettre { font-size: 15px; }
+  .frise-grande .mois { gap: 8px; }
+  .frise-mini { gap: 2px; }
+  .frise-mini .case { height: 10px; border-radius: 2px; }
+  .frise-mini .lettre { display: none; }
+  .frise-mini .ici .case { box-shadow: 0 0 0 1.5px var(--encre); }
+
+  .carte {
+    display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 14px;
+    background: var(--carte); border: 1px solid var(--trait); border-radius: 18px;
+    color: inherit; text-decoration: none; transition: border-color 0.12s;
+  }
+  .carte:hover { border-color: var(--trait-fort); }
+  .carte[aria-current='page'] { border-color: var(--encre); box-shadow: inset 0 0 0 1px var(--encre); }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px;
+    border-radius: 22px; background: var(--carte); border: 1.5px solid var(--trait-fort);
+    color: var(--encre); font: 500 15px/1.1 var(--font-texte); cursor: pointer; text-align: left;
+    transition: background-color 0.12s, border-color 0.12s, color 0.12s;
+  }
+  .chip .vignette { margin-left: -8px; }
+  .chip-saison { border-color: var(--saison); background: var(--saison-pale); }
+  .chip[aria-pressed='true'], .chip-retirer { background: var(--encre); border-color: var(--encre); color: var(--papier); }
+  .chip[aria-pressed='true'] .vignette, .chip-retirer .vignette { background: #eceae1; border-radius: 50%; padding: 2px; }
+  .chip-retirer { padding-right: 4px; }
+  .chip-retirer .x { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 18px; }
+  .chip-ajout { border-style: dashed; border-color: var(--saison); color: var(--saison-texte); }
+  .chip-lecture { cursor: default; border-color: var(--trait); }
+
+  .filtre {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; flex: none;
+    border-radius: 22px; border: 1.5px solid var(--trait-fort); background: transparent;
+    font: 600 14px/1 var(--font-texte); color: var(--encre); white-space: nowrap; cursor: pointer;
+  }
+  .filtre[aria-pressed='true'], .filtre[aria-checked='true'] { background: var(--encre); color: var(--papier); border-color: var(--encre); }
+
+  .champ { width: 100%; min-height: 52px; border-radius: 14px; border: 1.5px solid var(--trait-fort); background: var(--carte); padding: 0 16px; font: 400 16px var(--font-texte); color: var(--encre); }
+  .champ:focus { outline: none; border-color: var(--encre); box-shadow: 0 0 0 3px var(--saison-pale); }
+  .champ[aria-invalid='true'] { border-color: var(--danger); }
+  textarea.champ { min-height: 96px; padding: 14px 16px; line-height: 1.45; resize: vertical; }
+  select.champ { appearance: none; padding-right: 44px; }
+
+  .bloc { background: var(--carte); border: 1px solid var(--trait); border-radius: 20px; padding: 18px; }
+
+  /* Feuille (téléphone) / fenêtre (tablette) : élément <dialog> natif, qui gère le focus et Échap. */
+  .feuille {
+    margin: auto auto 0; width: 100%; max-width: 100%; max-height: 92dvh; border: 0; padding: 10px 20px 28px;
+    border-radius: 26px 26px 0 0; background: var(--carte); color: var(--encre);
+    animation: feuille-monte 0.22s ease-out;
+  }
+  .feuille::backdrop { background: rgb(22 18 23 / 0.45); animation: voile 0.22s ease-out; }
+  @media (min-width: 768px) {
+    .feuille { margin: auto; max-width: 560px; border-radius: 24px; padding: 24px 28px 28px; }
+  }
+  .alerte { display: flex; gap: 12px; align-items: flex-start; border-radius: 16px; padding: 14px 16px; font-size: 15px; line-height: 1.4; }
+}
+
+@keyframes frise-monte { from { transform: scaleY(0); } }
+@keyframes feuille-monte { from { transform: translateY(24px); opacity: 0; } }
+@keyframes voile { from { opacity: 0; } }
+
 /* En sombre, les illustrations sont posées sur une assiette claire pour garder leur contour lisible. */
 @media (prefers-color-scheme: dark) {
   .vignette {

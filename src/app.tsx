@@ -3,6 +3,8 @@ import { Navigation } from './components/Navigation';
 import { useDonnees } from './lib/donnees';
 import { useRoute, type Route } from './lib/routeur';
 import { EnPreparation, Introuvable } from './pages/EnPreparation';
+import { EcranEdition } from './pages/RecetteEdition';
+import { EcranRecettes } from './pages/Recettes';
 import { Semaine } from './pages/Semaine';
 
 const TITRES: Record<Route['nom'], string> = {
@@ -20,6 +22,14 @@ function Ecran({ route }: { route: Route }) {
   switch (route.nom) {
     case 'semaine':
       return <Semaine />;
+    case 'recettes':
+      return <EcranRecettes key="recettes" />;
+    case 'recette':
+      return <EcranRecettes key="recettes" id={route.id} />;
+    case 'nouvelle-recette':
+      return <EcranEdition />;
+    case 'modifier-recette':
+      return <EcranEdition id={route.id} />;
     case 'introuvable':
       return <Introuvable />;
     default:
@@ -48,18 +58,27 @@ function AlerteStockage() {
 
 export function App() {
   const route = useRoute();
-  const premierAffichage = useRef(true);
+  const precedente = useRef<Route | null>(null);
 
   // À chaque changement d'écran : titre de l'onglet, et focus sur le titre de la page
   // pour que lecteurs d'écran et clavier repartent du bon endroit.
   useEffect(() => {
     document.title = route.nom === 'semaine' ? 'Recettes de saison' : `${TITRES[route.nom]} · Recettes de saison`;
-    if (premierAffichage.current) {
-      premierAffichage.current = false;
-      return;
+    const avant = precedente.current;
+    precedente.current = route;
+    if (!avant) return; // premier affichage : on ne déplace pas le focus
+    // Sur deux colonnes, passer d'une recette à l'autre garde la liste à sa place.
+    const dansLesRecettes = (r: Route) => r.nom === 'recettes' || r.nom === 'recette';
+    if (!(window.matchMedia('(min-width: 1024px)').matches && dansLesRecettes(avant) && dansLesRecettes(route))) {
+      window.scrollTo(0, 0);
     }
-    window.scrollTo(0, 0);
-    document.querySelector<HTMLElement>('main h1')?.focus();
+    // Différé d'un tour : une fenêtre qui se ferme au même moment (suppression) rend d'abord son focus.
+    const minuteur = setTimeout(() => {
+      const cible = document.querySelector<HTMLElement>('main [data-focus-ecran]') ?? document.querySelector<HTMLElement>('main h1');
+      cible?.focus({ preventScroll: true });
+      if (route.nom === 'recette' && cible?.textContent) document.title = `${cible.textContent} · Recettes de saison`;
+    });
+    return () => clearTimeout(minuteur);
   }, [route]);
 
   return (
@@ -74,7 +93,7 @@ export function App() {
       >
         Aller au contenu
       </a>
-      <Navigation route={route} />
+      <Navigation route={route} masqueeSurTelephone={route.nom === 'nouvelle-recette' || route.nom === 'modifier-recette'} />
       <main id="contenu" class="mx-auto w-full max-w-3xl px-5 pt-5 pb-32 md:pl-[calc(96px+40px)] md:pr-10 md:pb-12 lg:max-w-5xl">
         <AlerteStockage />
         <Ecran route={route} />

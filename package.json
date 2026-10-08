@@ -10,7 +10,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "sync:legumes": "node scripts/fetch-legumes.mjs"
+    "sync:legumes": "node scripts/fetch-legumes.mjs",
+    "verifier": "node --experimental-strip-types --no-warnings --import ./scripts/verifier/chargeur.mjs scripts/verifier/index.mts"
   },
   "dependencies": {
     "preact": "10.29.8"

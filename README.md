@@ -8,7 +8,7 @@ Tout reste sur l'appareil : pas de compte, pas de serveur. Une sauvegarde s'expo
 s'importe en fichier JSON. L'app s'installe sur l'écran d'accueil et fonctionne hors ligne.
 
 > Projet en cours de développement — étapes suivies : maquette ✓, synchro des légumes ✓, squelette ✓,
-> écrans recettes, semaine et calendrier, PWA et accessibilité.
+> écrans recettes ✓, semaine et calendrier, PWA et accessibilité.
 
 En ligne : https://axsomette.github.io/my-recipe/
 
@@ -31,6 +31,7 @@ L'app s'ouvre sur http://localhost:5173/my-recipe/.
 | `npm run build` | Vérifie les types puis construit le site dans `dist/` |
 | `npm run preview` | Sert le build de `dist/` en local |
 | `npm run typecheck` | Vérifie les types TypeScript |
+| `npm run verifier` | Vérifie les fonctions pures (saison, routage, stockage…) sans framework de test |
 | `npm run sync:legumes` | Met à jour `public/legumes.json` et les illustrations |
 
 ## Stack

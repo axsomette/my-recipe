@@ -13,14 +13,14 @@ const ongletActif = (route: Route): Route['nom'] =>
   route.nom === 'recette' || route.nom === 'nouvelle-recette' || route.nom === 'modifier-recette' ? 'recettes' : route.nom;
 
 /** Barre du bas sur téléphone (zone du pouce), rail latéral à partir de la tablette. */
-export function Navigation({ route }: { route: Route }) {
+export function Navigation({ route, masqueeSurTelephone = false }: { route: Route; masqueeSurTelephone?: boolean }) {
   const actif = ongletActif(route);
   const mois = moisCourant();
   return (
     <nav
       aria-label="Navigation principale"
-      class="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-trait bg-carte px-2 pt-1.5 pb-[max(14px,env(safe-area-inset-bottom))]
-        md:inset-y-0 md:right-auto md:flex md:w-24 md:flex-col md:items-center md:gap-1.5 md:border-t-0 md:border-r md:px-2 md:py-5"
+      class={`fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 ${masqueeSurTelephone ? 'max-md:hidden' : ''} border-t border-trait bg-carte px-2 pt-1.5 pb-[max(14px,env(safe-area-inset-bottom))]
+        md:inset-y-0 md:right-auto md:flex md:w-24 md:flex-col md:items-center md:gap-1.5 md:border-t-0 md:border-r md:px-2 md:py-5`}
     >
       <p class="display mb-4 hidden text-center text-[22px] text-saison-texte md:block" aria-hidden="true">
         {MOIS_ABREGES[mois - 1]}

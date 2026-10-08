@@ -169,12 +169,14 @@ async function icone(id) {
 }
 
 // Illustration la plus proche pour un nom libre : correspondance connue,
-// sinon l'id le plus long contenu dans le nom (« chou kale » → chou), sinon générique.
+// sinon l'id contenu dans le nom, le plus à gauche (« chou kale » → chou), sinon générique.
 function iconeProche(nom, idsIllustres, categorie) {
   const slug = slugifier(nom);
   const alias = Object.keys(CORRESPONDANCES).find((cle) => slug.includes(cle));
   if (alias) return CORRESPONDANCES[alias];
-  const contenu = [...idsIllustres].filter((id) => slug.includes(id)).sort((a, b) => b.length - a.length)[0];
+  const contenu = [...idsIllustres]
+    .filter((id) => slug.includes(id))
+    .sort((a, b) => slug.indexOf(a) - slug.indexOf(b) || b.length - a.length)[0];
   if (contenu) return contenu;
   return categorie === 'champignons' ? 'champignon' : categorie === 'herbes' ? 'herbe' : 'panier';
 }
