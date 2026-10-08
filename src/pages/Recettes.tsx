@@ -125,7 +125,7 @@ function ListeRecettes({ monde, idActif, large = false }: { monde: Monde; idActi
           <p class="text-sm text-encre-2" aria-live="polite">
             {etatListe(affichees.length, recherche, moisTri)}
           </p>
-          <ul class="flex flex-col gap-2.5">
+          <ul class="cascade flex flex-col gap-2.5">
             {affichees.map((r) => (
               <li key={r.id}>
                 <CarteRecette recette={r} index={monde.index} mois={moisTri} active={r.id === idActif} />

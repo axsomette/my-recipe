@@ -17,13 +17,13 @@ render(
 
 /**
  * Écran de lancement (index.html) : il couvre le vrai chargement (légumes, polices)
- * et laisse à la rosace le temps d'éclore, sans jamais retenir l'app plus de 4 s.
+ * et laisse aux pages de l'année le temps de se tourner, sans jamais retenir l'app plus de 4 s.
  */
 function fermerLancement() {
   const ecran = document.getElementById('lancement');
   if (!ecran) return;
   const mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const dureeMinimale = mouvementReduit ? 250 : 900; // ms depuis l'ouverture de la page
+  const dureeMinimale = mouvementReduit ? 250 : 1600; // ms depuis l'ouverture de la page
   const pret = Promise.all([chargerCatalogue().catch(() => undefined), document.fonts?.ready]);
   const limite = new Promise((fin) => setTimeout(fin, 4000));
 

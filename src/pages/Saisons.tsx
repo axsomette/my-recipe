@@ -76,8 +76,10 @@ function ParMois({ monde }: { monde: Monde }) {
             <Icone nom="retour" />
           </button>
           <div class="text-center" aria-live="polite">
-            <p class="display text-[26px]">{majuscule(NOMS_MOIS[mois - 1] ?? '')}</p>
-            <p class="text-sm text-encre-2">{duMois.length} produits de saison</p>
+            <div key={mois} class="glisse">
+              <p class="display text-[26px]">{majuscule(NOMS_MOIS[mois - 1] ?? '')}</p>
+              <p class="text-sm text-encre-2">{duMois.length} produits de saison</p>
+            </div>
           </div>
           <button type="button" class="ico rotate-180" aria-label={`Mois suivant : ${NOMS_MOIS[moisSuivant(mois) - 1]}`} onClick={() => setMois(moisSuivant)}>
             <Icone nom="retour" />
@@ -107,41 +109,43 @@ function ParMois({ monde }: { monde: Monde }) {
       <Legende mois={mois} />
 
       {categories.length === 0 && <p class="text-encre-2">Aucun produit de cette catégorie n’est de saison en {NOMS_MOIS[mois - 1]}.</p>}
-      {categories.map((c) => {
-        const produits = duMois.filter((l) => l.categorie === c);
-        return (
-          <section key={c} aria-labelledby={`cat-${c}`} class="flex flex-col">
-            <div class="flex min-h-7 items-center justify-between border-b border-trait pb-1.5">
-              <h2 id={`cat-${c}`} class="etiq">
-                {NOMS_CATEGORIES[c]} · {produits.length}
-              </h2>
-              <div class="grid w-[132px] grid-cols-12 gap-0.5 text-center font-etiq text-[11px] font-bold text-encre-2" aria-hidden="true">
-                {INITIALES_MOIS.map((l, i) => (
-                  <span key={i} class={i + 1 === mois ? 'text-encre underline underline-offset-3' : ''}>
-                    {l}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <ul>
-              {produits.map((l) => (
-                <li key={l.id} class="flex min-h-12 items-center justify-between gap-3 border-b border-trait">
-                  <span class="flex min-w-0 items-center gap-2.5">
-                    <Vignette icone={l.icone} />
-                    <span>
-                      {l.nom}
-                      {!l.mois.includes(moisSuivant(mois)) && (
-                        <span class="ml-2 font-etiq text-xs font-bold tracking-[0.06em] whitespace-nowrap text-saison-texte uppercase">dernier mois</span>
-                      )}
+      <div key={`${mois}-${categorie}`} class="cascade flex flex-col gap-5 empty:hidden">
+        {categories.map((c) => {
+          const produits = duMois.filter((l) => l.categorie === c);
+          return (
+            <section key={c} aria-labelledby={`cat-${c}`} class="flex flex-col">
+              <div class="flex min-h-7 items-center justify-between border-b border-trait pb-1.5">
+                <h2 id={`cat-${c}`} class="etiq">
+                  {NOMS_CATEGORIES[c]} · {produits.length}
+                </h2>
+                <div class="grid w-[132px] grid-cols-12 gap-0.5 text-center font-etiq text-[11px] font-bold text-encre-2" aria-hidden="true">
+                  {INITIALES_MOIS.map((l, i) => (
+                    <span key={i} class={i + 1 === mois ? 'text-encre underline underline-offset-3' : ''}>
+                      {l}
                     </span>
-                  </span>
-                  <Frise class="w-[132px] shrink-0" variante="mini" valeurs={valeursBinaires(l)} mois={mois} description={`De saison : ${decrireMois(l)}`} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        );
-      })}
+                  ))}
+                </div>
+              </div>
+              <ul>
+                {produits.map((l) => (
+                  <li key={l.id} class="flex min-h-12 items-center justify-between gap-3 border-b border-trait">
+                    <span class="flex min-w-0 items-center gap-2.5">
+                      <Vignette icone={l.icone} />
+                      <span>
+                        {l.nom}
+                        {!l.mois.includes(moisSuivant(mois)) && (
+                          <span class="ml-2 font-etiq text-xs font-bold tracking-[0.06em] whitespace-nowrap text-saison-texte uppercase">dernier mois</span>
+                        )}
+                      </span>
+                    </span>
+                    <Frise class="w-[132px] shrink-0" variante="mini" valeurs={valeursBinaires(l)} mois={mois} description={`De saison : ${decrireMois(l)}`} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })}
+      </div>
 
       {toutelannee.length > 0 && (
         <section aria-labelledby="toute-annee" class="flex flex-col gap-2.5 pt-2">

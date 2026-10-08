@@ -17,7 +17,9 @@
 .cas{display:flex;flex-direction:column;align-items:center;gap:12px}
 .ios{width:180px;height:180px;border-radius:40px;overflow:hidden;box-shadow:0 10px 28px rgb(34 26 32 / .18)}
 .android{width:160px;height:160px;border-radius:50%;overflow:hidden;box-shadow:0 10px 28px rgb(34 26 32 / .18)}
-.android img{width:190px;height:190px;margin:-15px}
+.android img{width:160px;height:160px}
+.saisons{display:flex;gap:28px}
+.saisons figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px}
 .petite{width:60px;height:60px;border-radius:14px;overflow:hidden}
 .onglet{display:inline-flex;align-items:center;gap:8px;background:var(--carte);border:1px solid var(--trait);border-radius:10px 10px 0 0;padding:8px 14px;font-size:13px}
 .fond-ecran{display:grid;grid-template-columns:repeat(4,72px);gap:22px 18px;padding:28px 24px;border-radius:28px;background:linear-gradient(160deg,#3b5b4a,#2a3d4f)}
@@ -28,25 +30,32 @@
 </helmet>
 <div class="ecran planche {{saison}} {{theme}}" style="width: 1280px">
   <p class="etiq">Icône et emblème</p>
-  <h1 class="display" style="font-size: 44px; margin-top: 10px">La rosace des saisons</h1>
-  <p class="doux" style="max-width: 760px; margin-top: 12px; font-size: 17px">Les 12 mois en pétales, de janvier en haut, dans le sens des aiguilles d’une montre. La longueur de chaque pétale suit le nombre de produits de saison ce mois-là ; la couleur, la saison : chou rouge, petit pois, tomate, potimarron. Même trait que les illustrations des légumes.</p>
+  <h1 class="display" style="font-size: 44px; margin-top: 10px">La feuille du mois</h1>
+  <p class="doux" style="max-width: 760px; margin-top: 12px; font-size: 17px">Une page d’éphéméride : le bandeau prend la couleur de la saison, le produit de saison est servi dans un bol. La saison et la recette, rien de plus. Même trait que les illustrations des légumes.</p>
   <div class="rangee" style="margin-top: 44px">
     <div class="cas"><div class="ios"><img src="./icones/app.svg" alt="" width="180" height="180"></div><span class="etiq">iPhone · écran d’accueil</span></div>
-    <div class="cas"><div class="android"><img src="./icones/app.svg" alt=""></div><span class="etiq">Android · icône adaptable</span></div>
+    <div class="cas"><div class="android"><img src="./icones/app-adaptable.svg" alt=""></div><span class="etiq">Android · icône adaptable</span></div>
     <div class="cas"><div class="petite"><img src="./icones/app.svg" alt="" width="60" height="60"></div><span class="etiq">60 px</span></div>
-    <div class="cas"><span class="onglet"><img src="./icones/app.svg" alt="" width="16" height="16" style="border-radius:4px">Recettes de saison</span><span class="etiq">Onglet du navigateur</span></div>
-    <div class="cas"><span class="ecran sombre automne" style="display:inline-flex;background:#161217;padding:14px;border-radius:18px"><img class="vig" src="./icones/rosace.svg" alt="" width="64" height="64" style="background:#eceae1;border-radius:50%;padding:4px"></span><span class="etiq">Emblème en sombre</span></div>
+    <div class="cas"><span class="onglet"><img src="./icones/favicon.svg" alt="" width="16" height="16">Recettes de saison</span><span class="etiq">Onglet du navigateur</span></div>
+    <div class="cas"><span class="ecran sombre automne" style="display:inline-flex;background:#161217;padding:14px;border-radius:18px"><img src="./icones/feuille-automne.svg" alt="" width="64" height="64"></span><span class="etiq">Rail, en sombre</span></div>
   </div>
   <div class="rangee" style="margin-top: 52px; align-items: flex-start">
     <div class="fond-ecran" aria-label="Aperçu d’un écran d’accueil de téléphone">
       <span class="app"><i></i>Photos</span><span class="app"><i></i>Plans</span><span class="app"><i></i>Météo</span><span class="app"><i></i>Notes</span>
       <span class="app"><i></i>Musique</span><span class="app"><img src="./icones/app.svg" alt="">De saison</span><span class="app"><i></i>Horloge</span><span class="app"><i></i>Réglages</span>
     </div>
-    <p class="doux" style="max-width: 380px">Sous l’icône, le nom court « De saison ». Elle sert aussi d’emblème en haut du rail sur tablette, et sur l’écran de lancement où la rosace éclot pétale par pétale.</p>
+    <p class="doux" style="max-width: 380px">Sous l’icône, le nom court « De saison ». L’icône d’écran d’accueil garde la tomate d’été, la plus lisible en petit. Dans l’app, la feuille suit la saison : en haut du rail sur tablette, et sur l’écran de lancement, où la page de la saison passée se tourne.</p>
+  </div>
+  <p class="etiq" style="margin-top: 52px">Dans l’app, la feuille suit la saison</p>
+  <div class="saisons" style="margin-top: 16px">
+    <figure><img src="./icones/feuille-hiver.svg" alt="" width="112" height="112"><figcaption class="etiq">Hiver · poireau</figcaption></figure>
+    <figure><img src="./icones/feuille-printemps.svg" alt="" width="112" height="112"><figcaption class="etiq">Printemps · asperge</figcaption></figure>
+    <figure><img src="./icones/feuille-ete.svg" alt="" width="112" height="112"><figcaption class="etiq">Été · tomate</figcaption></figure>
+    <figure><img src="./icones/feuille-automne.svg" alt="" width="112" height="112"><figcaption class="etiq">Automne · potiron</figcaption></figure>
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":1120}}'>
 class Component extends DCLogic {
   renderVals() {
     return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };

@@ -135,12 +135,26 @@ la [charte des illustrations](design/ILLUSTRATIONS.md).
 
 ## Icône et écran de lancement
 
-L'emblème est une rosace : les 12 mois en pétales, de janvier en haut, dans le sens des aiguilles
-d'une montre. La longueur de chaque pétale suit le nombre de produits de saison ce mois-là, la couleur
-la saison. Fichiers dans `public/icones/` (icône iPhone 180 px, Android 192/512 px et version adaptable,
-favicon). L'écran de lancement, écrit directement dans `index.html` pour s'afficher avant le JavaScript,
-fait éclore la rosace pendant le chargement des légumes et des polices (0,9 s au plus tôt, 4 s au plus tard),
-et reste immobile si l'appareil demande de réduire les animations.
+L'emblème est « la feuille du mois » : une page d'éphéméride dont le bandeau prend la couleur de la
+saison, avec le produit de saison servi dans un bol (poireau, asperge, tomate, potiron). L'icône
+d'écran d'accueil garde la tomate d'été, la plus lisible en petit ; dans l'app, la feuille suit la
+saison (rail sur tablette, écran de lancement).
+
+Tout sort de `scripts/dessiner-logo.mjs`, à partir des illustrations de `scripts/icones-maison/` :
+les SVG de `public/icones/` et le bloc de l'écran de lancement dans `index.html` (entre les repères
+`logo:debut` et `logo:fin`). Après une modification, régénérer puis rendre les PNG depuis `app.svg`
+et `app-adaptable.svg` (512 px, puis 192 et 180 px pour Android et iPhone) :
+
+```bash
+node scripts/dessiner-logo.mjs
+```
+
+L'écran de lancement, écrit dans `index.html` pour s'afficher avant le JavaScript, empile les quatre
+pages de l'année : les trois autres saisons se tournent sur leurs anneaux, trois produits de la saison
+en cours tombent dans le bol, puis le titre arrive lettre par lettre avec un rebond. Il couvre le
+chargement des légumes et des polices (1,6 s au plus tôt, 4 s au plus tard) et reste immobile si
+l'appareil demande de réduire les animations, comme toutes les animations de l'app. La même
+chronologie, générée par le script, tourne en boucle dans la maquette (`design/Lancement.dc.html`).
 
 ## Maquette
 

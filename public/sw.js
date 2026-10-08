@@ -4,7 +4,7 @@ const VERSION = '__VERSION__';
 const CACHE = `recettes-de-saison-${VERSION}`;
 const BASE = new URL('./', self.location).pathname; // /my-recipe/
 
-const COQUILLE = ['', 'index.html', 'legumes.json', 'manifest.webmanifest', 'icones/favicon.svg', 'icones/rosace.svg', 'icones/apple-touch-icon.png', 'icones/icone-192.png', 'fonts/young-serif.woff2', 'fonts/hanken-grotesk.woff2', 'fonts/sofia-sans-extra-condensed-700.woff2'];
+const COQUILLE = ['', 'index.html', 'legumes.json', 'manifest.webmanifest', 'icones/favicon.svg', 'icones/feuille-hiver.svg', 'icones/feuille-printemps.svg', 'icones/feuille-ete.svg', 'icones/feuille-automne.svg', 'icones/apple-touch-icon.png', 'icones/icone-192.png', 'fonts/young-serif.woff2', 'fonts/hanken-grotesk.woff2', 'fonts/sofia-sans-extra-condensed-700.woff2'];
 
 /** Fichiers du build cités par index.html (noms avec empreinte, différents à chaque version). */
 async function fichiersDuBuild() {
@@ -79,7 +79,12 @@ self.addEventListener('fetch', (evenement) => {
   const url = new URL(request.url);
   if (request.method !== 'GET' || url.origin !== self.location.origin || !url.pathname.startsWith(BASE)) return;
 
-  if (request.mode === 'navigate') evenement.respondWith(reseauPuisCache(request));
-  else if (url.pathname.endsWith('/legumes.json')) evenement.respondWith(cacheEtMiseAJour(request));
+  // Seule la page de l'app sert de coquille hors connexion : un fichier ouvert dans un onglet
+  // (legumes.json, une icône…) ne doit pas la remplacer dans le cache.
+  if (request.mode === 'navigate') {
+    if (url.pathname === BASE || url.pathname === `${BASE}index.html`) evenement.respondWith(reseauPuisCache(request));
+    return;
+  }
+  if (url.pathname.endsWith('/legumes.json')) evenement.respondWith(cacheEtMiseAJour(request));
   else evenement.respondWith(cacheDabord(request));
 });

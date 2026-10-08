@@ -144,7 +144,7 @@
     text-decoration: none;
     cursor: pointer;
     white-space: nowrap;
-    transition: background-color 0.12s, box-shadow 0.12s, color 0.12s;
+    transition: background-color 0.12s, box-shadow 0.12s, color 0.12s, transform 0.12s;
   }
   .btn-plein { background: var(--saison); color: var(--sur-saison); }
   .btn-encre { background: var(--encre); color: var(--papier); }
@@ -241,6 +241,27 @@
 }
 
 @keyframes frise-monte { from { transform: scaleY(0); } }
+/* Mouvement : court, doux, toujours au service de ce qui change. Tout est coupé si l'appareil demande moins d'animations. */
+.btn:active, .chip:active, .filtre:active, .ico:active { transform: scale(0.96); }
+.chip, .filtre, .ico { transition-property: background-color, border-color, color, transform; transition-duration: 0.12s; }
+/* Un écran qui s'ouvre apparaît en fondu. Pas de transform ici : il piégerait les boutons fixes de l'écran. */
+.ecran-entre { animation: voile 0.24s ease-out both; }
+/* Listes : les éléments montent d'un cran l'un après l'autre (les huit premiers, au-delà ensemble). */
+@keyframes monte { from { opacity: 0; transform: translateY(8px); } }
+.cascade > * { animation: monte 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.cascade > :nth-child(2) { animation-delay: 35ms; }
+.cascade > :nth-child(3) { animation-delay: 70ms; }
+.cascade > :nth-child(4) { animation-delay: 105ms; }
+.cascade > :nth-child(5) { animation-delay: 140ms; }
+.cascade > :nth-child(6) { animation-delay: 175ms; }
+.cascade > :nth-child(7) { animation-delay: 210ms; }
+.cascade > :nth-child(n + 8) { animation-delay: 245ms; }
+/* Onglet actif : la pastille s'ouvre depuis le centre. */
+.pastille-active { animation: pastille 0.24s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes pastille { from { transform: scaleX(0.5); opacity: 0; } }
+/* Changement de mois dans le calendrier : le nom glisse, les barres suivent. */
+.glisse { animation: glisse 0.22s ease-out both; }
+@keyframes glisse { from { opacity: 0; transform: translateY(4px); } }
 /* Une nouvelle recette dans un repas arrive en glissant : on voit ce qui a changé. */
 .apparait { animation: apparait 0.18s ease-out both; }
 @keyframes apparait { from { opacity: 0; transform: translateX(-8px); } }
