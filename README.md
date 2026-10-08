@@ -7,18 +7,53 @@ ce qui est de saison ce mois-ci.
 Tout reste sur l'appareil : pas de compte, pas de serveur. Une sauvegarde s'exporte et
 s'importe en fichier JSON. L'app s'installe sur l'écran d'accueil et fonctionne hors ligne.
 
-> Projet en cours de développement — étapes suivies : maquette ✓, synchro des légumes ✓,
-> squelette, écrans recettes, semaine et calendrier, PWA et accessibilité.
+> Projet en cours de développement — étapes suivies : maquette ✓, synchro des légumes ✓, squelette ✓,
+> écrans recettes, semaine et calendrier, PWA et accessibilité.
 
-## Prérequis
+En ligne : https://axsomette.github.io/my-recipe/
 
-- Node.js 22 ou plus récent
+## Installation
+
+Node.js 22 ou plus récent.
+
+```bash
+npm install
+npm run dev
+```
+
+L'app s'ouvre sur http://localhost:5173/my-recipe/.
 
 ## Scripts
 
 | Commande | Rôle |
 |---|---|
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Vérifie les types puis construit le site dans `dist/` |
+| `npm run preview` | Sert le build de `dist/` en local |
+| `npm run typecheck` | Vérifie les types TypeScript |
 | `npm run sync:legumes` | Met à jour `public/legumes.json` et les illustrations |
+
+## Stack
+
+Vite, Preact, Tailwind CSS et TypeScript, sans autre dépendance. Pas de routeur ni de bibliothèque
+d'état : le routage par hash (`#/semaine`, `#/recettes`…) tient dans `src/lib/routeur.ts`, car GitHub Pages
+ne sait pas renvoyer `index.html` pour une URL inconnue.
+
+| Dossier | Contenu |
+|---|---|
+| `src/lib/` | Logique pure et données : types, stockage, routage, calendrier, catalogue |
+| `src/components/` | Composants réutilisables (navigation, vignette, icônes) |
+| `src/pages/` | Écrans |
+| `public/` | `legumes.json`, illustrations, polices auto-hébergées |
+
+Les données de l'utilisateur passent toutes par `src/lib/stockage.ts`, seul module à toucher au
+`localStorage`. Elles sont versionnées (`{ version, recettes, legumesPerso, reglages, plannings }`) ;
+une évolution du format s'accompagne d'une migration dans ce même fichier.
+
+## Déploiement
+
+Chaque push sur `main` lance `.github/workflows/deploy.yml` : build, puis publication sur GitHub Pages
+(source « GitHub Actions » dans *Settings → Pages*). La `base` de Vite vaut `/my-recipe/`, le nom du dépôt.
 
 ## Les données de saison
 

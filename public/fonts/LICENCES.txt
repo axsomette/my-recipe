@@ -1,0 +1,6 @@
+Polices auto-hébergées (sous-ensemble latin), toutes sous SIL Open Font License 1.1 :
+https://openfontlicense.org
+
+- Young Serif — Copyright The Young Serif Project Authors (https://github.com/noirblancrouge/YoungSerif)
+- Hanken Grotesk — Copyright The Hanken Grotesk Project Authors (https://github.com/marcologous/hanken-grotesk)
+- Sofia Sans Extra Condensed — Copyright The Sofia Sans Project Authors (https://github.com/lettersoup/Sofia-Sans)

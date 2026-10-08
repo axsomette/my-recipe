@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+
+/* Polices auto-hébergées (OFL, voir public/fonts/LICENCES.txt) */
+@font-face {
+  font-family: 'Young Serif';
+  src: url('/fonts/young-serif.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Hanken Grotesk';
+  src: url('/fonts/hanken-grotesk.woff2') format('woff2');
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sofia Sans Extra Condensed';
+  src: url('/fonts/sofia-sans-extra-condensed-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* Tokens de la maquette (design/rs.css). Les couleurs passent par des variables
+   pour suivre la saison (classe sur <html>) et le mode sombre. */
+:root {
+  --papier: #eef0e7;
+  --carte: #f9faf5;
+  --creux: #e3e6da;
+  --encre: #221a20;
+  --encre-2: #5a5158;
+  --trait: #d6d9cd;
+  --trait-fort: #7e8076;
+  --danger: #a3201a;
+  --danger-pale: #f6dcd8;
+  --ok: #2f6a3a;
+  --ok-pale: #dcebd9;
+  --sur-danger: #ffffff;
+  color-scheme: light;
+}
+
+.automne { --saison: #a9480f; --saison-texte: #8e3b0b; --saison-pale: #f2decb; --sur-saison: #ffffff; }
+.hiver { --saison: #6e2a63; --saison-texte: #6e2a63; --saison-pale: #eadbe6; --sur-saison: #ffffff; }
+.printemps { --saison: #3b6b1f; --saison-texte: #335e1a; --saison-pale: #dce9cf; --sur-saison: #ffffff; }
+.ete { --saison: #b3261e; --saison-texte: #9c2019; --saison-pale: #f4d8d3; --sur-saison: #ffffff; }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --papier: #161217;
+    --carte: #211b22;
+    --creux: #2b242c;
+    --encre: #eceae1;
+    --encre-2: #ada5ad;
+    --trait: #3a333b;
+    --trait-fort: #857d86;
+    --danger: #f2948b;
+    --danger-pale: #3d1f1d;
+    --ok: #9dd3a2;
+    --ok-pale: #1e3322;
+    --sur-danger: #221a20;
+    color-scheme: dark;
+  }
+  .automne { --saison: #f09a5b; --saison-texte: #f5b184; --saison-pale: #3a271b; --sur-saison: #221a20; }
+  .hiver { --saison: #d9a0cc; --saison-texte: #e3b6d8; --saison-pale: #35203a; --sur-saison: #221a20; }
+  .printemps { --saison: #a6d17e; --saison-texte: #b7db96; --saison-pale: #24331b; --sur-saison: #221a20; }
+  .ete { --saison: #f2877c; --saison-texte: #f6a59c; --saison-pale: #3d1f1d; --sur-saison: #221a20; }
+}
+
+@theme inline {
+  --color-papier: var(--papier);
+  --color-carte: var(--carte);
+  --color-creux: var(--creux);
+  --color-encre: var(--encre);
+  --color-encre-2: var(--encre-2);
+  --color-trait: var(--trait);
+  --color-trait-fort: var(--trait-fort);
+  --color-danger: var(--danger);
+  --color-danger-pale: var(--danger-pale);
+  --color-ok: var(--ok);
+  --color-ok-pale: var(--ok-pale);
+  --color-sur-danger: var(--sur-danger);
+  --color-saison: var(--saison);
+  --color-saison-texte: var(--saison-texte);
+  --color-saison-pale: var(--saison-pale);
+  --color-sur-saison: var(--sur-saison);
+
+  --font-display: 'Young Serif', Georgia, serif;
+  --font-texte: 'Hanken Grotesk', system-ui, sans-serif;
+  --font-etiq: 'Sofia Sans Extra Condensed', 'Arial Narrow', sans-serif;
+}
+
+@layer base {
+  html {
+    background: var(--papier);
+    color: var(--encre);
+    font-family: var(--font-texte);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    min-height: 100dvh;
+    line-height: 1.45;
+  }
+  :focus-visible {
+    outline: 3px solid var(--encre);
+    outline-offset: 3px;
+  }
+  ::placeholder {
+    color: var(--encre-2);
+    opacity: 1;
+  }
+}
+
+@layer components {
+  /* Étiquette condensée en capitales (titres de section, lettres des mois) */
+  .etiq {
+    font-family: var(--font-etiq);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 14px;
+    line-height: 1.2;
+    color: var(--encre-2);
+  }
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+  }
+}
+
+/* En sombre, les illustrations sont posées sur une assiette claire pour garder leur contour lisible. */
+@media (prefers-color-scheme: dark) {
+  .vignette {
+    background: #eceae1;
+    border-radius: 50%;
+    padding: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
