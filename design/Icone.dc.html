@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Icône de l’app</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}
+.planche{display:block;padding:56px 56px 64px}
+.rangee{display:flex;align-items:flex-end;gap:48px;flex-wrap:wrap}
+.cas{display:flex;flex-direction:column;align-items:center;gap:12px}
+.ios{width:180px;height:180px;border-radius:40px;overflow:hidden;box-shadow:0 10px 28px rgb(34 26 32 / .18)}
+.android{width:160px;height:160px;border-radius:50%;overflow:hidden;box-shadow:0 10px 28px rgb(34 26 32 / .18)}
+.android img{width:190px;height:190px;margin:-15px}
+.petite{width:60px;height:60px;border-radius:14px;overflow:hidden}
+.onglet{display:inline-flex;align-items:center;gap:8px;background:var(--carte);border:1px solid var(--trait);border-radius:10px 10px 0 0;padding:8px 14px;font-size:13px}
+.fond-ecran{display:grid;grid-template-columns:repeat(4,72px);gap:22px 18px;padding:28px 24px;border-radius:28px;background:linear-gradient(160deg,#3b5b4a,#2a3d4f)}
+.app{display:flex;flex-direction:column;align-items:center;gap:6px;font:500 11px/1.1 'Hanken Grotesk',sans-serif;color:#fff;text-align:center}
+.app i{display:block;width:60px;height:60px;border-radius:14px;background:rgb(255 255 255 / .18)}
+.app img{width:60px;height:60px;border-radius:14px}
+</style>
+</helmet>
+<div class="ecran planche {{saison}} {{theme}}" style="width: 1280px">
+  <p class="etiq">Icône et emblème</p>
+  <h1 class="display" style="font-size: 44px; margin-top: 10px">La rosace des saisons</h1>
+  <p class="doux" style="max-width: 760px; margin-top: 12px; font-size: 17px">Les 12 mois en pétales, de janvier en haut, dans le sens des aiguilles d’une montre. La longueur de chaque pétale suit le nombre de produits de saison ce mois-là ; la couleur, la saison : chou rouge, petit pois, tomate, potimarron. Même trait que les illustrations des légumes.</p>
+  <div class="rangee" style="margin-top: 44px">
+    <div class="cas"><div class="ios"><img src="./icones/app.svg" alt="" width="180" height="180"></div><span class="etiq">iPhone · écran d’accueil</span></div>
+    <div class="cas"><div class="android"><img src="./icones/app.svg" alt=""></div><span class="etiq">Android · icône adaptable</span></div>
+    <div class="cas"><div class="petite"><img src="./icones/app.svg" alt="" width="60" height="60"></div><span class="etiq">60 px</span></div>
+    <div class="cas"><span class="onglet"><img src="./icones/app.svg" alt="" width="16" height="16" style="border-radius:4px">Recettes de saison</span><span class="etiq">Onglet du navigateur</span></div>
+    <div class="cas"><span class="ecran sombre automne" style="display:inline-flex;background:#161217;padding:14px;border-radius:18px"><img class="vig" src="./icones/rosace.svg" alt="" width="64" height="64" style="background:#eceae1;border-radius:50%;padding:4px"></span><span class="etiq">Emblème en sombre</span></div>
+  </div>
+  <div class="rangee" style="margin-top: 52px; align-items: flex-start">
+    <div class="fond-ecran" aria-label="Aperçu d’un écran d’accueil de téléphone">
+      <span class="app"><i></i>Photos</span><span class="app"><i></i>Plans</span><span class="app"><i></i>Météo</span><span class="app"><i></i>Notes</span>
+      <span class="app"><i></i>Musique</span><span class="app"><img src="./icones/app.svg" alt="">De saison</span><span class="app"><i></i>Horloge</span><span class="app"><i></i>Réglages</span>
+    </div>
+    <p class="doux" style="max-width: 380px">Sous l’icône, le nom court « De saison ». Elle sert aussi d’emblème en haut du rail sur tablette, et sur l’écran de lancement où la rosace éclot pétale par pétale.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

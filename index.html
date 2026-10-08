@@ -7,11 +7,86 @@
     <meta name="description" content="Vos recettes, classées par saison, et vos repas de la semaine composés avec ce qui pousse en ce moment." />
     <meta name="theme-color" content="#EEF0E7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#161217" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/icones/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icones/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="De saison" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="preload" href="/fonts/young-serif.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/hanken-grotesk.woff2" as="font" type="font/woff2" crossorigin />
+    <script>
+      // Saison en cours posée avant le premier affichage : l'accent est juste dès l'écran de lancement.
+      (function () {
+        var m = new Date().getMonth() + 1;
+        document.documentElement.classList.add(m === 12 || m <= 2 ? 'hiver' : m <= 5 ? 'printemps' : m <= 8 ? 'ete' : 'automne');
+      })();
+    </script>
+    <style>
+      /* Écran de lancement : en ligne pour s'afficher avant le JavaScript. */
+      #lancement {
+        --fond: #eef0e7; --encre: #221a20; --doux: #5a5158; --creux: #e3e6da; --accent: #a9480f;
+        position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
+        background: var(--fond); color: var(--encre);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+      .hiver #lancement { --accent: #6e2a63; }
+      .printemps #lancement { --accent: #3b6b1f; }
+      .ete #lancement { --accent: #b3261e; }
+      @media (prefers-color-scheme: dark) {
+        #lancement { --fond: #161217; --encre: #eceae1; --doux: #ada5ad; --creux: #2b242c; --accent: #f09a5b; }
+        .hiver #lancement { --accent: #d9a0cc; }
+        .printemps #lancement { --accent: #a6d17e; }
+        .ete #lancement { --accent: #f2877c; }
+        /* En sombre, la rosace est posée sur une assiette claire, comme les illustrations de l'app. */
+        #lancement .l-rosace .assiette { display: inline; }
+      }
+      #lancement.fin { opacity: 0; transform: translateY(-6px); }
+      .l-centre { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+      .l-titre { margin: 0; font: 400 42px/1 'Young Serif', Georgia, serif; letter-spacing: -0.015em; text-align: center; }
+      .l-titre span { display: block; color: var(--accent); }
+      .l-rosace { width: 132px; height: 132px; margin-bottom: 4px; overflow: visible; }
+      .l-rosace .assiette { display: none; }
+      .l-rosace path {
+        transform: scale(0); animation: l-eclot 0.38s cubic-bezier(0.34, 1.5, 0.64, 1) forwards;
+        animation-delay: calc(var(--n) * 40ms + 80ms);
+      }
+      .l-rosace circle:not(.assiette) { transform-origin: 256px 256px; transform: scale(0); animation: l-eclot 0.3s cubic-bezier(0.34, 1.5, 0.64, 1) forwards; }
+      .l-mois {
+        margin: 0; font: 700 13px/1 'Sofia Sans Extra Condensed', 'Arial Narrow', sans-serif; letter-spacing: 0.1em; text-transform: uppercase;
+        color: var(--doux); opacity: 0; animation: l-apparait 0.3s ease-out 0.55s forwards;
+      }
+      .l-masque { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      @keyframes l-eclot { to { transform: scale(1); } }
+      @keyframes l-apparait { to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        .l-rosace path, .l-rosace circle:not(.assiette) { animation: none; transform: none; }
+        .l-mois { animation: none; opacity: 1; }
+        #lancement { transition-duration: 0.12s; }
+        #lancement.fin { transform: none; }
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="lancement" role="status">
+      <div class="l-centre">
+        <svg class="l-rosace" viewBox="0 0 512 512" aria-hidden="true" stroke="#221A20" stroke-width="9" stroke-linejoin="round"><circle class="assiette" cx="256" cy="256" r="250" fill="#EEF0E7" stroke="none"/><g transform="translate(256.0 208.0) rotate(-90)"><path style="--n:0" d="M0 0C44.8 -32  118.4 -30.4 160.0 0C118.4 30.4 44.8 32 0 0Z" fill="#9A6AA8"/></g><g transform="translate(280.0 214.4) rotate(-60)"><path style="--n:1" d="M0 0C42.3 -32  111.9 -30.4 151.2 0C111.9 30.4 42.3 32 0 0Z" fill="#9A6AA8"/></g><g transform="translate(297.6 232.0) rotate(-30)"><path style="--n:2" d="M0 0C38.3 -32  101.2 -30.4 136.8 0C101.2 30.4 38.3 32 0 0Z" fill="#8CC56F"/></g><g transform="translate(304.0 256.0) rotate(0)"><path style="--n:3" d="M0 0C32.9 -32  87.0 -30.4 117.6 0C87.0 30.4 32.9 32 0 0Z" fill="#8CC56F"/></g><g transform="translate(297.6 280.0) rotate(30)"><path style="--n:4" d="M0 0C34.3 -32  90.6 -30.4 122.4 0C90.6 30.4 34.3 32 0 0Z" fill="#8CC56F"/></g><g transform="translate(280.0 297.6) rotate(60)"><path style="--n:5" d="M0 0C41.7 -32  110.1 -30.4 148.8 0C110.1 30.4 41.7 32 0 0Z" fill="#E5544F"/></g><g transform="translate(256.0 304.0) rotate(90)"><path style="--n:6" d="M0 0C42.3 -32  111.9 -30.4 151.2 0C111.9 30.4 42.3 32 0 0Z" fill="#E5544F"/></g><g transform="translate(232.0 297.6) rotate(120)"><path style="--n:7" d="M0 0C42.8 -32  113.1 -30.4 152.8 0C113.1 30.4 42.8 32 0 0Z" fill="#E5544F"/></g><g transform="translate(214.4 280.0) rotate(150)"><path style="--n:8" d="M0 0C48.2 -32  127.3 -30.4 172.0 0C127.3 30.4 48.2 32 0 0Z" fill="#F08A24"/></g><g transform="translate(208.0 256.0) rotate(180)"><path style="--n:9" d="M0 0C47.5 -32  125.5 -30.4 169.6 0C125.5 30.4 47.5 32 0 0Z" fill="#F08A24"/></g><g transform="translate(214.4 232.0) rotate(210)"><path style="--n:10" d="M0 0C47.5 -32  125.5 -30.4 169.6 0C125.5 30.4 47.5 32 0 0Z" fill="#F08A24"/></g><g transform="translate(232.0 214.4) rotate(240)"><path style="--n:11" d="M0 0C44.1 -32  116.6 -30.4 157.6 0C116.6 30.4 44.1 32 0 0Z" fill="#9A6AA8"/></g><circle cx="256" cy="256" r="34" fill="#F9FAF5"/></svg>
+        <p class="l-titre">Recettes<span>de saison</span></p>
+        <p class="l-mois" id="lancement-mois" aria-hidden="true"></p>
+        <span class="l-masque">Chargement de vos recettes…</span>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var mois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+        var saisons = { hiver: 'hiver', printemps: 'printemps', ete: 'été', automne: 'automne' };
+        var m = new Date().getMonth();
+        var classe = document.documentElement.classList[0];
+        document.getElementById('lancement-mois').textContent = mois[m] + ' · ' + (saisons[classe] || '');
+      })();
+    </script>
+    <div id="app" inert></div>
     <noscript>Recettes de saison a besoin de JavaScript pour fonctionner.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>

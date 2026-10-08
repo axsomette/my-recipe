@@ -12,7 +12,9 @@ import {
   trouverSuggestion,
 } from '../../src/lib/recettes.ts';
 import { lien, lireRoute } from '../../src/lib/routeur.ts';
+import { alignerPlanning, basculerGarde, changerRecette, classer, creneaux, genererSemaine, rangerPlanning, semainePrecedente } from '../../src/lib/planning.ts';
 import { calculerScores, libelleSaison, niveauSaison, plagesDeMois } from '../../src/lib/saison.ts';
+import { analyserImport, contenuExport, fusionner, nomFichierExport, supprimerLegumePerso } from '../../src/lib/sauvegarde.ts';
 import { donneesVides, lireDonnees } from '../../src/lib/stockage.ts';
 import type { Catalogue } from '../../src/lib/types.ts';
 
@@ -77,6 +79,48 @@ eq(legumesDansLeNom('Gratin de poireaux au comté', cat.legumes).map((l) => l.id
 eq(legumesDansLeNom('Velouté de chou de Bruxelles', cat.legumes).map((l) => l.id).sort(), ['chou','choudebruxelles'], 'nom composé');
 eq(legumesDansLeNom('Bailey et pâtes', cat.legumes).length, 0, 'pas de faux positif ail');
 eq(legumesDansLeNom('Haricots verts sautés', cat.legumes).map((l) => l.id), ['haricotvert'], 'haricot vert (cru) nettoyé');
+
+// --- Générateur de semaine ---
+// Hasard reproductible pour les vérifications.
+const graine = (n: number) => () => ((n = (n * 1103515245 + 12345) % 2147483648) / 2147483648);
+const r = (id: string, scores: number[] | null) => ({ id, nom: id, legumes: [], notes: '', createdAt: '', updatedAt: '', scoreParMois: scores });
+const plein = Array(12).fill(1), moitie = Array(12).fill(0.5), zero = Array(12).fill(0);
+const recettesTest = [r('hors', zero), r('joker', null), r('moitie', moitie), r('p1', plein), r('p2', plein), r('p3', plein)];
+eq(creneaux({ jours: 2, moments: ['soir', 'midi'] }), [{ jour: 0, moment: 'midi' }, { jour: 0, moment: 'soir' }, { jour: 1, moment: 'midi' }, { jour: 1, moment: 'soir' }], 'créneaux midi puis soir');
+eq(classer(recettesTest, 10, new Set(), graine(1)).map((x) => x.id).slice(3), ['moitie', 'joker', 'hors'], 'ordre : saison, partie, joker, hors saison');
+eq(classer(recettesTest, 10, new Set(['p1', 'p2']), graine(1)).map((x) => x.id).slice(0, 3)[0], 'p3', 'semaine précédente évitée');
+const g1 = genererSemaine({ recettes: recettesTest, reglages: { jours: 4, moments: ['soir'] }, mois: 10, semaine: '2026-W41', aleatoire: graine(2) });
+eq([g1.manquants, new Set(g1.planning.slots.map((s) => s.recetteId)).size, g1.planning.slots.slice(3).map((s) => s.recetteId)], [0, 4, ['moitie']], 'semaine sans doublon, saison d’abord');
+const g2 = genererSemaine({ recettes: recettesTest, reglages: { jours: 7, moments: ['midi', 'soir'] }, mois: 10, semaine: '2026-W41', aleatoire: graine(3) });
+eq([g2.manquants, g2.planning.slots.filter((s) => s.recetteId).length], [8, 6], 'pas assez de recettes : repas vides comptés');
+const garde = basculerGarde(g1.planning, { jour: 1, moment: 'soir' });
+const gardee = garde.slots[1]!.recetteId;
+const g3 = genererSemaine({ recettes: recettesTest, reglages: { jours: 4, moments: ['soir'] }, mois: 10, semaine: '2026-W41', actuel: garde, aleatoire: graine(9) });
+eq([g3.planning.slots[1]!.recetteId, g3.planning.slots[1]!.verrouille, g3.planning.slots.filter((s) => s.recetteId === gardee).length], [gardee, true, 1], 'repas gardé conservé, sans doublon');
+const change = changerRecette(g1.planning, { jour: 0, moment: 'soir' }, { recettes: recettesTest, mois: 10, aleatoire: graine(4) })!;
+eq([change.slots[0]!.recetteId !== g1.planning.slots[0]!.recetteId, new Set(change.slots.map((s) => s.recetteId)).size], [true, 4], 'changer un repas : autre recette, sans doublon');
+eq(changerRecette(g2.planning, { jour: 0, moment: 'midi' }, { recettes: recettesTest, mois: 10 }), null, 'aucune autre recette disponible');
+eq(semainePrecedente(new Date(2026, 9, 8)), '2026-W40', 'semaine précédente');
+eq(semainePrecedente(new Date(2026, 0, 1)), '2025-W52', 'semaine précédente au Nouvel An');
+const p40 = { semaine: '2026-W40', slots: [] }, p39 = { semaine: '2026-W39', slots: [] }, p41 = { semaine: '2026-W41', slots: [] };
+eq(rangerPlanning([p39, p40], p41, '2026-W40').map((p) => p.semaine), ['2026-W40', '2026-W41'], 'on garde la semaine précédente seulement');
+
+eq(alignerPlanning(g1.planning, { jours: 1, moments: ['midi', 'soir'] }, '2026-W41').slots.map((s) => [s.moment, s.recetteId === null]), [['midi', true], ['soir', false]], 'planning aligné sur de nouveaux réglages');
+
+// --- Sauvegarde ---
+eq(nomFichierExport(new Date(2026, 9, 8)), 'recettes-de-saison-2026-10-08.json', 'nom du fichier daté');
+const base = { ...donneesVides(), recettes: [{ ...r('a', null), legumes: ['poireau'], updatedAt: '2026-10-01' }] };
+eq(analyserImport(contenuExport(base)).ok, true, 'export relu sans perte');
+eq(analyserImport('{pas du json'), { ok: false, raison: 'illisible' }, 'fichier illisible');
+eq(analyserImport('{"courses":["pain"]}'), { ok: false, raison: 'format' }, 'autre fichier JSON');
+eq(analyserImport('{"version":99}'), { ok: false, raison: 'version' }, 'version plus récente');
+const importee = { ...donneesVides(), recettes: [{ ...r('a', null), nom: 'A modifiée', legumes: ['poireau'], updatedAt: '2026-10-05' }, { ...r('b', null), legumes: ['tomate'], updatedAt: '2026-09-01' }] };
+const fusion = fusionner(base, importee, cat);
+eq([fusion.ajoutees, fusion.misesAJour, fusion.donnees.recettes.find((x) => x.id === 'a')!.nom], [1, 1, 'A modifiée'], 'fusion : ajout et version la plus récente');
+eq(fusion.donnees.recettes.find((x) => x.id === 'b')!.scoreParMois?.[7], 1, 'fusion : scores recalculés');
+const avecPerso = { ...base, legumesPerso: [{ id: 'perso-cepe', nom: 'Cèpe', categorie: 'legumes' as const, mois: [9, 10, 11], source: 'perso' as const, touteLannee: false, icone: 'legumes/icones/champignon.svg' }], recettes: [{ ...r('c', null), legumes: ['perso-cepe', 'poireau'] }] };
+const sansPerso = supprimerLegumePerso(avecPerso, 'perso-cepe', cat);
+eq([sansPerso.legumesPerso.length, sansPerso.recettes[0]!.legumes], [0, ['poireau']], 'légume perso retiré des recettes');
 
 console.log(echecs ? `\n${echecs} échec(s)` : '\nTout est bon.');
 process.exitCode = echecs ? 1 : 0;

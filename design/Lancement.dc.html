@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Écran de lancement</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}
+.lanc{display:grid;place-items:center;width:375px;height:812px;background:var(--papier);color:var(--encre)}
+.centre{display:flex;flex-direction:column;align-items:center;gap:18px}
+.titre{margin:0;font:400 42px/1 'Young Serif',Georgia,serif;letter-spacing:-.015em;text-align:center}
+.titre span{display:block;color:var(--saison-texte)}
+.l-rosace{width:132px;height:132px;margin-bottom:4px;overflow:visible}
+.l-rosace .assiette{display:none}
+.sombre .l-rosace .assiette{display:inline}
+/* Boucle de 3,2 s pour la maquette ; dans l'app l'éclosion ne joue qu'une fois. */
+.l-rosace path{transform:scale(0);animation:boucle 3.2s cubic-bezier(.34,1.5,.64,1) infinite;animation-delay:calc(var(--n)*40ms + 80ms)}
+.l-rosace circle:not(.assiette){transform-origin:256px 256px;animation:boucle 3.2s cubic-bezier(.34,1.5,.64,1) infinite}
+.mois{margin:0;font:700 13px/1 'Sofia Sans Extra Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--encre-2);animation:texte 3.2s ease-out infinite}
+@keyframes boucle{0%{transform:scale(0)}12%{transform:scale(1)}88%{transform:scale(1);opacity:1}96%,100%{transform:scale(1);opacity:0}}
+@keyframes texte{0%,17%{opacity:0}24%,88%{opacity:1}96%,100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){.l-rosace path,.l-rosace circle,.mois{animation:none;transform:none;opacity:1}}
+</style>
+</helmet>
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 812px">
+  <div class="lanc" role="img" aria-label="Écran de lancement : la rosace des saisons éclot, puis Recettes de saison">
+    <div class="centre">
+      <svg class="l-rosace" viewBox="0 0 512 512" aria-hidden="true" stroke="#221A20" stroke-width="9" stroke-linejoin="round"><circle class="assiette" cx="256" cy="256" r="250" fill="#EEF0E7" stroke="none"/><g transform="translate(256.0 208.0) rotate(-90)"><path style="--n:0" d="M0 0C44.8 -32  118.4 -30.4 160.0 0C118.4 30.4 44.8 32 0 0Z" fill="#9A6AA8"/></g><g transform="translate(280.0 214.4) rotate(-60)"><path style="--n:1" d="M0 0C42.3 -32  111.9 -30.4 151.2 0C111.9 30.4 42.3 32 0 0Z" fill="#9A6AA8"/></g><g transform="translate(297.6 232.0) rotate(-30)"><path style="--n:2" d="M0 0C38.3 -32  101.2 -30.4 136.8 0C101.2 30.4 38.3 32 0 0Z" fill="#8CC56F"/></g><g transform="translate(304.0 256.0) rotate(0)"><path style="--n:3" d="M0 0C32.9 -32  87.0 -30.4 117.6 0C87.0 30.4 32.9 32 0 0Z" fill="#8CC56F"/></g><g transform="translate(297.6 280.0) rotate(30)"><path style="--n:4" d="M0 0C34.3 -32  90.6 -30.4 122.4 0C90.6 30.4 34.3 32 0 0Z" fill="#8CC56F"/></g><g transform="translate(280.0 297.6) rotate(60)"><path style="--n:5" d="M0 0C41.7 -32  110.1 -30.4 148.8 0C110.1 30.4 41.7 32 0 0Z" fill="#E5544F"/></g><g transform="translate(256.0 304.0) rotate(90)"><path style="--n:6" d="M0 0C42.3 -32  111.9 -30.4 151.2 0C111.9 30.4 42.3 32 0 0Z" fill="#E5544F"/></g><g transform="translate(232.0 297.6) rotate(120)"><path style="--n:7" d="M0 0C42.8 -32  113.1 -30.4 152.8 0C113.1 30.4 42.8 32 0 0Z" fill="#E5544F"/></g><g transform="translate(214.4 280.0) rotate(150)"><path style="--n:8" d="M0 0C48.2 -32  127.3 -30.4 172.0 0C127.3 30.4 48.2 32 0 0Z" fill="#F08A24"/></g><g transform="translate(208.0 256.0) rotate(180)"><path style="--n:9" d="M0 0C47.5 -32  125.5 -30.4 169.6 0C125.5 30.4 47.5 32 0 0Z" fill="#F08A24"/></g><g transform="translate(214.4 232.0) rotate(210)"><path style="--n:10" d="M0 0C47.5 -32  125.5 -30.4 169.6 0C125.5 30.4 47.5 32 0 0Z" fill="#F08A24"/></g><g transform="translate(232.0 214.4) rotate(240)"><path style="--n:11" d="M0 0C44.1 -32  116.6 -30.4 157.6 0C116.6 30.4 44.1 32 0 0Z" fill="#9A6AA8"/></g><circle cx="256" cy="256" r="34" fill="#F9FAF5"/></svg>
+      <p class="titre">Recettes<span>de saison</span></p>
+      <p class="mois">octobre · automne</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":812}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

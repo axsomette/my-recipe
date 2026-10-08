@@ -1,15 +1,39 @@
 import { render } from 'preact';
 import { App } from './app';
-import { moisCourant, saisonDuMois } from './lib/calendrier';
+import { chargerCatalogue } from './lib/catalogue';
 import { FournisseurDonnees } from './lib/donnees';
+import { suivreInstallation } from './lib/installation';
 import './styles.css';
 
-// L'accent de couleur suit la saison en cours.
-document.documentElement.classList.add(saisonDuMois(moisCourant()));
+suivreInstallation();
 
+const racine = document.getElementById('app')!;
 render(
   <FournisseurDonnees>
     <App />
   </FournisseurDonnees>,
-  document.getElementById('app')!,
+  racine,
 );
+
+/**
+ * Écran de lancement (index.html) : il couvre le vrai chargement (légumes, polices)
+ * et laisse à la rosace le temps d'éclore, sans jamais retenir l'app plus de 4 s.
+ */
+function fermerLancement() {
+  const ecran = document.getElementById('lancement');
+  if (!ecran) return;
+  const mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dureeMinimale = mouvementReduit ? 250 : 900; // ms depuis l'ouverture de la page
+  const pret = Promise.all([chargerCatalogue().catch(() => undefined), document.fonts?.ready]);
+  const limite = new Promise((fin) => setTimeout(fin, 4000));
+
+  Promise.race([pret, limite]).then(() => {
+    setTimeout(() => {
+      racine.inert = false;
+      ecran.classList.add('fin');
+      setTimeout(() => ecran.remove(), 320);
+    }, Math.max(0, dureeMinimale - performance.now()));
+  });
+}
+
+fermerLancement();

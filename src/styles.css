@@ -240,6 +240,9 @@
 }
 
 @keyframes frise-monte { from { transform: scaleY(0); } }
+/* Une nouvelle recette dans un repas arrive en glissant : on voit ce qui a changé. */
+.apparait { animation: apparait 0.18s ease-out both; }
+@keyframes apparait { from { opacity: 0; transform: translateX(-8px); } }
 @keyframes feuille-monte { from { transform: translateY(24px); opacity: 0; } }
 @keyframes voile { from { opacity: 0; } }
 

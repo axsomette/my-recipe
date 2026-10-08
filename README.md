@@ -8,7 +8,7 @@ Tout reste sur l'appareil : pas de compte, pas de serveur. Une sauvegarde s'expo
 s'importe en fichier JSON. L'app s'installe sur l'écran d'accueil et fonctionne hors ligne.
 
 > Projet en cours de développement — étapes suivies : maquette ✓, synchro des légumes ✓, squelette ✓,
-> écrans recettes ✓, semaine et calendrier, PWA et accessibilité.
+> écrans recettes ✓, semaine, calendrier et réglages ✓, PWA et accessibilité.
 
 En ligne : https://axsomette.github.io/my-recipe/
 
@@ -88,6 +88,15 @@ Pièges de l'API vérifiés : le filtre de catégories s'appelle `categories` (l
 Les 91 illustrations sont dessinées pour le projet (`scripts/icones-maison/`). Un nouveau produit
 sans dessin reçoit le panier générique et la synchro le signale : il faut alors le dessiner en suivant
 la [charte des illustrations](design/ILLUSTRATIONS.md).
+
+## Icône et écran de lancement
+
+L'emblème est une rosace : les 12 mois en pétales, de janvier en haut, dans le sens des aiguilles
+d'une montre. La longueur de chaque pétale suit le nombre de produits de saison ce mois-là, la couleur
+la saison. Fichiers dans `public/icones/` (icône iPhone 180 px, Android 192/512 px et version adaptable,
+favicon). L'écran de lancement, écrit directement dans `index.html` pour s'afficher avant le JavaScript,
+fait éclore la rosace pendant le chargement des légumes et des polices (0,9 s au plus tôt, 4 s au plus tard),
+et reste immobile si l'appareil demande de réduire les animations.
 
 ## Maquette
 

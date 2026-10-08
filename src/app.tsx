@@ -2,9 +2,11 @@ import { useEffect, useRef } from 'preact/hooks';
 import { Navigation } from './components/Navigation';
 import { useDonnees } from './lib/donnees';
 import { useRoute, type Route } from './lib/routeur';
-import { EnPreparation, Introuvable } from './pages/EnPreparation';
+import { Introuvable } from './pages/Introuvable';
 import { EcranEdition } from './pages/RecetteEdition';
 import { EcranRecettes } from './pages/Recettes';
+import { Reglages } from './pages/Reglages';
+import { Saisons } from './pages/Saisons';
 import { Semaine } from './pages/Semaine';
 
 const TITRES: Record<Route['nom'], string> = {
@@ -30,10 +32,12 @@ function Ecran({ route }: { route: Route }) {
       return <EcranEdition />;
     case 'modifier-recette':
       return <EcranEdition id={route.id} />;
+    case 'saisons':
+      return <Saisons />;
+    case 'reglages':
+      return <Reglages />;
     case 'introuvable':
       return <Introuvable />;
-    default:
-      return <EnPreparation titre={TITRES[route.nom]} />;
   }
 }
 
