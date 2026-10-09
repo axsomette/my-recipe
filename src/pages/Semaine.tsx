@@ -109,74 +109,88 @@ function BoutonDehors({ libelle, onDehors }: { libelle: string; onDehors: () => 
 function Repas({ slot, mois, libelle, afficherMoment, delai, peutChanger, choisi, dehors, types, onGarder, onChanger, onDehors, onChoisir }: PropsRepas) {
   const { donnees } = useDonnees();
   const recette = slot.recetteId ? donnees.recettes.find((r) => r.id === slot.recetteId) : undefined;
+  // Chaque repas s'adapte à sa propre largeur (requête de conteneur) : étroit, comme dans les deux
+  // colonnes midi et soir sur ordinateur, les boutons passent sous le nom au lieu de l'écraser.
   if (dehors) {
     return (
-      <div class="apparait flex min-h-14 items-center gap-2 rounded-2xl bg-creux py-2 pr-1.5 pl-3.5">
-        <Icone nom="dehors" taille={20} class="shrink-0 text-encre-2" />
-        <p class="flex-1 text-encre-2">
-          {afficherMoment && <span class="etiq mr-2 text-xs">{MOMENTS[slot.moment]}</span>}
-          Repas dehors
-        </p>
-        <button type="button" class="btn btn-texte min-h-11 px-3 text-[15px]" aria-label={`Je mange à la maison ${libelle}`} onClick={onDehors}>
-          À la maison
-        </button>
+      <div class="apparait @container rounded-2xl bg-creux">
+        <div class="flex h-full min-h-14 flex-col justify-center gap-0.5 py-2 pr-1.5 pl-3.5 @xs:flex-row @xs:items-center @xs:gap-2">
+          <p class="flex flex-wrap items-center gap-x-2 text-encre-2 @xs:flex-1">
+            {afficherMoment && <span class="etiq text-xs">{MOMENTS[slot.moment]}</span>}
+            <span class="inline-flex items-center gap-1.5">
+              <Icone nom="dehors" taille={20} class="shrink-0" />
+              Repas dehors
+            </span>
+          </p>
+          <button type="button" class="btn btn-texte -ml-3 min-h-11 self-start px-3 text-[15px] @xs:ml-0 @xs:self-auto" aria-label={`Je mange à la maison ${libelle}`} onClick={onDehors}>
+            À la maison
+          </button>
+        </div>
       </div>
     );
   }
   if (!recette) {
     return (
-      <div class="flex min-h-18 items-center gap-1.5 rounded-2xl border-[1.5px] border-dashed border-trait-fort py-3 pr-1.5 pl-3.5">
-        <p class="flex-1 text-encre-2">
-          {afficherMoment && <span class="etiq mr-2 text-xs">{MOMENTS[slot.moment]}</span>}
-          Pas de recette disponible
-        </p>
-        <BoutonDehors libelle={libelle} onDehors={onDehors} />
+      <div class="@container rounded-2xl border-[1.5px] border-dashed border-trait-fort">
+        <div class="flex h-full min-h-18 flex-col justify-center gap-0.5 py-2.5 pr-1.5 pl-3.5 @xs:flex-row @xs:items-center @xs:gap-1.5">
+          <p class="text-encre-2 @xs:flex-1">
+            {afficherMoment && <span class="etiq mr-2 text-xs">{MOMENTS[slot.moment]}</span>}
+            Pas de recette disponible
+          </p>
+          <div class="-ml-2.5 @xs:ml-0">
+            <BoutonDehors libelle={libelle} onDehors={onDehors} />
+          </div>
+        </div>
       </div>
     );
   }
   const changementImpossible = slot.verrouille || !peutChanger;
   return (
     <div
-      class={`relative flex min-h-18 items-center gap-1.5 rounded-2xl bg-carte py-3 pr-1.5 pl-3.5 ${
+      class={`@container relative rounded-2xl bg-carte ${
         choisi ? 'border-[1.5px] border-saison bg-saison-pale' : slot.verrouille ? 'border-[1.5px] border-encre' : 'border border-trait'
       }`}
     >
-      <div key={recette.id} class="apparait flex min-w-0 flex-1 flex-col gap-1" style={{ animationDelay: `${delai}ms` }}>
-        {afficherMoment && <span class="etiq text-xs">{MOMENTS[slot.moment]}</span>}
-        {onChoisir ? (
-          <button type="button" class="display text-left text-lg leading-tight after:absolute after:inset-0" aria-pressed={choisi} onClick={onChoisir}>
-            {recette.nom}
+      <div class="flex h-full min-h-18 flex-col gap-1 py-3 pr-1.5 pl-3.5 @xs:flex-row @xs:items-center @xs:gap-1.5">
+        <div key={recette.id} class="apparait flex min-w-0 flex-1 flex-col gap-1" style={{ animationDelay: `${delai}ms` }}>
+          {afficherMoment && <span class="etiq text-xs">{MOMENTS[slot.moment]}</span>}
+          {onChoisir ? (
+            <button type="button" class="display text-left text-lg leading-tight after:absolute after:inset-0" aria-pressed={choisi} onClick={onChoisir}>
+              {recette.nom}
+            </button>
+          ) : (
+            <a class="display text-lg leading-tight after:absolute after:inset-0" href={lien({ nom: 'recette', id: recette.id })}>
+              {recette.nom}
+            </a>
+          )}
+          <div class="flex flex-wrap items-center gap-2">
+            <BadgeSaison niveau={niveauSaison(recette.scoreParMois, mois)} />
+            <PictosTypes types={types} />
+            {slot.verrouille && <span class="text-sm text-encre-2">Gardé</span>}
+          </div>
+        </div>
+        <div class="mt-auto -ml-2.5 flex shrink-0 @xs:mt-0 @xs:ml-0">
+          <BoutonDehors libelle={libelle} onDehors={onDehors} />
+          <button
+            type="button"
+            class={`ico relative z-[1] ${slot.verrouille ? 'bg-encre text-papier' : ''}`}
+            aria-pressed={slot.verrouille}
+            aria-label={`Garder le repas de ${libelle}`}
+            onClick={onGarder}
+          >
+            <Icone nom={slot.verrouille ? 'garde' : 'garder'} taille={22} />
           </button>
-        ) : (
-          <a class="display text-lg leading-tight after:absolute after:inset-0" href={lien({ nom: 'recette', id: recette.id })}>
-            {recette.nom}
-          </a>
-        )}
-        <div class="flex flex-wrap items-center gap-2">
-          <BadgeSaison niveau={niveauSaison(recette.scoreParMois, mois)} />
-          <PictosTypes types={types} />
-          {slot.verrouille && <span class="text-sm text-encre-2">Gardé</span>}
+          <button
+            type="button"
+            class={`ico relative z-[1] ${changementImpossible ? 'cursor-not-allowed opacity-35' : ''}`}
+            aria-disabled={changementImpossible}
+            aria-label={`Changer la recette de ${libelle}${slot.verrouille ? ' (repas gardé)' : !peutChanger ? ' (aucune autre recette disponible)' : ''}`}
+            onClick={() => !changementImpossible && onChanger()}
+          >
+            <Icone nom="changer" taille={22} />
+          </button>
         </div>
       </div>
-      <BoutonDehors libelle={libelle} onDehors={onDehors} />
-      <button
-        type="button"
-        class={`ico relative z-[1] ${slot.verrouille ? 'bg-encre text-papier' : ''}`}
-        aria-pressed={slot.verrouille}
-        aria-label={`Garder le repas de ${libelle}`}
-        onClick={onGarder}
-      >
-        <Icone nom={slot.verrouille ? 'garde' : 'garder'} taille={22} />
-      </button>
-      <button
-        type="button"
-        class={`ico relative z-[1] ${changementImpossible ? 'cursor-not-allowed opacity-35' : ''}`}
-        aria-disabled={changementImpossible}
-        aria-label={`Changer la recette de ${libelle}${slot.verrouille ? ' (repas gardé)' : !peutChanger ? ' (aucune autre recette disponible)' : ''}`}
-        onClick={() => !changementImpossible && onChanger()}
-      >
-        <Icone nom="changer" taille={22} />
-      </button>
     </div>
   );
 }
@@ -265,7 +279,10 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   };
 
   const jours = Array.from({ length: donnees.reglages.jours }, (_, j) => j);
-  const idChoisi = large ? (choisi ?? planning.slots.find((s) => s.jour >= aujourdHui && s.recetteId)?.recetteId ?? null) : null;
+  // Sur ordinateur, la colonne de droite montre toujours une recette : celle choisie, sinon la prochaine de la semaine.
+  const idChoisi = large
+    ? (choisi ?? (planning.slots.find((s) => s.jour >= aujourdHui && s.recetteId) ?? planning.slots.find((s) => s.recetteId))?.recetteId ?? null)
+    : null;
 
   const liste = (
     <section aria-labelledby="titre-semaine" class="flex flex-col gap-4">
@@ -450,10 +467,14 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
 
   if (!large) return liste;
   return (
-    <div class="grid grid-cols-[minmax(0,470px)_minmax(0,1fr)] gap-10">
+    <div class={`grid gap-10 ${deuxMoments ? 'grid-cols-[minmax(0,520px)_minmax(0,1fr)] xl:grid-cols-[minmax(0,600px)_minmax(0,1fr)]' : 'grid-cols-[minmax(0,470px)_minmax(0,1fr)]'}`}>
       {liste}
       <div class="sticky top-5 self-start">
-        {idChoisi ? <DetailRecette id={idChoisi} monde={monde} enColonne /> : null}
+        {idChoisi ? (
+          <DetailRecette id={idChoisi} monde={monde} enColonne />
+        ) : (
+          <p class="bloc text-encre-2">Générez la semaine : la recette du prochain repas s’affichera ici.</p>
+        )}
       </div>
     </div>
   );

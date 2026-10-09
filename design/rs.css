@@ -240,3 +240,8 @@ textarea.input{height:auto;min-height:96px;padding:14px 16px;line-height:1.45;re
 .bilan img{width:24px;height:24px}
 .slot.dehors{background:var(--creux);border:0;min-height:56px}
 .slot.dehors .corps{flex-direction:row;align-items:center;gap:8px;color:var(--encre-2)}
+
+/* Repas étroit (deux colonnes midi et soir) : les boutons passent sous le nom, alignés en bas */
+.slot.pile{flex-direction:column;align-items:stretch;gap:4px;padding-right:6px}
+.slot.pile .actions{display:flex;margin-left:-10px;margin-top:auto}
+.slot .actions{display:flex;flex:none}

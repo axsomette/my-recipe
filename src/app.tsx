@@ -101,7 +101,7 @@ export function App() {
         Aller au contenu
       </a>
       <Navigation route={route} masqueeSurTelephone={route.nom === 'nouvelle-recette' || route.nom === 'modifier-recette'} />
-      <main id="contenu" class="mx-auto w-full max-w-3xl px-5 pt-5 pb-32 md:pl-[calc(96px+40px)] md:pr-10 md:pb-12 lg:max-w-5xl">
+      <main id="contenu" class="mx-auto w-full max-w-3xl px-5 pt-5 pb-32 md:pl-[calc(96px+40px)] md:pr-10 md:pb-12 lg:max-w-5xl xl:max-w-6xl">
         <AlerteStockage />
         <div key={groupeEcran(route)} class="ecran-entre">
           <Ecran route={route} />
