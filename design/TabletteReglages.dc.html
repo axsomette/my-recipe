@@ -17,7 +17,7 @@
 .sec{display:flex;flex-direction:column;gap:10px}
 </style>
 </helmet>
-<div class="ecran tablette {{saison}} {{theme}}" style="width: 834px; height: 1194px">
+<div class="ecran tablette {{saison}} {{theme}}" style="width: 834px; height: 1520px">
 <nav class="rail" aria-label="Navigation principale">
   <p class="marque">oct.<span class="etiq">automne</span></p>
   <a class="onglet" href="TabletteSemainePortrait.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>Semaine</a>
@@ -49,6 +49,37 @@
         </div>
         <p class="petit doux">14 repas par semaine.</p>
       </section>
+
+  <section class="sec" aria-labelledby="r-dehors" style="display: flex; flex-direction: column; gap: 10px">
+    <h2 id="r-dehors" class="etiq">Repas pris dehors</h2>
+    <div class="bloc" style="display: flex; flex-direction: column; gap: 12px">
+      <p>Cantine, restaurant, chez des amis : ces repas restent libres chaque semaine.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <span class="filtre" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M7 3v6.5a2 2 0 0 0 4 0V3M9 11.5V21"/><path d="M17 21V3c-2.4 1.4-3.5 4.6-3.5 8.5H17"/></svg>lun.</span><span class="filtre">mar.</span><span class="filtre">mer.</span><span class="filtre">jeu.</span><span class="filtre">ven.</span><span class="filtre">sam.</span><span class="filtre">dim.</span>
+      </div>
+      <p class="petit doux">Pour une fois seulement, touchez les couverts sur un repas de la semaine.</p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="r-equilibre" style="display: flex; flex-direction: column; gap: 10px">
+    <h2 id="r-equilibre" class="etiq">Équilibre de la semaine</h2>
+    <div class="bloc" style="padding: 6px 18px">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px">
+        <div style="display: flex; align-items: center; gap: 10px"><img class="vig" src="./icons/boeuf.svg" alt="" width="32" height="32"><div><p style="font-weight: 600">Viande</p><p class="petit doux">2 repas au plus</p></div></div>
+        <div class="stepper"><button class="ico" type="button" aria-label="Viande : un repas de moins"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 12h12"/></svg></button><output>2</output><button class="ico" type="button" aria-label="Viande : un repas de plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 6v12M6 12h12"/></svg></button></div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; border-top: 1px solid var(--trait)">
+        <div style="display: flex; align-items: center; gap: 10px"><img class="vig" src="./icons/cabillaud.svg" alt="" width="32" height="32"><div><p style="font-weight: 600">Poisson</p><p class="petit doux">Sans limite</p></div></div>
+        <div class="stepper"><button class="ico" type="button" aria-label="Poisson : un repas de moins"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 12h12"/></svg></button><output>∞</output><button class="ico" type="button" aria-label="Poisson : un repas de plus" style="opacity: .35"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 6v12M6 12h12"/></svg></button></div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; border-top: 1px solid var(--trait)">
+        <div style="display: flex; align-items: center; gap: 10px"><img class="vig" src="./icons/pates.svg" alt="" width="32" height="32"><div><p style="font-weight: 600">Féculents</p><p class="petit doux">3 repas au plus</p></div></div>
+        <div class="stepper"><button class="ico" type="button" aria-label="Féculents : un repas de moins"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 12h12"/></svg></button><output>3</output><button class="ico" type="button" aria-label="Féculents : un repas de plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 6v12M6 12h12"/></svg></button></div>
+      </div>
+    </div>
+    <p class="petit doux">Par semaine, sur 7 repas. Une recette avec du bœuf et des pâtes compte pour la viande et pour les féculents.</p>
+  </section>
+
 
       <section aria-labelledby="r-apparence" class="sec" style="display: flex; flex-direction: column; gap: 10px">
         <h2 id="r-apparence" class="etiq">Apparence</h2>
@@ -93,7 +124,7 @@
 </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":834,"height":1194}}'>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":834,"height":1520}}'>
 class Component extends DCLogic {
   renderVals() {
     return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };

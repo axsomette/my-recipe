@@ -45,7 +45,7 @@ function Formulaire({ monde, existante }: { monde: Monde; existante?: Recette })
       id = resultat.recette.id;
       if (!pourLaSemaine) return resultat.donnees;
       const avant = alignerPlanning(resultat.donnees.plannings.find((p) => p.semaine === pourLaSemaine), resultat.donnees.reglages, pourLaSemaine);
-      const apres = remplirVides(avant, [id]);
+      const apres = remplirVides(avant, [id], resultat.donnees.reglages);
       const place = apres.slots.find((s, i) => s.recetteId === id && avant.slots[i]!.recetteId !== id);
       laisserMessage(place ? `« ${nom.trim()} » ajoutée à votre semaine : ${NOMS_JOURS[place.jour]} ${place.moment}.` : `« ${nom.trim()} » enregistrée. La semaine n’a plus de repas vide.`);
       return { ...resultat.donnees, plannings: rangerPlanning(resultat.donnees.plannings, apres, semainePrecedente()) };

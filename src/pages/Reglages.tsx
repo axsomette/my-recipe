@@ -7,12 +7,13 @@ import { MOIS_ABREGES, NOMS_JOURS } from '../lib/calendrier';
 import { NOMS_CATEGORIES } from '../lib/categories';
 import { useApparence } from '../lib/apparence';
 import { useDonnees } from '../lib/donnees';
+import { ICONES_TYPES, NOMS_TYPES } from '../lib/equilibre';
 import { useInstallation } from '../lib/installation';
 import { plagesDeMois } from '../lib/saison';
 import { analyserImport, contenuExport, fusionner, nomFichierExport, remplacer, supprimerLegumePerso, type AnalyseImport } from '../lib/sauvegarde';
 import { pluriel } from '../lib/texte';
-import type { Apparence } from '../lib/stockage';
-import type { Legume, Moment } from '../lib/types';
+import { TYPES_LIMITES, type Apparence } from '../lib/stockage';
+import type { Creneau, Legume, Moment, TypeLimite } from '../lib/types';
 
 const UN_JOUR = 24 * 3600 * 1000;
 
@@ -78,6 +79,122 @@ function ChoixApparence() {
         <p class="text-sm text-encre-2">
           {apparence === 'auto' ? 'L’app suit le mode clair ou sombre de votre appareil.' : 'Ce choix vaut pour cet appareil.'}
         </p>
+      </div>
+    </section>
+  );
+}
+
+function EquilibreSemaine() {
+  const { donnees, modifier } = useDonnees();
+  const { limites, jours, moments } = donnees.reglages;
+  const nbRepas = jours * moments.length;
+  // Calculé à partir des données à jour : deux appuis rapprochés comptent bien pour deux.
+  const ajuster = (t: TypeLimite, sens: -1 | 1) =>
+    modifier((d) => {
+      const total = d.reglages.jours * d.reglages.moments.length;
+      const actuelle = d.reglages.limites[t];
+      let valeur: number | null;
+      if (sens < 0) valeur = actuelle === null ? Math.max(0, total - 1) : Math.max(0, actuelle - 1);
+      else valeur = actuelle === null || actuelle + 1 >= total ? null : actuelle + 1;
+      return { ...d, reglages: { ...d.reglages, limites: { ...d.reglages.limites, [t]: valeur } } };
+    });
+
+  return (
+    <section aria-labelledby="r-equilibre" class="flex flex-col gap-2.5">
+      <h2 id="r-equilibre" class="etiq">
+        Équilibre de la semaine
+      </h2>
+      <div class="bloc px-4.5 py-1.5">
+        {TYPES_LIMITES.map((t, i) => {
+          const valeur = limites[t];
+          return (
+            <div key={t} class={`flex min-h-15 items-center justify-between gap-3 ${i > 0 ? 'border-t border-trait' : ''}`}>
+              <div class="flex items-center gap-2.5">
+                <Vignette icone={ICONES_TYPES[t]} taille={32} />
+                <div>
+                  <p class="font-semibold" id={`l-limite-${t}`}>
+                    {NOMS_TYPES[t]}
+                  </p>
+                  <p class="text-sm text-encre-2">{valeur === null ? 'Sans limite' : valeur === 0 ? 'Jamais' : `${valeur} repas au plus`}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 rounded-3xl p-0.5 shadow-[inset_0_0_0_1.5px_var(--trait-fort)]" role="group" aria-labelledby={`l-limite-${t}`}>
+                <button
+                  type="button"
+                  class={`ico ${valeur === 0 ? 'opacity-35' : ''}`}
+                  aria-disabled={valeur === 0}
+                  aria-label={`${NOMS_TYPES[t]} : un repas de moins`}
+                  onClick={() => valeur !== 0 && ajuster(t, -1)}
+                >
+                  <Icone nom="moins" taille={22} epaisseur={2} />
+                </button>
+                <output class="min-w-7 text-center text-[17px] font-bold" aria-live="polite">
+                  {valeur === null ? '∞' : valeur}
+                  <span class="sr-only">{valeur === null ? ' (sans limite)' : ' au plus'}</span>
+                </output>
+                <button
+                  type="button"
+                  class={`ico ${valeur === null ? 'opacity-35' : ''}`}
+                  aria-disabled={valeur === null}
+                  aria-label={`${NOMS_TYPES[t]} : un repas de plus`}
+                  onClick={() => valeur !== null && ajuster(t, 1)}
+                >
+                  <Icone nom="plus" taille={22} />
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <p class="text-sm text-encre-2">
+        Par semaine, sur {pluriel(nbRepas, 'repas', 'repas')}. Une recette avec du bœuf et des pâtes compte pour la viande et pour les féculents.
+      </p>
+    </section>
+  );
+}
+
+const ABREGES_JOURS = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'];
+
+function RepasDehors() {
+  const { donnees, modifier } = useDonnees();
+  const { jours, moments, dehors } = donnees.reglages;
+  const ordre: Moment[] = (['midi', 'soir'] as Moment[]).filter((m) => moments.includes(m));
+  const pris = (c: Creneau) => dehors.some((d) => d.jour === c.jour && d.moment === c.moment);
+  const basculer = (c: Creneau) =>
+    modifier((d) => ({
+      ...d,
+      reglages: { ...d.reglages, dehors: pris(c) ? d.reglages.dehors.filter((x) => x.jour !== c.jour || x.moment !== c.moment) : [...d.reglages.dehors, c] },
+    }));
+
+  return (
+    <section aria-labelledby="r-dehors" class="flex flex-col gap-2.5">
+      <h2 id="r-dehors" class="etiq">
+        Repas pris dehors
+      </h2>
+      <div class="bloc flex flex-col gap-3">
+        <p class="text-[15px]">Cantine, restaurant, chez des amis : ces repas restent libres chaque semaine.</p>
+        <div class="flex flex-wrap gap-2" role="group" aria-labelledby="r-dehors">
+          {Array.from({ length: jours }, (_, jour) =>
+            ordre.map((moment) => {
+              const actif = pris({ jour, moment });
+              return (
+                <button
+                  key={`${jour}-${moment}`}
+                  type="button"
+                  class="filtre"
+                  aria-pressed={actif}
+                  aria-label={`${NOMS_JOURS[jour]} ${moment}`}
+                  onClick={() => basculer({ jour, moment })}
+                >
+                  {actif && <Icone nom="dehors" taille={16} />}
+                  {ABREGES_JOURS[jour]}
+                  {ordre.length > 1 && ` ${moment}`}
+                </button>
+              );
+            }),
+          )}
+        </div>
+        <p class="text-sm text-encre-2">Pour une fois seulement, touchez les couverts sur un repas de la semaine.</p>
       </div>
     </section>
   );
@@ -416,6 +533,8 @@ export function Reglages() {
           <div class="grid items-start gap-7 md:grid-cols-2 md:gap-6">
             <div class="flex flex-col gap-7 md:col-start-1 md:row-start-1 md:gap-6">
               <RepasAGenerer />
+              <RepasDehors />
+              <EquilibreSemaine />
               <ChoixApparence />
             </div>
             <div class="md:col-start-2 md:row-start-2">

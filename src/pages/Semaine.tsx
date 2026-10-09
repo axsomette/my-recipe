@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'preact/hooks';
 import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
 import { Dialogue } from '../components/Dialogue';
+import { BilanSemaine, PictosTypes } from '../components/Equilibre';
 import { Icone } from '../components/Icone';
 import { BadgeSaison } from '../components/Saison';
 import { Vignette } from '../components/Vignette';
 import { MOIS_ABREGES, NOMS_JOURS, NOMS_MOIS, NOMS_SAISONS, majuscule, moisCourant, saisonDuMois, semaineIso } from '../lib/calendrier';
 import { deSaison } from '../lib/catalogue';
 import { useDonnees } from '../lib/donnees';
+import { compter, typesRecette, type TypeRepas } from '../lib/equilibre';
 import { prendreMessage, reserverPourLaSemaine } from '../lib/intention';
-import { alignerPlanning, basculerGarde, changerRecette, genererSemaine, propositionsHorsSaison, rangerPlanning, remplirVides, semainePrecedente } from '../lib/planning';
+import { alignerPlanning, basculerDehors, basculerGarde, changerRecette, estDehors, genererSemaine, propositionsHorsSaison, rangerPlanning, remplirVides, semainePrecedente } from '../lib/planning';
 import { lien, naviguer } from '../lib/routeur';
 import { libelleSaison, niveauSaison } from '../lib/saison';
 import type { Legume, Moment, Planning, Slot } from '../lib/types';
@@ -88,21 +90,47 @@ interface PropsRepas {
   delai: number;
   peutChanger: boolean;
   choisi: boolean;
+  dehors: boolean;
+  types: TypeRepas[];
   onGarder: () => void;
   onChanger: () => void;
+  onDehors: () => void;
   onChoisir?: () => void;
 }
 
-function Repas({ slot, mois, libelle, afficherMoment, delai, peutChanger, choisi, onGarder, onChanger, onChoisir }: PropsRepas) {
+function BoutonDehors({ libelle, onDehors }: { libelle: string; onDehors: () => void }) {
+  return (
+    <button type="button" class="ico relative z-[1]" aria-label={`Je mange dehors ${libelle}`} onClick={onDehors}>
+      <Icone nom="dehors" taille={22} />
+    </button>
+  );
+}
+
+function Repas({ slot, mois, libelle, afficherMoment, delai, peutChanger, choisi, dehors, types, onGarder, onChanger, onDehors, onChoisir }: PropsRepas) {
   const { donnees } = useDonnees();
   const recette = slot.recetteId ? donnees.recettes.find((r) => r.id === slot.recetteId) : undefined;
+  if (dehors) {
+    return (
+      <div class="apparait flex min-h-14 items-center gap-2 rounded-2xl bg-creux py-2 pr-1.5 pl-3.5">
+        <Icone nom="dehors" taille={20} class="shrink-0 text-encre-2" />
+        <p class="flex-1 text-encre-2">
+          {afficherMoment && <span class="etiq mr-2 text-xs">{MOMENTS[slot.moment]}</span>}
+          Repas dehors
+        </p>
+        <button type="button" class="btn btn-texte min-h-11 px-3 text-[15px]" aria-label={`Je mange à la maison ${libelle}`} onClick={onDehors}>
+          À la maison
+        </button>
+      </div>
+    );
+  }
   if (!recette) {
     return (
-      <div class="flex min-h-18 items-center rounded-2xl border-[1.5px] border-dashed border-trait-fort px-3.5 py-3">
-        <p class="text-encre-2">
+      <div class="flex min-h-18 items-center gap-1.5 rounded-2xl border-[1.5px] border-dashed border-trait-fort py-3 pr-1.5 pl-3.5">
+        <p class="flex-1 text-encre-2">
           {afficherMoment && <span class="etiq mr-2 text-xs">{MOMENTS[slot.moment]}</span>}
           Pas de recette disponible
         </p>
+        <BoutonDehors libelle={libelle} onDehors={onDehors} />
       </div>
     );
   }
@@ -126,9 +154,11 @@ function Repas({ slot, mois, libelle, afficherMoment, delai, peutChanger, choisi
         )}
         <div class="flex flex-wrap items-center gap-2">
           <BadgeSaison niveau={niveauSaison(recette.scoreParMois, mois)} />
+          <PictosTypes types={types} />
           {slot.verrouille && <span class="text-sm text-encre-2">Gardé</span>}
         </div>
       </div>
+      <BoutonDehors libelle={libelle} onDehors={onDehors} />
       <button
         type="button"
         class={`ico relative z-[1] ${slot.verrouille ? 'bg-encre text-papier' : ''}`}
@@ -163,7 +193,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   const [cascade, setCascade] = useState(false);
   const [choisi, setChoisi] = useState<string | null>(null);
   // Fenêtre « pas assez de recettes de saison » : recettes hors saison proposées, et celles cochées.
-  const [manque, setManque] = useState<{ repas: number; ids: string[]; coches: string[] } | null>(null);
+  const [manque, setManque] = useState<{ repas: number; ids: string[]; coches: string[]; ecartees: number } | null>(null);
   // Retour d'une recette créée depuis cette fenêtre.
   const [message] = useState(prendreMessage);
 
@@ -177,23 +207,26 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   const deuxMoments = donnees.reglages.moments.length === 2;
   const nbRepas = planning.slots.length;
   const gardes = planning.slots.filter((s) => s.verrouille && s.recetteId).length;
-  const vides = enregistre ? planning.slots.filter((s) => !s.recetteId).length : 0;
+  const vides = enregistre ? planning.slots.filter((s) => !s.recetteId && !estDehors(s, donnees.reglages)).length : 0;
   const disponiblesPourChanger = donnees.recettes.length > planning.slots.filter((s) => s.recetteId).length;
   const dimanche = new Date(lundi);
   dimanche.setDate(lundi.getDate() + donnees.reglages.jours - 1);
   const libelleJour = (s: Slot) => `${NOMS_JOURS[s.jour]} ${s.moment}`;
   const enregistrer = (p: Planning) => modifier((d) => ({ ...d, plannings: rangerPlanning(d.plannings, p, precedente) }));
 
-  const contexte = { recettes: donnees.recettes, mois, precedent };
-  const proposer = (p: Planning, repas: number) => {
+  const typesParId = new Map(donnees.recettes.map((r) => [r.id, typesRecette(r, monde.index)]));
+  const typesDe = (id: string) => typesParId.get(id) ?? [];
+  const contexte = { recettes: donnees.recettes, reglages: donnees.reglages, mois, precedent, typesDe };
+  const limitesActives = Object.values(donnees.reglages.limites).some((l) => l !== null);
+  const proposer = (p: Planning, repas: number, ecartees = 0) => {
     const ids = propositionsHorsSaison(p, contexte).slice(0, repas).map((r) => r.id);
-    setManque({ repas, ids, coches: ids });
+    setManque({ repas, ids, coches: ids, ecartees });
   };
   const horsSaisonDisponibles = propositionsHorsSaison(planning, contexte).length;
 
   const utiliserHorsSaison = () => {
     if (!manque) return;
-    enregistrer(remplirVides(planning, manque.coches));
+    enregistrer(remplirVides(planning, manque.coches, donnees.reglages));
     setAnnonce(`${pluriel(manque.coches.length, 'recette')} hors saison ${manque.coches.length > 1 ? 'ajoutées' : 'ajoutée'} à la semaine.`);
     setManque(null);
   };
@@ -205,26 +238,25 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   };
 
   const generer = () => {
-    const { planning: nouveau, manquants } = genererSemaine({
-      recettes: donnees.recettes,
-      reglages: donnees.reglages,
-      mois,
-      semaine: cle,
-      actuel: planning,
-      precedent,
-    });
+    const { planning: nouveau, manquants, ecartees } = genererSemaine({ ...contexte, semaine: cle, actuel: planning });
     enregistrer(nouveau);
     setCascade(true);
     setAnnonce(manquants > 0 ? `Semaine générée, ${manquants} repas sans recette de saison.` : `Semaine générée : ${nouveau.slots.length} repas.`);
-    if (manquants > 0) proposer(nouveau, manquants);
+    if (manquants > 0) proposer(nouveau, manquants, ecartees);
   };
 
   const changer = (s: Slot) => {
-    const nouveau = changerRecette(planning, s, { recettes: donnees.recettes, mois, precedent });
-    if (!nouveau) return setAnnonce('Aucune autre recette de saison disponible.');
+    const nouveau = changerRecette(planning, s, contexte);
+    if (!nouveau) return setAnnonce(limitesActives ? 'Aucune autre recette de saison disponible dans vos limites.' : 'Aucune autre recette de saison disponible.');
     enregistrer(nouveau);
     const recette = donnees.recettes.find((r) => r.id === nouveau.slots.find((x) => x.jour === s.jour && x.moment === s.moment)?.recetteId);
     setAnnonce(`${majuscule(libelleJour(s))} : ${recette?.nom ?? ''}.`);
+  };
+
+  const mangerDehors = (s: Slot) => {
+    const dehors = !estDehors(s, donnees.reglages);
+    enregistrer(basculerDehors(planning, s, donnees.reglages));
+    setAnnonce(dehors ? `${majuscule(libelleJour(s))} : repas dehors.` : `${majuscule(libelleJour(s))} : repas à la maison.`);
   };
 
   const garder = (s: Slot) => {
@@ -257,6 +289,9 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
           </p>
         )}
       </div>
+      {enregistre && planning.slots.some((x) => x.recetteId) && (
+        <BilanSemaine compte={compter(planning.slots.map((x) => x.recetteId), typesDe)} limites={donnees.reglages.limites} />
+      )}
       <p class="sr-only" aria-live="polite">
         {annonce}
       </p>
@@ -309,6 +344,17 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
                 ? 'Vous pouvez compléter avec des recettes hors saison, ou en ajouter une nouvelle.'
                 : 'Toutes vos autres recettes sont déjà dans la semaine : ajoutez-en une pour compléter.'}
             </p>
+            {manque.ecartees > 0 && (
+              <p class="alerte bg-creux">
+                <Icone nom="info" taille={22} class="mt-px shrink-0" />
+                <span>
+                  {manque.ecartees === 1 ? 'Une recette de saison est écartée' : `${manque.ecartees} recettes de saison sont écartées`} par vos limites de la semaine.{' '}
+                  <a href={lien({ nom: 'reglages' })} onClick={() => setManque(null)}>
+                    Ajuster les limites
+                  </a>
+                </span>
+              </p>
+            )}
             {manque.ids.length > 0 && (
               <fieldset class="flex flex-col gap-2">
                 <legend class="etiq mb-2">Proposées hors saison</legend>
@@ -388,6 +434,9 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
                     choisi={large && s.recetteId !== null && s.recetteId === idChoisi}
                     onGarder={() => garder(s)}
                     onChanger={() => changer(s)}
+                    dehors={estDehors(s, donnees.reglages)}
+                    types={s.recetteId ? typesDe(s.recetteId) : []}
+                    onDehors={() => mangerDehors(s)}
                     onChoisir={large ? () => setChoisi(s.recetteId) : undefined}
                   />
                 ))}

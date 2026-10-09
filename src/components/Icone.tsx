@@ -24,6 +24,7 @@ const TRACES = {
   exporter: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
   importer: '<path d="M12 16V5M7 10l5-5 5 5M5 20h14"/>',
   fichier: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>',
+  dehors: '<path d="M7 3v6.5a2 2 0 0 0 4 0V3M9 11.5V21"/><path d="M17 21V3c-2.4 1.4-3.5 4.6-3.5 8.5H17"/>',
 } as const;
 
 export type NomIcone = keyof typeof TRACES;

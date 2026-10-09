@@ -13,12 +13,15 @@ s'importe en fichier JSON. L'app s'installe sur l'écran d'accueil et fonctionne
   les recettes de saison ce mois-ci ; on garde un repas, on en change un seul, on régénère le reste.
   Une recette hors saison n'est jamais placée d'office : s'il en manque, une fenêtre propose des
   recettes hors saison à cocher, ou d'en ajouter une nouvelle qui va directement dans la semaine.
+  Chaque recette a un type déduit de ses ingrédients (viande, poisson, féculents, végé) : la semaine
+  affiche son bilan et respecte les limites choisies (« viande au plus 3 fois »). Les repas pris
+  dehors, habituels ou pour une fois, restent libres.
 - **Mes recettes** : recherche par recette ou par ingrédient, filtre par mois de saison, fiche avec la
   frise des 12 mois.
 - **Ajout d'une recette** : sélection rapide parmi 88 produits (légumes cités dans le nom, produits du
   mois, catégories, recherche) et légumes perso, avec la saison calculée en direct.
 - **Calendrier des saisons** : ce qui est de saison, mois par mois.
-- **Réglages** : repas à générer, apparence (automatique, clair ou sombre), export et import de la sauvegarde, rappel d'installation.
+- **Réglages** : repas à générer, repas pris dehors, équilibre de la semaine, apparence (automatique, clair ou sombre), export et import de la sauvegarde, rappel d'installation.
 
 ### Calcul de saison
 

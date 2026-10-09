@@ -52,18 +52,30 @@ export interface Recette {
 
 export type Moment = 'midi' | 'soir';
 
+export interface Creneau {
+  /** 0 = lundi … 6 = dimanche. */
+  jour: number;
+  moment: Moment;
+}
+
+/** Types de repas suivis pour l'équilibre de la semaine. */
+export type TypeLimite = 'viande' | 'poisson' | 'feculents';
+
 export interface Reglages {
   /** Nombre de jours planifiés, à partir du lundi (1 à 7). */
   jours: number;
   moments: Moment[];
+  /** Repas pris dehors chaque semaine (cantine, restaurant…) : rien n'y est prévu. */
+  dehors: Creneau[];
+  /** Nombre maximum de repas par semaine de chaque type ; null = sans limite. */
+  limites: Record<TypeLimite, number | null>;
 }
 
-export interface Slot {
-  /** 0 = lundi … 6 = dimanche. */
-  jour: number;
-  moment: Moment;
+export interface Slot extends Creneau {
   recetteId: string | null;
   verrouille: boolean;
+  /** Repas pris dehors cette semaine : true / false choisi pour ce repas, null = suit l'habitude des réglages. */
+  dehors: boolean | null;
 }
 
 export interface Planning {

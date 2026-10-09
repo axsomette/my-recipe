@@ -4,11 +4,14 @@
 //   1. de saison (score ≥ 0,75), 2. en partie de saison, 3. jokers « toutes saisons ».
 // Les recettes hors saison ne sont jamais placées d'office : elles sont proposées à part
 // (propositionsHorsSaison) et c'est la personne qui choisit de s'en servir.
+// Les repas pris dehors restent vides, et les limites par type (viande, poisson, féculents)
+// écartent une recette qui ferait dépasser le nombre choisi pour la semaine.
 // Dans chaque groupe, les recettes de la semaine précédente passent après les autres,
 // puis on mélange les recettes de score proche (par tranches de 0,25) pour varier.
 import { semaineIso } from './calendrier';
+import { ajouter, compter, depasse, type TypeRepas } from './equilibre';
 import { niveauSaison, type NiveauSaison } from './saison';
-import type { Moment, Planning, Recette, Reglages, Slot } from './types';
+import type { Creneau, Moment, Planning, Recette, Reglages, Slot } from './types';
 
 export type Aleatoire = () => number;
 
@@ -16,13 +19,18 @@ const RANG: Record<NiveauSaison, number> = { pleine: 0, partie: 1, toutes: 2, ho
 const ORDRE_MOMENTS: Moment[] = ['midi', 'soir'];
 
 /** Créneaux attendus selon les réglages : lundi midi, lundi soir, mardi midi… */
-export function creneaux(reglages: Reglages): Pick<Slot, 'jour' | 'moment'>[] {
+export function creneaux(reglages: Pick<Reglages, 'jours' | 'moments'>): Creneau[] {
   const moments = ORDRE_MOMENTS.filter((m) => reglages.moments.includes(m));
   return Array.from({ length: reglages.jours }, (_, jour) => moments.map((moment) => ({ jour, moment }))).flat();
 }
 
-const memeCreneau = (a: Pick<Slot, 'jour' | 'moment'>, b: Pick<Slot, 'jour' | 'moment'>) =>
-  a.jour === b.jour && a.moment === b.moment;
+const memeCreneau = (a: Creneau, b: Creneau) => a.jour === b.jour && a.moment === b.moment;
+
+/** Repas pris dehors : choix fait pour ce repas cette semaine, sinon l'habitude des réglages. */
+export const estDehors = (slot: Creneau & { dehors?: boolean | null }, reglages: Pick<Reglages, 'dehors'>) =>
+  slot.dehors ?? reglages.dehors.some((d) => memeCreneau(d, slot));
+
+const sansTypes = (): TypeRepas[] => [];
 
 /** Mélange de Fisher-Yates (copie). */
 function melanger<T>(liste: T[], aleatoire: Aleatoire): T[] {
@@ -56,6 +64,8 @@ export interface ContexteGeneration {
   actuel?: Planning;
   /** Planning de la semaine précédente, pour éviter de reproposer les mêmes recettes. */
   precedent?: Planning;
+  /** Types d'une recette (viande, poisson…), pour les limites des réglages. Sans elle, pas de limite. */
+  typesDe?: (id: string) => TypeRepas[];
   aleatoire?: Aleatoire;
 }
 
@@ -63,43 +73,75 @@ export interface Generation {
   planning: Planning;
   /** Nombre de repas laissés vides faute de recettes de saison ou toutes saisons. */
   manquants: number;
+  /** Recettes de saison restées de côté parce qu'elles feraient dépasser une limite. */
+  ecartees: number;
 }
 
 const horsSaison = (r: Recette, mois: number) => niveauSaison(r.scoreParMois, mois) === 'hors';
 const idsDe = (slots: Slot[]) => new Set(slots.flatMap((s) => (s.recetteId ? [s.recetteId] : [])));
 
-export function genererSemaine({ recettes, reglages, mois, semaine, actuel, precedent, aleatoire = Math.random }: ContexteGeneration): Generation {
+export function genererSemaine({ recettes, reglages, mois, semaine, actuel, precedent, typesDe = sansTypes, aleatoire = Math.random }: ContexteGeneration): Generation {
   const existantes = new Set(recettes.map((r) => r.id));
-  const gardes = (actuel?.slots ?? []).filter((s) => s.verrouille && s.recetteId && existantes.has(s.recetteId));
+  const avant = (c: Creneau) => actuel?.slots.find((s) => memeCreneau(s, c));
+  const gardes = (actuel?.slots ?? []).filter((s) => s.verrouille && s.recetteId && existantes.has(s.recetteId) && !estDehors(s, reglages));
   const prises = new Set(gardes.map((s) => s.recetteId!));
-  const dejaServies = new Set((precedent?.slots ?? []).flatMap((s) => (s.recetteId ? [s.recetteId] : [])));
+  const dejaServies = idsDe(precedent?.slots ?? []);
   const disponibles = classer(recettes.filter((r) => !prises.has(r.id) && !horsSaison(r, mois)), mois, dejaServies, aleatoire);
+  const compte = compter([...prises], typesDe);
 
   let manquants = 0;
   const slots: Slot[] = creneaux(reglages).map((c) => {
+    const dehors = avant(c)?.dehors ?? null;
+    if (estDehors({ ...c, dehors }, reglages)) return { ...c, recetteId: null, verrouille: false, dehors };
     const garde = gardes.find((g) => memeCreneau(g, c));
-    if (garde) return { ...c, recetteId: garde.recetteId, verrouille: true };
-    const recette = disponibles.shift();
-    if (!recette) manquants++;
-    return { ...c, recetteId: recette?.id ?? null, verrouille: false };
+    if (garde) return { ...c, recetteId: garde.recetteId, verrouille: true, dehors };
+    const i = disponibles.findIndex((r) => !depasse(compte, typesDe(r.id), reglages.limites));
+    if (i < 0) {
+      manquants++;
+      return { ...c, recetteId: null, verrouille: false, dehors };
+    }
+    const [recette] = disponibles.splice(i, 1);
+    ajouter(compte, typesDe(recette!.id));
+    return { ...c, recetteId: recette!.id, verrouille: false, dehors };
   });
-  return { planning: { semaine, slots }, manquants };
+  const ecartees = manquants > 0 ? disponibles.filter((r) => depasse(compte, typesDe(r.id), reglages.limites)).length : 0;
+  return { planning: { semaine, slots }, manquants, ecartees };
 }
 
-/** Recettes hors saison qui pourraient compléter la semaine, de la plus à la moins indiquée. */
+/** Recettes hors saison qui pourraient compléter la semaine sans dépasser les limites, de la plus à la moins indiquée. */
 export function propositionsHorsSaison(
   planning: Planning,
-  { recettes, mois, precedent, aleatoire = Math.random }: Pick<ContexteGeneration, 'recettes' | 'mois' | 'precedent' | 'aleatoire'>,
+  { recettes, reglages, mois, precedent, typesDe = sansTypes, aleatoire = Math.random }: Pick<ContexteGeneration, 'recettes' | 'reglages' | 'mois' | 'precedent' | 'typesDe' | 'aleatoire'>,
 ): Recette[] {
   const dansLaSemaine = idsDe(planning.slots);
-  const dejaServies = idsDe(precedent?.slots ?? []);
-  return classer(recettes.filter((r) => !dansLaSemaine.has(r.id) && horsSaison(r, mois)), mois, dejaServies, aleatoire);
+  const compte = compter([...dansLaSemaine], typesDe);
+  const candidates = classer(recettes.filter((r) => !dansLaSemaine.has(r.id) && horsSaison(r, mois)), mois, idsDe(precedent?.slots ?? []), aleatoire);
+  return candidates.filter((r) => {
+    if (depasse(compte, typesDe(r.id), reglages.limites)) return false;
+    ajouter(compte, typesDe(r.id));
+    return true;
+  });
 }
 
-/** Place des recettes dans les repas vides de la semaine, dans l'ordre des créneaux. */
-export function remplirVides(planning: Planning, ids: string[]): Planning {
+/** Place des recettes dans les repas vides de la semaine (pas ceux pris dehors), dans l'ordre des créneaux. */
+export function remplirVides(planning: Planning, ids: string[], reglages: Pick<Reglages, 'dehors'>): Planning {
   const file = ids.filter((id) => !idsDe(planning.slots).has(id));
-  return { ...planning, slots: planning.slots.map((s) => (s.recetteId || !file.length ? s : { ...s, recetteId: file.shift()!, verrouille: false })) };
+  return {
+    ...planning,
+    slots: planning.slots.map((s) => (s.recetteId || !file.length || estDehors(s, reglages) ? s : { ...s, recetteId: file.shift()!, verrouille: false })),
+  };
+}
+
+/** Marque un repas comme pris dehors (il se vide) ou le rend à la maison. */
+export function basculerDehors(planning: Planning, creneau: Creneau, reglages: Pick<Reglages, 'dehors'>): Planning {
+  return {
+    ...planning,
+    slots: planning.slots.map((s) => {
+      if (!memeCreneau(s, creneau)) return s;
+      const dehors = !estDehors(s, reglages);
+      return dehors ? { ...s, dehors, recetteId: null, verrouille: false } : { ...s, dehors };
+    }),
+  };
 }
 
 /**
@@ -108,12 +150,18 @@ export function remplirVides(planning: Planning, ids: string[]): Planning {
  */
 export function changerRecette(
   planning: Planning,
-  creneau: Pick<Slot, 'jour' | 'moment'>,
-  { recettes, mois, precedent, aleatoire = Math.random }: Pick<ContexteGeneration, 'recettes' | 'mois' | 'precedent' | 'aleatoire'>,
+  creneau: Creneau,
+  { recettes, reglages, mois, precedent, typesDe = sansTypes, aleatoire = Math.random }: Pick<ContexteGeneration, 'recettes' | 'reglages' | 'mois' | 'precedent' | 'typesDe' | 'aleatoire'>,
 ): Planning | null {
   const dansLaSemaine = idsDe(planning.slots);
-  const dejaServies = idsDe(precedent?.slots ?? []);
-  const [choix] = classer(recettes.filter((r) => !dansLaSemaine.has(r.id) && !horsSaison(r, mois)), mois, dejaServies, aleatoire);
+  // Le repas qu'on change ne compte plus dans les limites.
+  const compte = compter(planning.slots.filter((s) => !memeCreneau(s, creneau)).map((s) => s.recetteId), typesDe);
+  const [choix] = classer(
+    recettes.filter((r) => !dansLaSemaine.has(r.id) && !horsSaison(r, mois) && !depasse(compte, typesDe(r.id), reglages.limites)),
+    mois,
+    idsDe(precedent?.slots ?? []),
+    aleatoire,
+  );
   if (!choix) return null;
   return {
     ...planning,
@@ -121,7 +169,7 @@ export function changerRecette(
   };
 }
 
-export function basculerGarde(planning: Planning, creneau: Pick<Slot, 'jour' | 'moment'>): Planning {
+export function basculerGarde(planning: Planning, creneau: Creneau): Planning {
   return {
     ...planning,
     slots: planning.slots.map((s) => (memeCreneau(s, creneau) && s.recetteId ? { ...s, verrouille: !s.verrouille } : s)),
@@ -146,11 +194,11 @@ export function rangerPlanning(plannings: Planning[], planning: Planning, preced
  * Planning de la semaine aligné sur les réglages actuels : les créneaux ajoutés
  * depuis la dernière génération sont vides, ceux retirés disparaissent.
  */
-export function alignerPlanning(planning: Planning | undefined, reglages: Reglages, semaine: string): Planning {
+export function alignerPlanning(planning: Planning | undefined, reglages: Pick<Reglages, 'jours' | 'moments'>, semaine: string): Planning {
   return {
     semaine,
     slots: creneaux(reglages).map(
-      (c) => planning?.slots.find((s) => memeCreneau(s, c)) ?? { ...c, recetteId: null, verrouille: false },
+      (c) => planning?.slots.find((s) => memeCreneau(s, c)) ?? { ...c, recetteId: null, verrouille: false, dehors: null },
     ),
   };
 }

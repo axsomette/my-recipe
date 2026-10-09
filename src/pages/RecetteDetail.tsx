@@ -2,12 +2,14 @@ import { useState } from 'preact/hooks';
 import type { Monde } from '../components/AvecCatalogue';
 import { Dialogue } from '../components/Dialogue';
 import { Icone } from '../components/Icone';
+import { EtiquettesTypes } from '../components/Equilibre';
 import { BadgeSaison, Frise, PictoToutelAnnee, decrireScores } from '../components/Saison';
 import { Vignette } from '../components/Vignette';
 import { NOMS_MOIS, moisCourant } from '../lib/calendrier';
 import { useDonnees } from '../lib/donnees';
 import { supprimerRecette } from '../lib/recettes';
 import { lien, naviguer } from '../lib/routeur';
+import { typesRecette } from '../lib/equilibre';
 import { libelleSaison, niveauSaison } from '../lib/saison';
 import { listeNaturelle, pluriel } from '../lib/texte';
 import type { Legume } from '../lib/types';
@@ -83,6 +85,7 @@ export function DetailRecette({ id, monde, enColonne = false }: { id: string; mo
           <BadgeSaison niveau={niveauSaison(scores, mois)} />
           {scores && <span class="text-sm text-encre-2">{libelleSaison(scores)}</span>}
         </div>
+        <EtiquettesTypes types={typesRecette(recette, monde.index)} />
       </header>
 
       <section aria-labelledby="titre-saison" class="flex flex-col gap-3.5">

@@ -229,3 +229,14 @@ textarea.input{height:auto;min-height:96px;padding:14px 16px;line-height:1.45;re
 .trouve{display:flex;gap:14px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--papier);border:1px solid var(--trait)}
 .source{display:inline-flex;align-items:center;gap:6px;font:700 12px/1 var(--etiq);letter-spacing:.06em;text-transform:uppercase;color:var(--saison-texte);background:var(--saison-pale);padding:5px 8px 4px;border-radius:6px}
 .carte .etal .vig{width:32px;height:32px}
+
+/* Équilibre de la semaine */
+.pictos{display:inline-flex;align-items:center;gap:2px}
+.pictos img{width:24px;height:24px}
+.bilan{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.bilan li{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:4px 12px 4px 6px;border-radius:18px;background:var(--creux);font-size:14px;font-weight:600}
+.bilan li.atteinte{background:var(--saison-pale);color:var(--saison-texte)}
+.bilan li span{font-weight:400;color:var(--encre-2)}
+.bilan img{width:24px;height:24px}
+.slot.dehors{background:var(--creux);border:0;min-height:56px}
+.slot.dehors .corps{flex-direction:row;align-items:center;gap:8px;color:var(--encre-2)}

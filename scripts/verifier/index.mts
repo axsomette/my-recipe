@@ -13,10 +13,13 @@ import {
   trouverSuggestion,
 } from '../../src/lib/recettes.ts';
 import { lien, lireRoute } from '../../src/lib/routeur.ts';
-import { alignerPlanning, basculerGarde, changerRecette, classer, creneaux, genererSemaine, propositionsHorsSaison, rangerPlanning, remplirVides, semainePrecedente } from '../../src/lib/planning.ts';
+import { alignerPlanning, basculerDehors, basculerGarde, changerRecette, classer, creneaux, estDehors, genererSemaine, propositionsHorsSaison, rangerPlanning, remplirVides, semainePrecedente } from '../../src/lib/planning.ts';
 import { calculerScores, libelleSaison, niveauSaison, plagesDeMois } from '../../src/lib/saison.ts';
 import { analyserImport, contenuExport, fusionner, nomFichierExport, supprimerLegumePerso } from '../../src/lib/sauvegarde.ts';
-import { donneesVides, lireDonnees } from '../../src/lib/stockage.ts';
+import { donneesVides, limitesLibres, lireDonnees } from '../../src/lib/stockage.ts';
+import { typesRecette } from '../../src/lib/equilibre.ts';
+import type { Moment, Reglages } from '../../src/lib/types.ts';
+const reg = (jours: number, moments: Moment[], extra: Partial<Reglages> = {}): Reglages => ({ jours, moments, dehors: [], limites: limitesLibres(), ...extra });
 import type { Catalogue } from '../../src/lib/types.ts';
 
 let echecs = 0;
@@ -92,28 +95,52 @@ const recettesTest = [r('hors', zero), r('joker', null), r('moitie', moitie), r(
 eq(creneaux({ jours: 2, moments: ['soir', 'midi'] }), [{ jour: 0, moment: 'midi' }, { jour: 0, moment: 'soir' }, { jour: 1, moment: 'midi' }, { jour: 1, moment: 'soir' }], 'créneaux midi puis soir');
 eq(classer(recettesTest, 10, new Set(), graine(1)).map((x) => x.id).slice(3), ['moitie', 'joker', 'hors'], 'ordre : saison, partie, joker, hors saison');
 eq(classer(recettesTest, 10, new Set(['p1', 'p2']), graine(1)).map((x) => x.id).slice(0, 3)[0], 'p3', 'semaine précédente évitée');
-const g1 = genererSemaine({ recettes: recettesTest, reglages: { jours: 4, moments: ['soir'] }, mois: 10, semaine: '2026-W41', aleatoire: graine(2) });
+const g1 = genererSemaine({ recettes: recettesTest, reglages: reg(4, ['soir']), mois: 10, semaine: '2026-W41', aleatoire: graine(2) });
 eq([g1.manquants, new Set(g1.planning.slots.map((s) => s.recetteId)).size, g1.planning.slots.slice(3).map((s) => s.recetteId)], [0, 4, ['moitie']], 'semaine sans doublon, saison d’abord');
-const g2 = genererSemaine({ recettes: recettesTest, reglages: { jours: 7, moments: ['midi', 'soir'] }, mois: 10, semaine: '2026-W41', aleatoire: graine(3) });
+const g2 = genererSemaine({ recettes: recettesTest, reglages: reg(7, ['midi', 'soir']), mois: 10, semaine: '2026-W41', aleatoire: graine(3) });
 eq([g2.manquants, g2.planning.slots.filter((s) => s.recetteId).length], [9, 5], 'pas assez de recettes : repas vides comptés');
 eq(g2.planning.slots.some((s) => s.recetteId === 'hors'), false, 'jamais de recette hors saison placée d’office');
-eq(propositionsHorsSaison(g2.planning, { recettes: recettesTest, mois: 10 }).map((x) => x.id), ['hors'], 'recette hors saison proposée à part');
-const complete = remplirVides(g2.planning, ['hors']);
+eq(propositionsHorsSaison(g2.planning, { recettes: recettesTest, reglages: reg(7, ['midi', 'soir']), mois: 10 }).map((x) => x.id), ['hors'], 'recette hors saison proposée à part');
+const complete = remplirVides(g2.planning, ['hors'], reg(7, ['midi', 'soir']));
 eq([complete.slots.filter((s) => s.recetteId).length, complete.slots.find((s) => !g2.planning.slots.find((x) => x.jour === s.jour && x.moment === s.moment)!.recetteId)?.recetteId], [6, 'hors'], 'hors saison placée dans le premier repas vide');
-eq(remplirVides(complete, ['hors']).slots.filter((s) => s.recetteId === 'hors').length, 1, 'pas de doublon en complétant');
+eq(remplirVides(complete, ['hors'], reg(7, ['midi', 'soir'])).slots.filter((s) => s.recetteId === 'hors').length, 1, 'pas de doublon en complétant');
 const garde = basculerGarde(g1.planning, { jour: 1, moment: 'soir' });
 const gardee = garde.slots[1]!.recetteId;
-const g3 = genererSemaine({ recettes: recettesTest, reglages: { jours: 4, moments: ['soir'] }, mois: 10, semaine: '2026-W41', actuel: garde, aleatoire: graine(9) });
+const g3 = genererSemaine({ recettes: recettesTest, reglages: reg(4, ['soir']), mois: 10, semaine: '2026-W41', actuel: garde, aleatoire: graine(9) });
 eq([g3.planning.slots[1]!.recetteId, g3.planning.slots[1]!.verrouille, g3.planning.slots.filter((s) => s.recetteId === gardee).length], [gardee, true, 1], 'repas gardé conservé, sans doublon');
-const change = changerRecette(g1.planning, { jour: 0, moment: 'soir' }, { recettes: recettesTest, mois: 10, aleatoire: graine(4) })!;
+const change = changerRecette(g1.planning, { jour: 0, moment: 'soir' }, { recettes: recettesTest, reglages: reg(4, ['soir']), mois: 10, aleatoire: graine(4) })!;
 eq([change.slots[0]!.recetteId !== g1.planning.slots[0]!.recetteId, new Set(change.slots.map((s) => s.recetteId)).size], [true, 4], 'changer un repas : autre recette, sans doublon');
-eq(changerRecette(g2.planning, { jour: 0, moment: 'midi' }, { recettes: recettesTest, mois: 10 }), null, 'aucune autre recette disponible');
+eq(changerRecette(g2.planning, { jour: 0, moment: 'midi' }, { recettes: recettesTest, reglages: reg(7, ['midi', 'soir']), mois: 10 }), null, 'aucune autre recette disponible');
 eq(semainePrecedente(new Date(2026, 9, 8)), '2026-W40', 'semaine précédente');
 eq(semainePrecedente(new Date(2026, 0, 1)), '2025-W52', 'semaine précédente au Nouvel An');
 const p40 = { semaine: '2026-W40', slots: [] }, p39 = { semaine: '2026-W39', slots: [] }, p41 = { semaine: '2026-W41', slots: [] };
 eq(rangerPlanning([p39, p40], p41, '2026-W40').map((p) => p.semaine), ['2026-W40', '2026-W41'], 'on garde la semaine précédente seulement');
 
 eq(alignerPlanning(g1.planning, { jours: 1, moments: ['midi', 'soir'] }, '2026-W41').slots.map((s) => [s.moment, s.recetteId === null]), [['midi', true], ['soir', false]], 'planning aligné sur de nouveaux réglages');
+
+// --- Équilibre : types de repas, limites, repas dehors ---
+const indexCatalogue = new Map(cat.legumes.map((l) => [l.id, l]));
+eq([typesRecette({ ...r('a', null), legumes: ['poulet', 'pommedeterre'] }, indexCatalogue), typesRecette({ ...r('b', null), legumes: ['saumon'] }, indexCatalogue), typesRecette({ ...r('c', null), legumes: ['potiron', 'pates'] }, indexCatalogue)],
+  [['viande', 'feculents'], ['poisson'], ['feculents', 'vege']], 'types déduits des ingrédients (pomme de terre = féculent)');
+const vides = { semaine: '2026-W41', slots: [] };
+const parType = [r('v1', plein), r('v2', plein), r('v3', plein), r('p1', plein), r('vg', plein)];
+const typesTest: Record<string, ('viande' | 'poisson' | 'feculents' | 'vege')[]> = { v1: ['viande'], v2: ['viande'], v3: ['viande'], p1: ['poisson'], vg: ['vege'] };
+const gl = genererSemaine({ recettes: parType, reglages: reg(5, ['soir'], { limites: { viande: 1, poisson: null, feculents: null } }), mois: 10, semaine: '2026-W41', actuel: vides, typesDe: (id) => typesTest[id]!, aleatoire: graine(5) });
+const placees = gl.planning.slots.map((x) => x.recetteId).filter(Boolean) as string[];
+eq([placees.filter((id) => id.startsWith('v') && id !== 'vg').length, gl.manquants, gl.ecartees], [1, 2, 2], 'limite viande respectée, recettes écartées comptées');
+const gd = genererSemaine({ recettes: parType, reglages: reg(3, ['midi', 'soir'], { dehors: [{ jour: 0, moment: 'midi' }, { jour: 1, moment: 'midi' }] }), mois: 10, semaine: '2026-W41', aleatoire: graine(6) });
+eq(gd.planning.slots.filter((x) => estDehors(x, { dehors: [{ jour: 0, moment: 'midi' }, { jour: 1, moment: 'midi' }] })).map((x) => [x.jour, x.recetteId]), [[0, null], [1, null]], 'repas dehors habituels laissés libres');
+const habit = { dehors: [{ jour: 0, moment: 'midi' as const }] };
+const unJour = basculerDehors(gd.planning, { jour: 2, moment: 'soir' }, habit);
+eq([unJour.slots.find((x) => x.jour === 2 && x.moment === 'soir')!.recetteId, estDehors(unJour.slots.find((x) => x.jour === 2 && x.moment === 'soir')!, habit)], [null, true], 'repas dehors pour une fois : vidé');
+const retour = basculerDehors(unJour, { jour: 0, moment: 'midi' }, habit);
+eq(estDehors(retour.slots.find((x) => x.jour === 0 && x.moment === 'midi')!, habit), false, 'habitude levée pour une semaine');
+const relance = genererSemaine({ recettes: parType, reglages: reg(3, ['midi', 'soir'], habit), mois: 10, semaine: '2026-W41', actuel: unJour, aleatoire: graine(7) });
+eq(relance.planning.slots.find((x) => x.jour === 2 && x.moment === 'soir')!.recetteId, null, 'le repas dehors reste libre en régénérant');
+eq(changerRecette(gl.planning, gl.planning.slots.find((x) => x.recetteId === 'p1')!, { recettes: parType, reglages: reg(5, ['soir'], { limites: { viande: 1, poisson: null, feculents: null } }), mois: 10, typesDe: (id) => typesTest[id]! }), null, 'changer un repas respecte les limites');
+const v1 = { version: 1, recettes: [], legumesPerso: [], reglages: { jours: 5, moments: ['soir'] }, plannings: [{ semaine: '2026-W40', slots: [{ jour: 0, moment: 'soir', recetteId: null, verrouille: false }] }], dernierExport: null };
+const migree = lireDonnees(v1);
+eq([migree?.version, migree?.reglages.dehors, migree?.reglages.limites.viande, migree?.plannings[0]!.slots[0]!.dehors], [2, [], null, null], 'sauvegarde v1 migrée en v2');
 
 // --- Sauvegarde ---
 eq([libelleSaison([0,0,0,1,1,1,0,0,0,0,0,0]), libelleSaison([0,0,0,0,0,0,0,1,1,0,0,0]), libelleSaison([0,0,1,1,0,0,0,0,0,0,0,0])], ['d’avril à juin', 'd’août à septembre', 'de mars à avril'], 'élision des mois');

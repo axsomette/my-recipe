@@ -1,6 +1,8 @@
+import { typesRecette } from '../lib/equilibre';
 import { lien } from '../lib/routeur';
 import { libelleSaison, niveauSaison } from '../lib/saison';
 import type { Legume, Recette } from '../lib/types';
+import { PictosTypes } from './Equilibre';
 import { BadgeSaison, Frise } from './Saison';
 import { Vignette } from './Vignette';
 
@@ -25,6 +27,7 @@ export function CarteRecette({ recette, index, mois, active = false }: { recette
       )}
       <div class="flex items-center gap-3.5">
         <BadgeSaison niveau={niveauSaison(recette.scoreParMois, mois)} />
+        <PictosTypes types={typesRecette(recette, index)} />
         {recette.scoreParMois && (
           <Frise
             class="flex-1"

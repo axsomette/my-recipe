@@ -1,15 +1,17 @@
 // Seul module à toucher au localStorage. Les données sont versionnées :
 // toute évolution du format passe par une migration ci-dessous.
 import { ORDRE_CATEGORIES } from './categories';
-import type { CategorieId, Donnees, Legume, Moment, Planning, Recette, Reglages, Slot } from './types';
+import type { CategorieId, Creneau, Donnees, Legume, Moment, Planning, Recette, Reglages, Slot, TypeLimite } from './types';
 
 const CLE = 'recettes-de-saison';
 const CLE_SECOURS = `${CLE}:illisible`;
 // Lue aussi par le script en tête d'index.html, avant le premier affichage.
 const CLE_APPARENCE = `${CLE}:apparence`;
-export const VERSION = 1;
+export const VERSION = 2;
 
-export const reglagesParDefaut = (): Reglages => ({ jours: 7, moments: ['soir'] });
+export const TYPES_LIMITES: TypeLimite[] = ['viande', 'poisson', 'feculents'];
+export const limitesLibres = (): Reglages['limites'] => ({ viande: null, poisson: null, feculents: null });
+export const reglagesParDefaut = (): Reglages => ({ jours: 7, moments: ['soir'], dehors: [], limites: limitesLibres() });
 
 export const donneesVides = (): Donnees => ({
   version: VERSION,
@@ -20,16 +22,28 @@ export const donneesVides = (): Donnees => ({
   dernierExport: null,
 });
 
-// Migrations : MIGRATIONS[n] transforme des données en version n vers la version n + 1.
-// Exemple pour une future version 2 : { 1: (d) => ({ ...d, version: 2, nouveauChamp: … }) }
-const MIGRATIONS: Record<number, (d: Record<string, unknown>) => Record<string, unknown>> = {};
-
 // --- Validation manuelle (pas de bibliothèque de schéma) ---
 
 const estObjet = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
 const estTexte = (v: unknown): v is string => typeof v === 'string';
 const estMois = (v: unknown) => Number.isInteger(v) && (v as number) >= 1 && (v as number) <= 12;
 const estMoment = (v: unknown): v is Moment => v === 'midi' || v === 'soir';
+
+// Migrations : MIGRATIONS[n] transforme des données en version n vers la version n + 1.
+type Brut = Record<string, unknown>;
+const MIGRATIONS: Record<number, (d: Brut) => Brut> = {
+  // v2 : repas pris dehors et limites par type de repas (équilibre de la semaine).
+  1: (d) => ({
+    ...d,
+    version: 2,
+    reglages: estObjet(d.reglages) ? { ...d.reglages, dehors: [], limites: limitesLibres() } : d.reglages,
+    plannings: Array.isArray(d.plannings)
+      ? d.plannings.map((p) =>
+          estObjet(p) && Array.isArray(p.slots) ? { ...p, slots: p.slots.map((s) => (estObjet(s) ? { ...s, dehors: null } : s)) } : p,
+        )
+      : d.plannings,
+  }),
+};
 
 function estRecette(v: unknown): v is Recette {
   if (!estObjet(v)) return false;
@@ -54,20 +68,25 @@ function estLegumePerso(v: unknown): v is Legume {
   );
 }
 
+function estCreneau(v: unknown): v is Creneau {
+  return estObjet(v) && Number.isInteger(v.jour) && (v.jour as number) >= 0 && (v.jour as number) <= 6 && estMoment(v.moment);
+}
+
+const estLimite = (v: unknown) => v === null || (Number.isInteger(v) && (v as number) >= 0 && (v as number) <= 14);
+
 function estReglages(v: unknown): v is Reglages {
   if (!estObjet(v)) return false;
   return (
     Number.isInteger(v.jours) && (v.jours as number) >= 1 && (v.jours as number) <= 7 &&
-    Array.isArray(v.moments) && v.moments.length > 0 && v.moments.every(estMoment)
+    Array.isArray(v.moments) && v.moments.length > 0 && v.moments.every(estMoment) &&
+    Array.isArray(v.dehors) && v.dehors.every(estCreneau) &&
+    estObjet(v.limites) && TYPES_LIMITES.every((t) => estLimite((v.limites as Record<string, unknown>)[t]))
   );
 }
 
 function estSlot(v: unknown): v is Slot {
-  if (!estObjet(v)) return false;
-  return (
-    Number.isInteger(v.jour) && (v.jour as number) >= 0 && (v.jour as number) <= 6 &&
-    estMoment(v.moment) && (v.recetteId === null || estTexte(v.recetteId)) && typeof v.verrouille === 'boolean'
-  );
+  if (!estObjet(v) || !estCreneau(v)) return false;
+  return (v.recetteId === null || estTexte(v.recetteId)) && typeof v.verrouille === 'boolean' && (v.dehors === null || typeof v.dehors === 'boolean');
 }
 
 function estPlanning(v: unknown): v is Planning {
