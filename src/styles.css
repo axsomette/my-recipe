@@ -43,8 +43,8 @@
 .printemps { --saison: #3b6b1f; --saison-texte: #335e1a; --saison-pale: #dce9cf; --sur-saison: #ffffff; }
 .ete { --saison: #b3261e; --saison-texte: #9c2019; --saison-pale: #f4d8d3; --sur-saison: #ffffff; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+/* Sombre : posé par data-theme sur <html> (réglage du téléphone, ou choix dans les réglages). */
+:root[data-theme='sombre'] {
     --papier: #161217;
     --carte: #211b22;
     --creux: #2b242c;
@@ -58,12 +58,11 @@
     --ok-pale: #1e3322;
     --sur-danger: #221a20;
     color-scheme: dark;
-  }
-  .automne { --saison: #f09a5b; --saison-texte: #f5b184; --saison-pale: #3a271b; --sur-saison: #221a20; }
-  .hiver { --saison: #d9a0cc; --saison-texte: #e3b6d8; --saison-pale: #35203a; --sur-saison: #221a20; }
-  .printemps { --saison: #a6d17e; --saison-texte: #b7db96; --saison-pale: #24331b; --sur-saison: #221a20; }
-  .ete { --saison: #f2877c; --saison-texte: #f6a59c; --saison-pale: #3d1f1d; --sur-saison: #221a20; }
 }
+[data-theme='sombre'].automne { --saison: #f09a5b; --saison-texte: #f5b184; --saison-pale: #3a271b; --sur-saison: #221a20; }
+[data-theme='sombre'].hiver { --saison: #d9a0cc; --saison-texte: #e3b6d8; --saison-pale: #35203a; --sur-saison: #221a20; }
+[data-theme='sombre'].printemps { --saison: #a6d17e; --saison-texte: #b7db96; --saison-pale: #24331b; --sur-saison: #221a20; }
+[data-theme='sombre'].ete { --saison: #f2877c; --saison-texte: #f6a59c; --saison-pale: #3d1f1d; --sur-saison: #221a20; }
 
 @theme inline {
   --color-papier: var(--papier);
@@ -225,6 +224,13 @@
   textarea.champ { min-height: 96px; padding: 14px 16px; line-height: 1.45; resize: vertical; }
   select.champ { appearance: none; padding-right: 44px; }
 
+  /* Lien « Aller au contenu » : hors de l'écran, il apparaît en haut à gauche au premier Tab. */
+  .evitement {
+    position: fixed; top: 12px; left: 12px; z-index: 30; padding: 12px 16px; border-radius: 12px;
+    background: var(--encre); color: var(--papier); font-weight: 600; text-decoration: none;
+    transform: translateY(-200%);
+  }
+  .evitement:focus { transform: none; }
   .bloc { background: var(--carte); border: 1px solid var(--trait); border-radius: 20px; padding: 18px; }
 
   /* Feuille (téléphone) / fenêtre (tablette) : élément <dialog> natif, qui gère le focus et Échap. */
@@ -269,12 +275,10 @@
 @keyframes voile { from { opacity: 0; } }
 
 /* En sombre, les illustrations sont posées sur une assiette claire pour garder leur contour lisible. */
-@media (prefers-color-scheme: dark) {
-  .vignette {
-    background: #eceae1;
-    border-radius: 50%;
-    padding: 3px;
-  }
+[data-theme='sombre'] .vignette {
+  background: #eceae1;
+  border-radius: 50%;
+  padding: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {

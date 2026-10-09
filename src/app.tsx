@@ -96,7 +96,7 @@ export function App() {
           e.preventDefault();
           document.querySelector<HTMLElement>('main h1')?.focus();
         }}
-        class="sr-only z-30 rounded-xl bg-encre px-4 py-3 text-papier focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+        class="evitement"
       >
         Aller au contenu
       </a>

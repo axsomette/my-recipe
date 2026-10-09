@@ -4,7 +4,7 @@ import { CarteRecette } from '../components/CarteRecette';
 import { Icone } from '../components/Icone';
 import { NOMS_MOIS, moisCourant } from '../lib/calendrier';
 import { useDonnees } from '../lib/donnees';
-import { normaliser } from '../lib/recettes';
+import { cleRecherche } from '../lib/recettes';
 import { lien } from '../lib/routeur';
 import { niveauSaison } from '../lib/saison';
 import { pluriel } from '../lib/texte';
@@ -31,13 +31,13 @@ function ListeRecettes({ monde, idActif, large = false }: { monde: Monde; idActi
   const moisTri = filtre.type === 'mois' ? filtre.mois : maintenant;
 
   const affichees = useMemo(() => {
-    const terme = normaliser(recherche);
+    const terme = cleRecherche(recherche);
     return donnees.recettes
       .filter((r) => {
         if (filtre.type === 'mois' && niveauSaison(r.scoreParMois, filtre.mois) !== 'pleine') return false;
         if (!terme) return true;
         const noms = r.legumes.map((id) => monde.index.get(id)?.nom ?? '');
-        return [r.nom, ...noms].some((texte) => normaliser(texte).includes(terme));
+        return [r.nom, ...noms].some((texte) => cleRecherche(texte).includes(terme));
       })
       .sort((a, b) => scorePourTri(b, moisTri) - scorePourTri(a, moisTri) || a.nom.localeCompare(b.nom, 'fr'));
   }, [donnees.recettes, recherche, filtre, moisTri, monde.index]);

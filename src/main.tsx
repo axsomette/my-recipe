@@ -1,11 +1,13 @@
 import { render } from 'preact';
 import { App } from './app';
+import { suivreApparence } from './lib/apparence';
 import { chargerCatalogue } from './lib/catalogue';
 import { FournisseurDonnees } from './lib/donnees';
 import { suivreInstallation } from './lib/installation';
 import './styles.css';
 
 suivreInstallation();
+suivreApparence();
 
 const racine = document.getElementById('app')!;
 render(

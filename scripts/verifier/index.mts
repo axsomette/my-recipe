@@ -7,6 +7,7 @@ import {
   iconeProche,
   indexerLegumes,
   legumeExistant,
+  cleRecherche,
   legumesDansLeNom,
   supprimerRecette,
   trouverSuggestion,
@@ -74,6 +75,7 @@ eq(iconeProche('Tomate cerise', 'legumes', cat), 'legumes/icones/tomate.svg', 'i
 eq(iconeProche('Oca du Pérou', 'legumes', cat), 'legumes/icones/panier.svg', 'icône générique');
 eq(iconeProche('Verveine', 'herbes', cat), 'legumes/icones/herbe.svg', 'générique herbe');
 eq(legumeExistant('Poireaux', cat.legumes)?.id, 'poireau', 'pluriel retrouvé');
+eq(['Épinard', 'Pomme de terre', 'Chou de Bruxelles', 'Radis'].map((n) => [cleRecherche(n).includes(cleRecherche('EPINARDS')), cleRecherche(n).includes(cleRecherche('pommes de t')), cleRecherche(n).includes(cleRecherche('choux de bruxelles')), cleRecherche(n).includes(cleRecherche('radis'))].indexOf(true)), [0, 1, 2, 3], 'recherche sans accent ni pluriel');
 eq(legumesDansLeNom('Risotto de courge et sauge', cat.legumes).map((l) => l.id), ['courge','sauge'], 'repérés dans le nom');
 eq(legumesDansLeNom('Gratin de poireaux au comté', cat.legumes).map((l) => l.id), ['poireau'], 'pluriel dans le nom');
 eq(legumesDansLeNom('Velouté de chou de Bruxelles', cat.legumes).map((l) => l.id).sort(), ['chou','choudebruxelles'], 'nom composé');

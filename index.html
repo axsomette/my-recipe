@@ -6,8 +6,7 @@
     <title>Recettes de saison</title>
     <!-- Site privé : ne pas indexer dans les moteurs de recherche. -->
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
-    <meta name="theme-color" content="#EEF0E7" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#161217" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#EEF0E7" />
     <link rel="icon" href="/icones/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icones/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
@@ -18,10 +17,17 @@
     <link rel="preload" href="/fonts/young-serif.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/hanken-grotesk.woff2" as="font" type="font/woff2" crossorigin />
     <script>
-      // Saison en cours posée avant le premier affichage : l'accent est juste dès l'écran de lancement.
+      // Saison et apparence posées avant le premier affichage : l'accent et le mode sont justes dès l'écran de lancement.
+      // Même règle que src/lib/apparence.ts : choix des réglages, sinon celui du téléphone.
       (function () {
+        var racine = document.documentElement;
         var m = new Date().getMonth() + 1;
-        document.documentElement.classList.add(m === 12 || m <= 2 ? 'hiver' : m <= 5 ? 'printemps' : m <= 8 ? 'ete' : 'automne');
+        racine.classList.add(m === 12 || m <= 2 ? 'hiver' : m <= 5 ? 'printemps' : m <= 8 ? 'ete' : 'automne');
+        var choix = null;
+        try { choix = localStorage.getItem('recettes-de-saison:apparence'); } catch (e) {}
+        var sombre = choix === 'sombre' || (choix !== 'clair' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        racine.dataset.theme = sombre ? 'sombre' : 'clair';
+        if (sombre) document.querySelector('meta[name="theme-color"]').setAttribute('content', '#161217');
       })();
     </script>
     <style>
@@ -36,12 +42,10 @@
       .hiver #lancement { --accent: #6e2a63; }
       .printemps #lancement { --accent: #3b6b1f; }
       .ete #lancement { --accent: #b3261e; }
-      @media (prefers-color-scheme: dark) {
-        #lancement { --fond: #161217; --encre: #eceae1; --doux: #ada5ad; --accent: #f09a5b; }
-        .hiver #lancement { --accent: #d9a0cc; }
-        .printemps #lancement { --accent: #a6d17e; }
-        .ete #lancement { --accent: #f2877c; }
-      }
+      [data-theme='sombre'] #lancement { --fond: #161217; --encre: #eceae1; --doux: #ada5ad; --accent: #f09a5b; }
+      [data-theme='sombre'].hiver #lancement { --accent: #d9a0cc; }
+      [data-theme='sombre'].printemps #lancement { --accent: #a6d17e; }
+      [data-theme='sombre'].ete #lancement { --accent: #f2877c; }
       #lancement.fin { opacity: 0; transform: translateY(-6px); }
       .l-centre { display: flex; flex-direction: column; align-items: center; gap: 18px; }
       .l-titre { margin: 0; font: 400 42px/1 'Young Serif', Georgia, serif; letter-spacing: -0.015em; text-align: center; }

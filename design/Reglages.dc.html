@@ -16,7 +16,7 @@
 .etape .n{width:28px;height:28px;border-radius:14px;background:var(--encre);color:var(--papier);display:inline-flex;align-items:center;justify-content:center;font:700 14px/1 var(--etiq);flex:none}
 </style>
 </helmet>
-<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 1300px">
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 1440px">
 <main class="defile" style="gap: 28px">
   <h1 class="display t-ecran" style="padding-top: 8px">Réglages</h1>
 
@@ -39,6 +39,14 @@
       </fieldset>
     </div>
     <p class="petit doux">7 repas par semaine.</p>
+  </section>
+
+  <section aria-labelledby="r-apparence" class="" style="display: flex; flex-direction: column; gap: 10px">
+    <h2 id="r-apparence" class="etiq">Apparence</h2>
+    <div class="bloc" style="display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; flex-wrap: wrap; gap: 8px"><span class="filtre" aria-pressed="true">Automatique</span><span class="filtre">Clair</span><span class="filtre">Sombre</span></div>
+      <p class="petit doux">L’app suit le mode clair ou sombre de votre appareil.</p>
+    </div>
   </section>
 
   <section aria-labelledby="r-install" class="bloc" style="background: var(--saison-pale); border: 0; display: flex; flex-direction: column; gap: 14px">
@@ -81,7 +89,7 @@
 </nav>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":1300}}'>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":1440}}'>
 class Component extends DCLogic {
   renderVals() {
     return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };

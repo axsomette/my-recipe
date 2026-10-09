@@ -5,6 +5,8 @@ import type { CategorieId, Donnees, Legume, Moment, Planning, Recette, Reglages,
 
 const CLE = 'recettes-de-saison';
 const CLE_SECOURS = `${CLE}:illisible`;
+// Lue aussi par le script en tête d'index.html, avant le premier affichage.
+const CLE_APPARENCE = `${CLE}:apparence`;
 export const VERSION = 1;
 
 export const reglagesParDefaut = (): Reglages => ({ jours: 7, moments: ['soir'] });
@@ -137,5 +139,26 @@ export function sauvegarder(donnees: Donnees): boolean {
     return true;
   } catch {
     return false;
+  }
+}
+
+export type Apparence = 'auto' | 'clair' | 'sombre';
+
+/** Préférence d'apparence de cet appareil (elle ne part pas dans les sauvegardes). */
+export function lireApparence(): Apparence {
+  try {
+    const valeur = localStorage.getItem(CLE_APPARENCE);
+    return valeur === 'clair' || valeur === 'sombre' ? valeur : 'auto';
+  } catch {
+    return 'auto';
+  }
+}
+
+export function ecrireApparence(apparence: Apparence) {
+  try {
+    if (apparence === 'auto') localStorage.removeItem(CLE_APPARENCE);
+    else localStorage.setItem(CLE_APPARENCE, apparence);
+  } catch {
+    /* la préférence vaudra pour cette visite seulement */
   }
 }

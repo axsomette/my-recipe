@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'preact/hooks';
 import { NOMS_MOIS, moisCourant } from '../lib/calendrier';
 import { NOMS_CATEGORIES, ORDRE_CATEGORIES } from '../lib/categories';
-import { legumeExistant, legumesDansLeNom, normaliser } from '../lib/recettes';
+import { cleRecherche, legumeExistant, legumesDansLeNom } from '../lib/recettes';
 import { calculerScores, libelleSaison } from '../lib/saison';
 import type { Legume } from '../lib/types';
 import type { Monde } from './AvecCatalogue';
@@ -44,9 +44,9 @@ export function SelecteurLegumes({ monde, nomRecette, choisis, onChange, onCreer
 
   const selection = choisis.map((id) => monde.index.get(id)).filter((l): l is Legume => l !== undefined);
   const scores = calculerScores(choisis, monde.index);
-  const terme = normaliser(recherche);
+  const terme = cleRecherche(recherche);
   const resultats = useMemo(
-    () => (terme ? monde.legumes.filter((l) => normaliser(l.nom).includes(terme)) : []),
+    () => (terme ? monde.legumes.filter((l) => cleRecherche(l.nom).includes(terme)) : []),
     [terme, monde.legumes],
   );
   const deSaison = monde.legumes.filter(enSaison);

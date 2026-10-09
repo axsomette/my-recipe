@@ -5,11 +5,13 @@ import { Icone } from '../components/Icone';
 import { Vignette } from '../components/Vignette';
 import { MOIS_ABREGES, NOMS_JOURS } from '../lib/calendrier';
 import { NOMS_CATEGORIES } from '../lib/categories';
+import { useApparence } from '../lib/apparence';
 import { useDonnees } from '../lib/donnees';
 import { useInstallation } from '../lib/installation';
 import { plagesDeMois } from '../lib/saison';
 import { analyserImport, contenuExport, fusionner, nomFichierExport, remplacer, supprimerLegumePerso, type AnalyseImport } from '../lib/sauvegarde';
 import { pluriel } from '../lib/texte';
+import type { Apparence } from '../lib/stockage';
 import type { Legume, Moment } from '../lib/types';
 
 const UN_JOUR = 24 * 3600 * 1000;
@@ -45,6 +47,39 @@ function Toast({ message, onFin }: { message: string | null; onFin: () => void }
         </p>
       )}
     </div>
+  );
+}
+
+const APPARENCES: [Apparence, string][] = [
+  ['auto', 'Automatique'],
+  ['clair', 'Clair'],
+  ['sombre', 'Sombre'],
+];
+
+function ChoixApparence() {
+  const { apparence, choisir } = useApparence();
+  return (
+    <section aria-labelledby="r-apparence" class="flex flex-col gap-2.5">
+      <h2 id="r-apparence" class="etiq">
+        Apparence
+      </h2>
+      <div class="bloc flex flex-col gap-3">
+        <fieldset class="flex flex-col gap-3">
+          <legend class="sr-only">Mode d’affichage</legend>
+          <div class="flex flex-wrap gap-2">
+            {APPARENCES.map(([valeur, libelle]) => (
+              <label key={valeur} class={`filtre ${apparence === valeur ? 'filtre-actif' : ''}`}>
+                <input type="radio" name="apparence" class="sr-only" checked={apparence === valeur} onChange={() => choisir(valeur)} />
+                {libelle}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <p class="text-sm text-encre-2">
+          {apparence === 'auto' ? 'L’app suit le mode clair ou sombre de votre appareil.' : 'Ce choix vaut pour cet appareil.'}
+        </p>
+      </div>
+    </section>
   );
 }
 
@@ -379,8 +414,9 @@ export function Reglages() {
           </h1>
           {/* Téléphone : ordre de la maquette. Tablette : deux colonnes (repas et légumes | sauvegarde et installation). */}
           <div class="grid items-start gap-7 md:grid-cols-2 md:gap-6">
-            <div class="md:col-start-1 md:row-start-1">
+            <div class="flex flex-col gap-7 md:col-start-1 md:row-start-1 md:gap-6">
               <RepasAGenerer />
+              <ChoixApparence />
             </div>
             <div class="md:col-start-2 md:row-start-2">
               <Installer />

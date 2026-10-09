@@ -16,7 +16,7 @@ s'importe en fichier JSON. L'app s'installe sur l'écran d'accueil et fonctionne
 - **Ajout d'une recette** : sélection rapide parmi 88 produits (légumes cités dans le nom, produits du
   mois, catégories, recherche) et légumes perso, avec la saison calculée en direct.
 - **Calendrier des saisons** : ce qui est de saison, mois par mois.
-- **Réglages** : repas à générer, export et import de la sauvegarde, rappel d'installation.
+- **Réglages** : repas à générer, apparence (automatique, clair ou sombre), export et import de la sauvegarde, rappel d'installation.
 
 ### Calcul de saison
 

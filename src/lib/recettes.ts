@@ -21,6 +21,9 @@ const mots = (texte: string) =>
     .filter(Boolean)
     .map((m) => m.replace(/[sx]$/, ''));
 
+/** Clé de recherche sans accent, ponctuation ni pluriel : « épinards » trouve « Épinard », « pommes de t » trouve « Pomme de terre ». */
+export const cleRecherche = (texte: string) => mots(texte).join('');
+
 /** Légumes cités dans un nom de recette (« Risotto de courge et sauge » → courge, sauge). */
 export function legumesDansLeNom(nom: string, legumes: Legume[]): Legume[] {
   const motsNom = mots(nom);
