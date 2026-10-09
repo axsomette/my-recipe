@@ -6,14 +6,17 @@ export const nouvelId = () =>
   globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
 /** Texte sans accent ni ponctuation, pour comparer et chercher (« Céleri-rave » → « celerirave »). */
+/** Ligatures dépliées (« œuf » → « oeuf »), que NFD ne décompose pas. */
+const deplier = (texte: string) => texte.replace(/œ/g, 'oe').replace(/Œ/g, 'Oe').replace(/æ/g, 'ae').replace(/Æ/g, 'Ae');
+
 export const normaliser = (texte: string) =>
-  texte.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  deplier(texte).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
 /** Forme normalisée au singulier approximatif (« Poireaux » → « poireau », « Cèpes » → « cepe »). */
 const singulier = (texte: string) => normaliser(texte).replace(/[sx]$/, '');
 
 const mots = (texte: string) =>
-  texte
+  deplier(texte)
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
@@ -103,7 +106,9 @@ export function trouverSuggestion(nom: string, suggestions: Suggestion[]): Sugge
   );
 }
 
-const GENERIQUE: Partial<Record<CategorieId, string>> = { herbes: 'herbe' };
+const GENERIQUE: Partial<Record<CategorieId, string>> = {
+  herbes: 'herbe', viandes: 'boeuf', poissons: 'cabillaud', cremerie: 'fromage', feculents: 'pates',
+};
 export const ICONES_GENERIQUES = ['panier', 'herbe', 'champignon'];
 const cheminIcone = (id: string) => `legumes/icones/${id}.svg`;
 

@@ -3,7 +3,7 @@
 // Pour chaque mois : score = légumes de la recette de saison ce mois-là / légumes saisonniers de la recette.
 // Les légumes disponibles toute l'année sont exclus. Sans légume saisonnier, la recette est
 // « toutes saisons » (score null) : c'est un joker pour le planning.
-import { MOIS_ABREGES, NOMS_MOIS } from './calendrier';
+import { MOIS_ABREGES, NOMS_MOIS, deMois } from './calendrier';
 import type { Legume } from './types';
 
 export const SEUIL_PLEINE_SAISON = 0.75;
@@ -69,7 +69,7 @@ export function libelleSaison(scores: number[] | null, format: 'long' | 'court' 
   const noms = format === 'long' ? NOMS_MOIS : MOIS_ABREGES;
   const texte = plages.map(([debut, fin]) => {
     if (debut === fin) return format === 'long' ? `en ${noms[debut - 1]}` : noms[debut - 1];
-    return format === 'long' ? `de ${noms[debut - 1]} à ${noms[fin - 1]}` : `${noms[debut - 1]} – ${noms[fin - 1]}`;
+    return format === 'long' ? `${deMois(noms[debut - 1]!)} à ${noms[fin - 1]}` : `${noms[debut - 1]} – ${noms[fin - 1]}`;
   });
   return texte.join(format === 'long' ? ' et ' : ', ');
 }

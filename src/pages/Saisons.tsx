@@ -5,7 +5,7 @@ import { Frise } from '../components/Saison';
 import { Vignette } from '../components/Vignette';
 import { INITIALES_MOIS, NOMS_MOIS, majuscule, moisCourant } from '../lib/calendrier';
 import { deSaison } from '../lib/catalogue';
-import { NOMS_CATEGORIES, NOMS_COURTS_CATEGORIES, ORDRE_CATEGORIES } from '../lib/categories';
+import { NOMS_CATEGORIES, NOMS_COURTS_CATEGORIES, ORDRE_CATEGORIES, estDuGardeManger } from '../lib/categories';
 import { plagesDeMois } from '../lib/saison';
 import type { CategorieId, Legume } from '../lib/types';
 import { useLarge } from '../lib/useLarge';
@@ -241,5 +241,13 @@ function Tableau({ monde }: { monde: Monde }) {
 
 export function Saisons() {
   const large = useLarge();
-  return <AvecCatalogue titre="Calendrier des saisons">{(monde) => (large ? <Tableau monde={monde} /> : <ParMois monde={monde} />)}</AvecCatalogue>;
+  return (
+    <AvecCatalogue titre="Calendrier des saisons">
+      {(tout) => {
+        // Viandes, poissons, crèmerie, féculents, épicerie : pas de saison, pas de place dans le calendrier.
+        const monde = { ...tout, legumes: tout.legumes.filter((l) => !estDuGardeManger(l.categorie)) };
+        return large ? <Tableau monde={monde} /> : <ParMois monde={monde} />;
+      }}
+    </AvecCatalogue>
+  );
 }

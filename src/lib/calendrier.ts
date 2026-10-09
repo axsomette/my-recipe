@@ -21,6 +21,9 @@ export const moisCourant = (date = new Date()) => date.getMonth() + 1;
 
 export const majuscule = (texte: string) => texte.charAt(0).toUpperCase() + texte.slice(1);
 
+/** « de mars », mais « d’avril », « d’août », « d’octobre ». */
+export const deMois = (nom: string) => (/^[aeiouyàâéèêh]/i.test(nom) ? `d’${nom}` : `de ${nom}`);
+
 /** Semaine ISO 8601 d'une date : année ISO, numéro, et lundi de la semaine (heure locale). */
 export function semaineIso(date = new Date()) {
   const jour = new Date(date.getFullYear(), date.getMonth(), date.getDate());

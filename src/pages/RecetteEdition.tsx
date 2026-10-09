@@ -3,7 +3,10 @@ import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
 import { FeuilleLegumePerso } from '../components/FeuilleLegumePerso';
 import { Icone } from '../components/Icone';
 import { SelecteurLegumes } from '../components/SelecteurLegumes';
+import { NOMS_JOURS } from '../lib/calendrier';
 import { useDonnees } from '../lib/donnees';
+import { laisserMessage, prendreSemaineEnAttente } from '../lib/intention';
+import { alignerPlanning, rangerPlanning, remplirVides, semainePrecedente } from '../lib/planning';
 import { ajouterLegumePerso, enregistrerRecette, indexerLegumes } from '../lib/recettes';
 import { lien, naviguer, type Route } from '../lib/routeur';
 import { pluriel } from '../lib/texte';
@@ -17,8 +20,10 @@ function Formulaire({ monde, existante }: { monde: Monde; existante?: Recette })
   const [erreurNom, setErreurNom] = useState(false);
   const [perso, setPerso] = useState<{ nom: string } | null>(null);
   const champNom = useRef<HTMLInputElement>(null);
+  // Création lancée depuis la semaine : la recette ira dans le premier repas vide.
+  const [pourLaSemaine] = useState(() => (existante ? null : prendreSemaineEnAttente()));
 
-  const retour: Route = existante ? { nom: 'recette', id: existante.id } : { nom: 'recettes' };
+  const retour: Route = existante ? { nom: 'recette', id: existante.id } : pourLaSemaine ? { nom: 'semaine' } : { nom: 'recettes' };
   const modifie =
     nom !== (existante?.nom ?? '') || notes !== (existante?.notes ?? '') || legumes.join() !== (existante?.legumes ?? []).join();
 
@@ -38,9 +43,14 @@ function Formulaire({ monde, existante }: { monde: Monde; existante?: Recette })
       // Index recalculé ici : il inclut un légume perso ajouté pendant la saisie.
       const resultat = enregistrerRecette(d, { id: existante?.id, nom, legumes, notes }, indexerLegumes(monde.catalogue, d.legumesPerso));
       id = resultat.recette.id;
-      return resultat.donnees;
+      if (!pourLaSemaine) return resultat.donnees;
+      const avant = alignerPlanning(resultat.donnees.plannings.find((p) => p.semaine === pourLaSemaine), resultat.donnees.reglages, pourLaSemaine);
+      const apres = remplirVides(avant, [id]);
+      const place = apres.slots.find((s, i) => s.recetteId === id && avant.slots[i]!.recetteId !== id);
+      laisserMessage(place ? `« ${nom.trim()} » ajoutée à votre semaine : ${NOMS_JOURS[place.jour]} ${place.moment}.` : `« ${nom.trim()} » enregistrée. La semaine n’a plus de repas vide.`);
+      return { ...resultat.donnees, plannings: rangerPlanning(resultat.donnees.plannings, apres, semainePrecedente()) };
     });
-    naviguer({ nom: 'recette', id }, { remplacer: true });
+    naviguer(pourLaSemaine ? { nom: 'semaine' } : { nom: 'recette', id }, { remplacer: true });
   };
 
   const titre = existante ? 'Modifier la recette' : 'Nouvelle recette';
@@ -63,6 +73,13 @@ function Formulaire({ monde, existante }: { monde: Monde; existante?: Recette })
           </button>
         </div>
       </header>
+
+      {pourLaSemaine && (
+        <p class="alerte bg-saison-pale">
+          <Icone nom="info" taille={22} class="mt-px shrink-0" />
+          Une fois enregistrée, elle ira dans le premier repas libre de votre semaine.
+        </p>
+      )}
 
       <div class="flex flex-col gap-2">
         <label for="nom-recette" class="font-semibold">
@@ -93,7 +110,7 @@ function Formulaire({ monde, existante }: { monde: Monde; existante?: Recette })
       <section aria-labelledby="titre-choix-legumes" class="flex flex-col gap-3.5">
         <div class="flex items-center justify-between">
           <h2 id="titre-choix-legumes" class="font-semibold">
-            Légumes
+            Ingrédients
           </h2>
           <span class="etiq">{legumes.length > 0 ? pluriel(legumes.length, 'choisi') : ''}</span>
         </div>

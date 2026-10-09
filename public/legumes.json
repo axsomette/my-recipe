@@ -1,5 +1,5 @@
 {
- "majLe": "2026-10-08",
+ "majLe": "2026-10-09",
  "version": 1,
  "sources": [
   {
@@ -26,6 +26,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/abricot.svg"
+  },
+  {
+   "id": "agneau",
+   "nom": "Agneau",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/agneau.svg"
   },
   {
    "id": "ail",
@@ -109,6 +118,15 @@
    "icone": "legumes/icones/betterave.svg"
   },
   {
+   "id": "beurre",
+   "nom": "Beurre",
+   "categorie": "cremerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/beurre.svg"
+  },
+  {
    "id": "blette",
    "nom": "Blette",
    "categorie": "legumes",
@@ -118,6 +136,15 @@
    "icone": "legumes/icones/blette.svg"
   },
   {
+   "id": "boeuf",
+   "nom": "Bœuf",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/boeuf.svg"
+  },
+  {
    "id": "brocoli",
    "nom": "Brocoli",
    "categorie": "legumes",
@@ -125,6 +152,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/brocoli.svg"
+  },
+  {
+   "id": "cabillaud",
+   "nom": "Cabillaud",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/cabillaud.svg"
   },
   {
    "id": "carambole",
@@ -188,6 +224,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/chataigne.svg"
+  },
+  {
+   "id": "chocolat",
+   "nom": "Chocolat",
+   "categorie": "epicerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/chocolat.svg"
   },
   {
    "id": "chou",
@@ -289,6 +334,15 @@
    "icone": "legumes/icones/courgette.svg"
   },
   {
+   "id": "creme",
+   "nom": "Crème fraîche",
+   "categorie": "cremerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/creme.svg"
+  },
+  {
    "id": "cresson",
    "nom": "Cresson",
    "categorie": "legumes",
@@ -296,6 +350,15 @@
    "source": "ademe",
    "touteLannee": true,
    "icone": "legumes/icones/cresson.svg"
+  },
+  {
+   "id": "crevette",
+   "nom": "Crevette",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/crevette.svg"
   },
   {
    "id": "datte",
@@ -334,6 +397,15 @@
    "icone": "legumes/icones/epinard.svg"
   },
   {
+   "id": "farine",
+   "nom": "Farine",
+   "categorie": "feculents",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/farine.svg"
+  },
+  {
    "id": "fenouil",
    "nom": "Fenouil",
    "categorie": "legumes",
@@ -368,6 +440,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/framboise.svg"
+  },
+  {
+   "id": "fromage",
+   "nom": "Fromage",
+   "categorie": "cremerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/fromage.svg"
   },
   {
    "id": "fruitdelapassion",
@@ -415,6 +496,33 @@
    "icone": "legumes/icones/haricotvert.svg"
   },
   {
+   "id": "haricotsrouges",
+   "nom": "Haricots rouges",
+   "categorie": "feculents",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/haricotsrouges.svg"
+  },
+  {
+   "id": "huileolive",
+   "nom": "Huile d’olive",
+   "categorie": "epicerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/huileolive.svg"
+  },
+  {
+   "id": "jambon",
+   "nom": "Jambon",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/jambon.svg"
+  },
+  {
    "id": "kaki",
    "nom": "Kaki",
    "categorie": "fruits",
@@ -433,6 +541,15 @@
    "icone": "legumes/icones/kiwi.svg"
   },
   {
+   "id": "lait",
+   "nom": "Lait",
+   "categorie": "cremerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/lait.svg"
+  },
+  {
    "id": "laitue",
    "nom": "Laitue",
    "categorie": "legumes",
@@ -442,6 +559,15 @@
    "icone": "legumes/icones/laitue.svg"
   },
   {
+   "id": "lardons",
+   "nom": "Lardons",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/lardons.svg"
+  },
+  {
    "id": "laurier",
    "nom": "Laurier",
    "categorie": "herbes",
@@ -449,6 +575,15 @@
    "source": "base",
    "touteLannee": true,
    "icone": "legumes/icones/laurier.svg"
+  },
+  {
+   "id": "lentilles",
+   "nom": "Lentilles",
+   "categorie": "feculents",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/lentilles.svg"
   },
   {
    "id": "mache",
@@ -514,6 +649,33 @@
    "icone": "legumes/icones/menthe.svg"
   },
   {
+   "id": "miel",
+   "nom": "Miel",
+   "categorie": "epicerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/miel.svg"
+  },
+  {
+   "id": "moule",
+   "nom": "Moule",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/moule.svg"
+  },
+  {
+   "id": "mozzarella",
+   "nom": "Mozzarella",
+   "categorie": "cremerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/mozzarella.svg"
+  },
+  {
    "id": "mure",
    "nom": "Mûre",
    "categorie": "fruits",
@@ -577,6 +739,15 @@
    "icone": "legumes/icones/noixdecoco.svg"
   },
   {
+   "id": "oeuf",
+   "nom": "Œuf",
+   "categorie": "cremerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/oeuf.svg"
+  },
+  {
    "id": "oignon",
    "nom": "Oignon",
    "categorie": "legumes",
@@ -593,6 +764,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/orange.svg"
+  },
+  {
+   "id": "pain",
+   "nom": "Pain",
+   "categorie": "feculents",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/pain.svg"
   },
   {
    "id": "pamplemousse",
@@ -629,6 +809,15 @@
    "source": "base",
    "touteLannee": true,
    "icone": "legumes/icones/patatedouce.svg"
+  },
+  {
+   "id": "pates",
+   "nom": "Pâtes",
+   "categorie": "feculents",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/pates.svg"
   },
   {
    "id": "peche",
@@ -676,6 +865,15 @@
    "icone": "legumes/icones/poireau.svg"
   },
   {
+   "id": "poischiches",
+   "nom": "Pois chiches",
+   "categorie": "feculents",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/poischiches.svg"
+  },
+  {
    "id": "poivron",
    "nom": "Poivron",
    "categorie": "legumes",
@@ -703,6 +901,15 @@
    "icone": "legumes/icones/pommedeterre.svg"
   },
   {
+   "id": "porc",
+   "nom": "Porc",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/porc.svg"
+  },
+  {
    "id": "potiron",
    "nom": "Potiron",
    "categorie": "legumes",
@@ -710,6 +917,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/potiron.svg"
+  },
+  {
+   "id": "poulet",
+   "nom": "Poulet",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/poulet.svg"
   },
   {
    "id": "prune",
@@ -757,6 +973,15 @@
    "icone": "legumes/icones/rhubarbe.svg"
   },
   {
+   "id": "riz",
+   "nom": "Riz",
+   "categorie": "feculents",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/riz.svg"
+  },
+  {
    "id": "romarin",
    "nom": "Romarin",
    "categorie": "herbes",
@@ -775,6 +1000,15 @@
    "icone": "legumes/icones/salsifis.svg"
   },
   {
+   "id": "saucisse",
+   "nom": "Saucisse",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/saucisse.svg"
+  },
+  {
    "id": "sauge",
    "nom": "Sauge",
    "categorie": "herbes",
@@ -784,6 +1018,33 @@
    "icone": "legumes/icones/sauge.svg"
   },
   {
+   "id": "saumon",
+   "nom": "Saumon",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/saumon.svg"
+  },
+  {
+   "id": "semoule",
+   "nom": "Semoule",
+   "categorie": "feculents",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/semoule.svg"
+  },
+  {
+   "id": "thon",
+   "nom": "Thon",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/thon.svg"
+  },
+  {
    "id": "thym",
    "nom": "Thym",
    "categorie": "herbes",
@@ -791,6 +1052,15 @@
    "source": "base",
    "touteLannee": true,
    "icone": "legumes/icones/thym.svg"
+  },
+  {
+   "id": "tofu",
+   "nom": "Tofu",
+   "categorie": "epicerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/tofu.svg"
   },
   {
    "id": "tomate",
@@ -809,6 +1079,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/topinambour.svg"
+  },
+  {
+   "id": "yaourt",
+   "nom": "Yaourt",
+   "categorie": "cremerie",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/yaourt.svg"
   }
  ],
  "suggestions": [
@@ -1020,7 +1299,7 @@
    "nom": "Navet nouveau",
    "categorie": "legumes",
    "mois": [4,5],
-   "icone": "legumes/icones/navet.svg"
+   "icone": "legumes/icones/boeuf.svg"
   },
   {
    "id": "nectarineblanche",
@@ -1235,6 +1514,42 @@
   "salade": "laitue",
   "roquette": "laitue",
   "yuzu": "citron",
-  "butternut": "courge"
+  "butternut": "courge",
+  "steak": "boeuf",
+  "veau": "boeuf",
+  "bavette": "boeuf",
+  "dinde": "poulet",
+  "volaille": "poulet",
+  "canard": "poulet",
+  "chorizo": "saucisse",
+  "merguez": "saucisse",
+  "bacon": "lardons",
+  "colin": "cabillaud",
+  "merlu": "cabillaud",
+  "lieu": "cabillaud",
+  "dorade": "cabillaud",
+  "truite": "cabillaud",
+  "sardine": "cabillaud",
+  "maquereau": "cabillaud",
+  "poisson": "cabillaud",
+  "gambas": "crevette",
+  "spaghetti": "pates",
+  "tagliatelle": "pates",
+  "lasagne": "pates",
+  "nouille": "pates",
+  "macaroni": "pates",
+  "baguette": "pain",
+  "parmesan": "fromage",
+  "comte": "fromage",
+  "emmental": "fromage",
+  "gruyere": "fromage",
+  "chevre": "fromage",
+  "feta": "fromage",
+  "ricotta": "creme",
+  "mascarpone": "creme",
+  "couscous": "semoule",
+  "boulgour": "semoule",
+  "quinoa": "semoule",
+  "cacao": "chocolat"
  }
 }

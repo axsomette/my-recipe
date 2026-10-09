@@ -34,9 +34,9 @@
     <input id="nom" class="input" type="text" value="Risotto de courge et sauge">
   </div>
   <section aria-labelledby="t-leg" style="display: flex; flex-direction: column; gap: 14px">
-    <div class="entete"><h2 id="t-leg" class="label">Légumes</h2><span class="compteur">3 CHOISIS</span></div>
+    <div class="entete"><h2 id="t-leg" class="label">Ingrédients</h2><span class="compteur">3 CHOISIS</span></div>
     <div style="display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 16px; align-items: start">
-      <ul class="nue chips" aria-label="Légumes choisis">
+      <ul class="nue chips" aria-label="Ingrédients choisis">
         <li><button class="chip chip-retire" type="button" aria-label="Retirer courge"><img class="vig vig-s" src="./icons/courge.svg" alt="">Courge<span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg></span></button></li>
         <li><button class="chip chip-retire" type="button" aria-label="Retirer oignon"><img class="vig vig-s" src="./icons/oignon.svg" alt="">Oignon<span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg></span></button></li>
         <li><button class="chip chip-retire" type="button" aria-label="Retirer sauge"><img class="vig vig-s" src="./icons/sauge.svg" alt="">Sauge<span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg></span></button></li>
@@ -49,7 +49,7 @@
     <div class="recherche">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
       <label class="sr" for="qleg">Chercher un légume, un fruit ou une herbe</label>
-      <input id="qleg" class="input" type="search" placeholder="Légume, fruit, herbe…">
+      <input id="qleg" class="input" type="search" placeholder="Légume, viande, pâtes…">
     </div>
     <div class="filtres" role="group" aria-label="Catégorie">
       <button class="filtre" type="button" aria-pressed="false">De saison · 33</button>

@@ -46,8 +46,17 @@ export function SelecteurLegumes({ monde, nomRecette, choisis, onChange, onCreer
   const scores = calculerScores(choisis, monde.index);
   const terme = cleRecherche(recherche);
   const resultats = useMemo(
-    () => (terme ? monde.legumes.filter((l) => cleRecherche(l.nom).includes(terme)) : []),
-    [terme, monde.legumes],
+    () => {
+      if (!terme) return [];
+      // Mots courants qui renvoient à un produit de la liste : « spaghetti » → pâtes, « potimarron » → potiron.
+      const proches = new Set(
+        Object.entries(monde.catalogue.correspondances)
+          .filter(([mot]) => terme.length >= 3 && (mot.includes(terme) || terme.includes(mot)))
+          .map(([, id]) => id),
+      );
+      return monde.legumes.filter((l) => cleRecherche(l.nom).includes(terme) || proches.has(l.id));
+    },
+    [terme, monde.legumes, monde.catalogue],
   );
   const deSaison = monde.legumes.filter(enSaison);
   const dansLeNom = useMemo(() => legumesDansLeNom(nomRecette, monde.legumes), [nomRecette, monde.legumes]);
@@ -57,13 +66,13 @@ export function SelecteurLegumes({ monde, nomRecette, choisis, onChange, onCreer
       titre: NOMS_CATEGORIES[c],
       legumes: monde.legumes.filter((l) => l.categorie === c && l.source !== 'perso'),
     })),
-    { id: 'perso', titre: 'Mes légumes perso', legumes: monde.legumes.filter((l) => l.source === 'perso') },
+    { id: 'perso', titre: 'Mes ingrédients perso', legumes: monde.legumes.filter((l) => l.source === 'perso') },
   ].filter((g) => g.legumes.length > 0);
 
   return (
     <div class="flex flex-col gap-3.5">
       {selection.length > 0 && (
-        <ul class="flex flex-wrap gap-2" aria-label="Légumes choisis">
+        <ul class="flex flex-wrap gap-2" aria-label="Ingrédients choisis">
           {selection.map((l) => (
             <li key={l.id}>
               <button type="button" class="chip chip-retirer" aria-label={`Retirer ${l.nom}`} onClick={() => basculer(l.id)}>
@@ -89,7 +98,7 @@ export function SelecteurLegumes({ monde, nomRecette, choisis, onChange, onCreer
         ) : (
           <p class="text-sm text-encre-2">
             {selection.length === 0
-              ? 'Cochez les légumes de la recette : sa saison se calcule au fur et à mesure.'
+              ? 'Cochez les ingrédients de la recette : sa saison se calcule au fur et à mesure.'
               : 'Aucun légume saisonnier pour l’instant : la recette ira en toute saison.'}
           </p>
         )}
@@ -98,13 +107,13 @@ export function SelecteurLegumes({ monde, nomRecette, choisis, onChange, onCreer
       <div class="relative">
         <Icone nom="recherche" taille={20} class="pointer-events-none absolute top-4 left-4 text-encre-2" />
         <label class="sr-only" for="recherche-legumes">
-          Chercher un légume, un fruit ou une herbe
+          Chercher un ingrédient
         </label>
         <input
           id="recherche-legumes"
           class="champ pl-12"
           type="search"
-          placeholder="Légume, fruit, herbe…"
+          placeholder="Légume, viande, pâtes…"
           autocomplete="off"
           value={recherche}
           onInput={(e) => setRecherche(e.currentTarget.value)}
@@ -118,12 +127,12 @@ export function SelecteurLegumes({ monde, nomRecette, choisis, onChange, onCreer
               {resultats.map(chip)}
             </div>
           ) : (
-            <p class="text-encre-2">Aucun légume « {recherche.trim()} » dans la liste.</p>
+            <p class="text-encre-2">Aucun ingrédient « {recherche.trim()} » dans la liste.</p>
           )}
           {!legumeExistant(recherche, monde.legumes) && (
             <button type="button" class="chip chip-ajout self-start" onClick={() => onCreer(recherche.trim())}>
               <Icone nom="plus" taille={18} />
-              Ajouter « {recherche.trim()} » comme légume perso
+              Ajouter « {recherche.trim()} » comme ingrédient perso
             </button>
           )}
         </div>
@@ -186,7 +195,7 @@ export function SelecteurLegumes({ monde, nomRecette, choisis, onChange, onCreer
           </div>
           <button type="button" class="chip chip-ajout self-start" onClick={() => onCreer('')}>
             <Icone nom="plus" taille={18} />
-            Ajouter un légume perso
+            Ajouter un ingrédient perso
           </button>
         </>
       )}

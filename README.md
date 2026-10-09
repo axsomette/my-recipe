@@ -11,7 +11,9 @@ s'importe en fichier JSON. L'app s'installe sur l'écran d'accueil et fonctionne
 
 - **Ma semaine** : les repas de la semaine (jours et moments réglables), générés en privilégiant
   les recettes de saison ce mois-ci ; on garde un repas, on en change un seul, on régénère le reste.
-- **Mes recettes** : recherche par recette ou par légume, filtre par mois de saison, fiche avec la
+  Une recette hors saison n'est jamais placée d'office : s'il en manque, une fenêtre propose des
+  recettes hors saison à cocher, ou d'en ajouter une nouvelle qui va directement dans la semaine.
+- **Mes recettes** : recherche par recette ou par ingrédient, filtre par mois de saison, fiche avec la
   frise des 12 mois.
 - **Ajout d'une recette** : sélection rapide parmi 88 produits (légumes cités dans le nom, produits du
   mois, catégories, recherche) et légumes perso, avec la saison calculée en direct.
@@ -112,8 +114,10 @@ Le script `scripts/fetch-legumes.mjs` le régénère à partir de :
 - **ADEME — Impact CO₂** : les mois de saison de 76 fruits et légumes, lus directement dans le dépôt
   open source de l'ADEME ([incubateur-ademe/impactco2](https://github.com/incubateur-ademe/impactco2),
   licence MIT) — la source même de leur API, sans clé, sans compte, sans demande à faire ;
-- **une liste de base** de 12 produits courants absents de l'ADEME (pomme de terre, aromates…),
-  disponibles toute l'année : ils n'entrent pas dans le calcul de saison ;
+- **une liste de base** de 43 produits absents de l'ADEME, disponibles toute l'année et donc hors
+  du calcul de saison : pomme de terre et aromates, et le garde-manger (viandes, poissons,
+  œufs et crèmerie, pâtes, riz, pain et légumineuses, épicerie), qui n'apparaît pas dans le
+  calendrier des saisons ;
 - **l'Agenda des Chefs METRO** (data.gouv.fr, Licence Ouverte) : 58 autres produits dont les mois
   phares servent seulement de suggestion quand on ajoute un légume perso.
 

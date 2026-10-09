@@ -1,7 +1,9 @@
 // Générateur de semaine : fonctions pures (le hasard est injecté pour pouvoir le tester).
 //
 // Ordre de préférence des recettes, pour le mois en cours :
-//   1. de saison (score ≥ 0,75), 2. en partie de saison, 3. jokers « toutes saisons », 4. hors saison.
+//   1. de saison (score ≥ 0,75), 2. en partie de saison, 3. jokers « toutes saisons ».
+// Les recettes hors saison ne sont jamais placées d'office : elles sont proposées à part
+// (propositionsHorsSaison) et c'est la personne qui choisit de s'en servir.
 // Dans chaque groupe, les recettes de la semaine précédente passent après les autres,
 // puis on mélange les recettes de score proche (par tranches de 0,25) pour varier.
 import { semaineIso } from './calendrier';
@@ -59,16 +61,19 @@ export interface ContexteGeneration {
 
 export interface Generation {
   planning: Planning;
-  /** Nombre de repas laissés vides faute de recettes. */
+  /** Nombre de repas laissés vides faute de recettes de saison ou toutes saisons. */
   manquants: number;
 }
+
+const horsSaison = (r: Recette, mois: number) => niveauSaison(r.scoreParMois, mois) === 'hors';
+const idsDe = (slots: Slot[]) => new Set(slots.flatMap((s) => (s.recetteId ? [s.recetteId] : [])));
 
 export function genererSemaine({ recettes, reglages, mois, semaine, actuel, precedent, aleatoire = Math.random }: ContexteGeneration): Generation {
   const existantes = new Set(recettes.map((r) => r.id));
   const gardes = (actuel?.slots ?? []).filter((s) => s.verrouille && s.recetteId && existantes.has(s.recetteId));
   const prises = new Set(gardes.map((s) => s.recetteId!));
   const dejaServies = new Set((precedent?.slots ?? []).flatMap((s) => (s.recetteId ? [s.recetteId] : [])));
-  const disponibles = classer(recettes.filter((r) => !prises.has(r.id)), mois, dejaServies, aleatoire);
+  const disponibles = classer(recettes.filter((r) => !prises.has(r.id) && !horsSaison(r, mois)), mois, dejaServies, aleatoire);
 
   let manquants = 0;
   const slots: Slot[] = creneaux(reglages).map((c) => {
@@ -81,18 +86,34 @@ export function genererSemaine({ recettes, reglages, mois, semaine, actuel, prec
   return { planning: { semaine, slots }, manquants };
 }
 
+/** Recettes hors saison qui pourraient compléter la semaine, de la plus à la moins indiquée. */
+export function propositionsHorsSaison(
+  planning: Planning,
+  { recettes, mois, precedent, aleatoire = Math.random }: Pick<ContexteGeneration, 'recettes' | 'mois' | 'precedent' | 'aleatoire'>,
+): Recette[] {
+  const dansLaSemaine = idsDe(planning.slots);
+  const dejaServies = idsDe(precedent?.slots ?? []);
+  return classer(recettes.filter((r) => !dansLaSemaine.has(r.id) && horsSaison(r, mois)), mois, dejaServies, aleatoire);
+}
+
+/** Place des recettes dans les repas vides de la semaine, dans l'ordre des créneaux. */
+export function remplirVides(planning: Planning, ids: string[]): Planning {
+  const file = ids.filter((id) => !idsDe(planning.slots).has(id));
+  return { ...planning, slots: planning.slots.map((s) => (s.recetteId || !file.length ? s : { ...s, recetteId: file.shift()!, verrouille: false })) };
+}
+
 /**
- * Change la recette d'un seul repas : la mieux classée qui n'est pas déjà dans la semaine.
- * Renvoie null s'il n'existe aucune autre recette disponible.
+ * Change la recette d'un seul repas : la mieux classée qui n'est pas déjà dans la semaine (hors saison exclues).
+ * Renvoie null s'il n'existe aucune autre recette de saison ou toutes saisons.
  */
 export function changerRecette(
   planning: Planning,
   creneau: Pick<Slot, 'jour' | 'moment'>,
   { recettes, mois, precedent, aleatoire = Math.random }: Pick<ContexteGeneration, 'recettes' | 'mois' | 'precedent' | 'aleatoire'>,
 ): Planning | null {
-  const dansLaSemaine = new Set(planning.slots.flatMap((s) => (s.recetteId ? [s.recetteId] : [])));
-  const dejaServies = new Set((precedent?.slots ?? []).flatMap((s) => (s.recetteId ? [s.recetteId] : [])));
-  const [choix] = classer(recettes.filter((r) => !dansLaSemaine.has(r.id)), mois, dejaServies, aleatoire);
+  const dansLaSemaine = idsDe(planning.slots);
+  const dejaServies = idsDe(precedent?.slots ?? []);
+  const [choix] = classer(recettes.filter((r) => !dansLaSemaine.has(r.id) && !horsSaison(r, mois)), mois, dejaServies, aleatoire);
   if (!choix) return null;
   return {
     ...planning,

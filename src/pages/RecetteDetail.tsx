@@ -115,7 +115,7 @@ export function DetailRecette({ id, monde, enColonne = false }: { id: string; mo
       {legumes.length > 0 && (
         <section aria-labelledby="titre-legumes" class="flex flex-col gap-3">
           <Section id="titre-legumes" class="etiq">
-            Légumes · {legumes.length}
+            Ingrédients · {legumes.length}
           </Section>
           <ul class="flex flex-wrap gap-2">
             {legumes.map((l) => {

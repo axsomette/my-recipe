@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ma semaine — compléter hors saison</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}
+.choix-hs{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 14px;border-radius:16px;border:1px solid var(--trait);background:var(--carte)}
+.voile{z-index:4}
+.feuille{z-index:5}
+.choix-hs input{width:20px;height:20px;flex:none;accent-color:var(--encre)}
+.choix-hs .corps{display:flex;flex-direction:column;flex:1;min-width:0}
+</style>
+</helmet>
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 900px">
+<main class="defile" aria-hidden="true" style="gap: 18px">
+  <header style="display: flex; flex-direction: column; gap: 4px; padding-top: 8px">
+    <p class="etiq">Automne · semaine 41</p>
+    <h1 class="display t-section" style="font-size: 30px">Ma semaine</h1>
+  </header>
+
+  <div class="alerte a-info" role="status">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.5v.01"/></svg>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <p><strong>Il manque 4 recettes de saison pour remplir la semaine.</strong> Les recettes hors saison ne sont ajoutées que si vous le choisissez.</p>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-left: -12px">
+        <a class="btn btn-texte" href="SemaineHorsSaison.dc.html">Compléter hors saison</a>
+        <a class="btn btn-texte" href="RecetteEdition.dc.html">Ajouter une recette</a>
+        <a class="btn btn-texte" href="Reglages.dc.html">Prévoir moins de repas</a>
+      </div>
+    </div>
+  </div>
+
+  <ol class="slots" style="gap: 10px">
+    <li class="jour passe">
+      <div class="date"><span class="num">5</span><span class="etiq">lundi</span></div>
+      <div class="slot"><div class="corps"><a class="nom" href="RecetteDetail.dc.html">Gratin de poireaux au comté</a><div class="meta"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span></div></div>
+        <button class="ico" type="button" aria-pressed="false" aria-label="Garder le repas de lundi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></button>
+        <button class="ico" type="button" aria-disabled="true" aria-label="Changer la recette de lundi soir (aucune autre recette disponible)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></button></div>
+    </li>
+    <li class="jour passe">
+      <div class="date"><span class="num">6</span><span class="etiq">mardi</span></div>
+      <div class="slot"><div class="corps"><a class="nom" href="RecetteDetail.dc.html">Endives braisées à l’orange</a><div class="meta"><span class="badge b-partie"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 2a5 5 0 0 1 0 10z" fill="currentColor"/></svg>En partie de saison</span></div></div>
+        <button class="ico" type="button" aria-pressed="false" aria-label="Garder le repas de mardi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></button>
+        <button class="ico" type="button" aria-disabled="true" aria-label="Changer la recette de mardi soir (aucune autre recette disponible)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></button></div>
+    </li>
+    <li class="jour passe">
+      <div class="date"><span class="num">7</span><span class="etiq">mercredi</span></div>
+      <div class="slot"><div class="corps"><a class="nom" href="RecetteDetail.dc.html">Poêlée de champignons persillés</a><div class="meta"><span class="badge b-toutes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7c0-1.4 1-2.3 2.1-2.3C6.6 4.7 7.4 9.3 9.4 9.3c1.1 0 2.1-.9 2.1-2.3s-1-2.3-2.1-2.3C7.4 4.7 6.6 9.3 4.6 9.3 3.5 9.3 2.5 8.4 2.5 7z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Toutes saisons</span></div></div>
+        <button class="ico" type="button" aria-pressed="false" aria-label="Garder le repas de mercredi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></button>
+        <button class="ico" type="button" aria-disabled="true" aria-label="Changer la recette de mercredi soir (aucune autre recette disponible)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></button></div>
+    </li>
+    <li class="jour auj">
+      <div class="date"><span class="num">8</span><span class="etiq">jeudi</span><span class="auj-tag">aujourd’hui</span></div>
+      <div class="slot vide"><p class="doux">Pas de recette disponible</p></div>
+    </li>
+    <li class="jour">
+      <div class="date"><span class="num">9</span><span class="etiq">vendredi</span></div>
+      <div class="slot vide"><p class="doux">Pas de recette disponible</p></div>
+    </li>
+    <li class="jour">
+      <div class="date"><span class="num">10</span><span class="etiq">samedi</span></div>
+      <div class="slot vide"><p class="doux">Pas de recette disponible</p></div>
+    </li>
+    <li class="jour">
+      <div class="date"><span class="num">11</span><span class="etiq">dimanche</span></div>
+      <div class="slot vide"><p class="doux">Pas de recette disponible</p></div>
+    </li>
+  </ol>
+</main>
+<div class="voile"></div>
+<section class="feuille" role="dialog" aria-modal="true" aria-labelledby="hs-titre" style="gap: 16px">
+  <span class="poignee"></span>
+  <h2 id="hs-titre" class="display" style="font-size: 24px; line-height: 1.15">Pas assez de recettes de saison</h2>
+  <p class="doux">4 repas restent sans recette de saison. Vous pouvez compléter avec des recettes hors saison, ou en ajouter une nouvelle.</p>
+  <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px">
+    <legend class="etiq" style="margin-bottom: 8px">Proposées hors saison</legend>
+    <label class="choix-hs"><input type="checkbox" checked><span class="corps"><b>Ratatouille</b><span class="petit doux">Saison : de juin à septembre</span></span><span class="badge b-hors"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Hors saison</span></label>
+    <label class="choix-hs"><input type="checkbox" checked><span class="corps"><b>Asperges vinaigrette</b><span class="petit doux">Saison : d’avril à juin</span></span><span class="badge b-hors"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Hors saison</span></label>
+  </fieldset>
+  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px">
+    <a class="btn btn-plein btn-large" href="Main.dc.html">Utiliser ces 2 recettes</a>
+    <a class="btn btn-ligne btn-large" href="RecetteEdition.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter une recette</a>
+    <a class="btn btn-texte" href="SemaineIncomplete.dc.html" style="align-self: center">Laisser ces repas vides</a>
+  </div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

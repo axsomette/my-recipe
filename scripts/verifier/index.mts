@@ -13,7 +13,7 @@ import {
   trouverSuggestion,
 } from '../../src/lib/recettes.ts';
 import { lien, lireRoute } from '../../src/lib/routeur.ts';
-import { alignerPlanning, basculerGarde, changerRecette, classer, creneaux, genererSemaine, rangerPlanning, semainePrecedente } from '../../src/lib/planning.ts';
+import { alignerPlanning, basculerGarde, changerRecette, classer, creneaux, genererSemaine, propositionsHorsSaison, rangerPlanning, remplirVides, semainePrecedente } from '../../src/lib/planning.ts';
 import { calculerScores, libelleSaison, niveauSaison, plagesDeMois } from '../../src/lib/saison.ts';
 import { analyserImport, contenuExport, fusionner, nomFichierExport, supprimerLegumePerso } from '../../src/lib/sauvegarde.ts';
 import { donneesVides, lireDonnees } from '../../src/lib/stockage.ts';
@@ -54,7 +54,7 @@ eq(niveauSaison(null, 5), 'toutes', 'joker');
 eq(libelleSaison(gratin), 'de septembre à décembre', 'libellé long');
 eq(libelleSaison(gratin, 'court'), 'sept. – déc.', 'libellé court');
 const soupe = calculerScores(['panais','carotte','oignon','gingembre'], idx);
-eq(libelleSaison(soupe), 'd’octobre à mars'.replace('d’','de '), 'boucle déc→janv');
+eq(libelleSaison(soupe), 'd’octobre à mars', 'boucle déc→janv');
 eq(plagesDeMois([1,2,9,10,11,12]), [[9,2]], 'plage bouclée');
 eq(plagesDeMois([4,5,6]), [[4,6]], 'plage simple');
 eq(libelleSaison(calculerScores(['radis','ail'], idx)), 'aucun mois vraiment de saison', 'aucun mois ≥ 0,75');
@@ -79,7 +79,8 @@ eq(['Épinard', 'Pomme de terre', 'Chou de Bruxelles', 'Radis'].map((n) => [cleR
 eq(legumesDansLeNom('Risotto de courge et sauge', cat.legumes).map((l) => l.id), ['courge','sauge'], 'repérés dans le nom');
 eq(legumesDansLeNom('Gratin de poireaux au comté', cat.legumes).map((l) => l.id), ['poireau'], 'pluriel dans le nom');
 eq(legumesDansLeNom('Velouté de chou de Bruxelles', cat.legumes).map((l) => l.id).sort(), ['chou','choudebruxelles'], 'nom composé');
-eq(legumesDansLeNom('Bailey et pâtes', cat.legumes).length, 0, 'pas de faux positif ail');
+eq(legumesDansLeNom('Bailey et pâtes', cat.legumes).map((l) => l.id), ['pates'], 'pas de faux positif ail (mais les pâtes, oui)');
+eq(legumesDansLeNom('Œufs mimosa au thon', cat.legumes).map((l) => l.id).sort(), ['oeuf', 'thon'], 'garde-manger et ligature œ');
 eq(legumesDansLeNom('Haricots verts sautés', cat.legumes).map((l) => l.id), ['haricotvert'], 'haricot vert (cru) nettoyé');
 
 // --- Générateur de semaine ---
@@ -94,7 +95,12 @@ eq(classer(recettesTest, 10, new Set(['p1', 'p2']), graine(1)).map((x) => x.id).
 const g1 = genererSemaine({ recettes: recettesTest, reglages: { jours: 4, moments: ['soir'] }, mois: 10, semaine: '2026-W41', aleatoire: graine(2) });
 eq([g1.manquants, new Set(g1.planning.slots.map((s) => s.recetteId)).size, g1.planning.slots.slice(3).map((s) => s.recetteId)], [0, 4, ['moitie']], 'semaine sans doublon, saison d’abord');
 const g2 = genererSemaine({ recettes: recettesTest, reglages: { jours: 7, moments: ['midi', 'soir'] }, mois: 10, semaine: '2026-W41', aleatoire: graine(3) });
-eq([g2.manquants, g2.planning.slots.filter((s) => s.recetteId).length], [8, 6], 'pas assez de recettes : repas vides comptés');
+eq([g2.manquants, g2.planning.slots.filter((s) => s.recetteId).length], [9, 5], 'pas assez de recettes : repas vides comptés');
+eq(g2.planning.slots.some((s) => s.recetteId === 'hors'), false, 'jamais de recette hors saison placée d’office');
+eq(propositionsHorsSaison(g2.planning, { recettes: recettesTest, mois: 10 }).map((x) => x.id), ['hors'], 'recette hors saison proposée à part');
+const complete = remplirVides(g2.planning, ['hors']);
+eq([complete.slots.filter((s) => s.recetteId).length, complete.slots.find((s) => !g2.planning.slots.find((x) => x.jour === s.jour && x.moment === s.moment)!.recetteId)?.recetteId], [6, 'hors'], 'hors saison placée dans le premier repas vide');
+eq(remplirVides(complete, ['hors']).slots.filter((s) => s.recetteId === 'hors').length, 1, 'pas de doublon en complétant');
 const garde = basculerGarde(g1.planning, { jour: 1, moment: 'soir' });
 const gardee = garde.slots[1]!.recetteId;
 const g3 = genererSemaine({ recettes: recettesTest, reglages: { jours: 4, moments: ['soir'] }, mois: 10, semaine: '2026-W41', actuel: garde, aleatoire: graine(9) });
@@ -110,6 +116,7 @@ eq(rangerPlanning([p39, p40], p41, '2026-W40').map((p) => p.semaine), ['2026-W40
 eq(alignerPlanning(g1.planning, { jours: 1, moments: ['midi', 'soir'] }, '2026-W41').slots.map((s) => [s.moment, s.recetteId === null]), [['midi', true], ['soir', false]], 'planning aligné sur de nouveaux réglages');
 
 // --- Sauvegarde ---
+eq([libelleSaison([0,0,0,1,1,1,0,0,0,0,0,0]), libelleSaison([0,0,0,0,0,0,0,1,1,0,0,0]), libelleSaison([0,0,1,1,0,0,0,0,0,0,0,0])], ['d’avril à juin', 'd’août à septembre', 'de mars à avril'], 'élision des mois');
 eq(nomFichierExport(new Date(2026, 9, 8)), 'recettes-de-saison-2026-10-08.json', 'nom du fichier daté');
 const base = { ...donneesVides(), recettes: [{ ...r('a', null), legumes: ['poireau'], updatedAt: '2026-10-01' }] };
 eq(analyserImport(contenuExport(base)).ok, true, 'export relu sans perte');

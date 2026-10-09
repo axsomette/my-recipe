@@ -301,7 +301,7 @@ function Sauvegarde({ monde, onSucces }: { monde: Monde; onSucces: (m: string) =
               <p class="font-semibold [overflow-wrap:anywhere]">{aImporter?.fichier}</p>
               {resume && (
                 <p class="text-sm text-encre-2">
-                  {pluriel(resume.recettes, 'recette')} · {pluriel(resume.legumesPerso, 'légume')} perso · {pluriel(resume.semaines, 'semaine')}
+                  {pluriel(resume.recettes, 'recette')} · {pluriel(resume.legumesPerso, 'ingrédient')} perso · {pluriel(resume.semaines, 'semaine')}
                 </p>
               )}
             </div>
@@ -348,7 +348,7 @@ function LegumesPerso({ monde, onSucces }: { monde: Monde; onSucces: (m: string)
   return (
     <section aria-labelledby="r-perso" class="flex flex-col gap-2.5">
       <h2 id="r-perso" class="etiq">
-        Légumes perso · {donnees.legumesPerso.length}
+        Ingrédients perso · {donnees.legumesPerso.length}
       </h2>
       <ul class="bloc py-1 pr-1.5 pl-4.5">
         {donnees.legumesPerso.map((l, i) => {
@@ -364,7 +364,7 @@ function LegumesPerso({ monde, onSucces }: { monde: Monde; onSucces: (m: string)
                   </span>
                 </span>
               </span>
-              <button type="button" class="ico" aria-label={`Supprimer le légume ${l.nom}`} onClick={() => setASupprimer(l)}>
+              <button type="button" class="ico" aria-label={`Supprimer l’ingrédient ${l.nom}`} onClick={() => setASupprimer(l)}>
                 <Icone nom="poubelle" taille={22} />
               </button>
             </li>
@@ -391,10 +391,10 @@ function LegumesPerso({ monde, onSucces }: { monde: Monde; onSucces: (m: string)
                 onSucces(`« ${nom} » supprimé.`);
               }}
             >
-              Supprimer le légume
+              Supprimer l’ingrédient
             </button>
             <button type="button" class="btn btn-ligne w-full" autofocus onClick={() => setASupprimer(null)}>
-              Garder le légume
+              Garder l’ingrédient
             </button>
           </div>
         </div>

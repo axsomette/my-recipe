@@ -54,6 +54,38 @@ const BASE = [
   { id: 'menthe', nom: 'Menthe', categorie: 'herbes' },
   { id: 'sauge', nom: 'Sauge', categorie: 'herbes' },
   { id: 'gingembre', nom: 'Gingembre', categorie: 'herbes' },
+  // Garde-manger : ce qui complète les recettes, hors de toute saisonnalité.
+  { id: 'poulet', nom: 'Poulet', categorie: 'viandes' },
+  { id: 'boeuf', nom: 'Bœuf', categorie: 'viandes' },
+  { id: 'porc', nom: 'Porc', categorie: 'viandes' },
+  { id: 'agneau', nom: 'Agneau', categorie: 'viandes' },
+  { id: 'jambon', nom: 'Jambon', categorie: 'viandes' },
+  { id: 'lardons', nom: 'Lardons', categorie: 'viandes' },
+  { id: 'saucisse', nom: 'Saucisse', categorie: 'viandes' },
+  { id: 'saumon', nom: 'Saumon', categorie: 'poissons' },
+  { id: 'cabillaud', nom: 'Cabillaud', categorie: 'poissons' },
+  { id: 'thon', nom: 'Thon', categorie: 'poissons' },
+  { id: 'crevette', nom: 'Crevette', categorie: 'poissons' },
+  { id: 'moule', nom: 'Moule', categorie: 'poissons' },
+  { id: 'oeuf', nom: 'Œuf', categorie: 'cremerie' },
+  { id: 'fromage', nom: 'Fromage', categorie: 'cremerie' },
+  { id: 'beurre', nom: 'Beurre', categorie: 'cremerie' },
+  { id: 'creme', nom: 'Crème fraîche', categorie: 'cremerie' },
+  { id: 'lait', nom: 'Lait', categorie: 'cremerie' },
+  { id: 'yaourt', nom: 'Yaourt', categorie: 'cremerie' },
+  { id: 'mozzarella', nom: 'Mozzarella', categorie: 'cremerie' },
+  { id: 'pates', nom: 'Pâtes', categorie: 'feculents' },
+  { id: 'riz', nom: 'Riz', categorie: 'feculents' },
+  { id: 'pain', nom: 'Pain', categorie: 'feculents' },
+  { id: 'farine', nom: 'Farine', categorie: 'feculents' },
+  { id: 'semoule', nom: 'Semoule', categorie: 'feculents' },
+  { id: 'lentilles', nom: 'Lentilles', categorie: 'feculents' },
+  { id: 'poischiches', nom: 'Pois chiches', categorie: 'feculents' },
+  { id: 'haricotsrouges', nom: 'Haricots rouges', categorie: 'feculents' },
+  { id: 'huileolive', nom: 'Huile d’olive', categorie: 'epicerie' },
+  { id: 'chocolat', nom: 'Chocolat', categorie: 'epicerie' },
+  { id: 'tofu', nom: 'Tofu', categorie: 'epicerie' },
+  { id: 'miel', nom: 'Miel', categorie: 'epicerie' },
 ];
 
 // Illustrations génériques, pour un produit sans dessin dédié.
@@ -65,6 +97,14 @@ const CORRESPONDANCES = {
   feve: 'petitpois', bergamote: 'citron', kumquat: 'orange', pomelo: 'pamplemousse',
   mirabelle: 'prune', truffe: 'champignon', girolle: 'champignon', cepe: 'champignon',
   salade: 'laitue', roquette: 'laitue', yuzu: 'citron', butternut: 'courge',
+  // Garde-manger
+  steak: 'boeuf', veau: 'boeuf', bavette: 'boeuf', dinde: 'poulet', volaille: 'poulet', canard: 'poulet',
+  chorizo: 'saucisse', merguez: 'saucisse', bacon: 'lardons', colin: 'cabillaud', merlu: 'cabillaud',
+  lieu: 'cabillaud', dorade: 'cabillaud', truite: 'cabillaud', sardine: 'cabillaud', maquereau: 'cabillaud',
+  poisson: 'cabillaud', gambas: 'crevette', spaghetti: 'pates', tagliatelle: 'pates', lasagne: 'pates',
+  nouille: 'pates', macaroni: 'pates', baguette: 'pain', parmesan: 'fromage', comte: 'fromage',
+  emmental: 'fromage', gruyere: 'fromage', chevre: 'fromage', feta: 'fromage', ricotta: 'creme',
+  mascarpone: 'creme', couscous: 'semoule', boulgour: 'semoule', quinoa: 'semoule', cacao: 'chocolat',
 };
 
 const TOUS_LES_MOIS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];

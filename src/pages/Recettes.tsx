@@ -68,7 +68,7 @@ function ListeRecettes({ monde, idActif, large = false }: { monde: Monde; idActi
       {total === 0 ? (
         <div class="bloc flex flex-col gap-4">
           <p class="display text-2xl leading-tight">Aucune recette pour l’instant</p>
-          <p class="text-encre-2">Ajoutez une recette en cochant ses légumes : l’app calcule ses mois de saison.</p>
+          <p class="text-encre-2">Ajoutez une recette en cochant ses ingrédients : l’app calcule ses mois de saison.</p>
           <a class="btn btn-plein self-start" href={lien({ nom: 'nouvelle-recette' })}>
             <Icone nom="plus" taille={20} />
             Ajouter une recette
@@ -85,7 +85,7 @@ function ListeRecettes({ monde, idActif, large = false }: { monde: Monde; idActi
               id="recherche-recettes"
               class="champ pl-12"
               type="search"
-              placeholder="Recette ou légume…"
+              placeholder="Recette ou ingrédient…"
               value={recherche}
               onInput={(e) => setRecherche(e.currentTarget.value)}
             />

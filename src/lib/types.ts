@@ -3,7 +3,9 @@
 /** Mois de 1 (janvier) à 12 (décembre). */
 export type Mois = number;
 
-export type CategorieId = 'legumes' | 'fruits' | 'herbes' | 'tubercules' | 'fruits-a-coque' | 'cereales';
+export type CategorieId =
+  | 'legumes' | 'fruits' | 'herbes' | 'tubercules' | 'fruits-a-coque' | 'cereales'
+  | 'viandes' | 'poissons' | 'cremerie' | 'feculents' | 'epicerie';
 
 export interface Legume {
   id: string;

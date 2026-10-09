@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'preact/hooks';
 import { MOIS_ABREGES, NOMS_MOIS } from '../lib/calendrier';
-import { NOMS_CATEGORIES } from '../lib/categories';
+import { NOMS_CATEGORIES, estDuGardeManger } from '../lib/categories';
 import { iconeProche, legumeExistant, nouvelIdPerso, toutesLesIcones, trouverSuggestion } from '../lib/recettes';
 import type { CategorieId, Legume } from '../lib/types';
 import type { Monde } from './AvecCatalogue';
@@ -59,7 +59,7 @@ function Formulaire({ monde, nomInitial, onFermer, onChoisir }: Props) {
   const enregistrer = (e: Event) => {
     e.preventDefault();
     const propre = nom.trim();
-    if (!propre) return setErreur('Donnez un nom au légume.');
+    if (!propre) return setErreur('Donnez un nom à l’ingrédient.');
     if (!touteLannee && moisAffiches.length === 0) return setErreur('Cochez au moins un mois, ou choisissez « Toute l’année ».');
     onChoisir(
       {
@@ -109,7 +109,7 @@ function Formulaire({ monde, nomInitial, onFermer, onChoisir }: Props) {
   return (
     <form class="flex flex-col gap-4" onSubmit={enregistrer} noValidate>
       <h2 id="titre-legume-perso" class="display text-2xl">
-        Nouveau légume perso
+        Nouvel ingrédient perso
       </h2>
 
       <div class="flex items-center gap-3.5 rounded-2xl border border-trait bg-papier px-3.5 py-3" aria-live="polite">
@@ -164,7 +164,11 @@ function Formulaire({ monde, nomInitial, onFermer, onChoisir }: Props) {
             id="categorie-legume"
             class="champ"
             value={categorieAffichee}
-            onChange={(e) => setCategorie(e.currentTarget.value as CategorieId)}
+            onChange={(e) => {
+              const choix = e.currentTarget.value as CategorieId;
+              setCategorie(choix);
+              if (estDuGardeManger(choix)) setTouteLannee(true); // viande, poisson, épicerie : pas de saison
+            }}
           >
             {Object.entries(NOMS_CATEGORIES).map(([id, libelle]) => (
               <option key={id} value={id}>
@@ -226,7 +230,7 @@ function Formulaire({ monde, nomInitial, onFermer, onChoisir }: Props) {
           Annuler
         </button>
         <button type="submit" class="btn btn-plein flex-[2]">
-          Ajouter le légume
+          Ajouter l’ingrédient
         </button>
       </div>
     </form>

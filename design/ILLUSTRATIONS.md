@@ -1,7 +1,8 @@
 # Charte des illustrations
 
-Toutes les illustrations de fruits, légumes et aromates sont dessinées pour l'app.
-Un nouveau dessin doit suivre ces règles pour rester cohérent avec les 91 existants
+Toutes les illustrations (fruits, légumes, aromates, et le garde-manger : viandes, poissons,
+crèmerie, féculents, épicerie) sont dessinées pour l'app.
+Un nouveau dessin doit suivre ces règles pour rester cohérent avec les 122 existants
 (voir `planche-illustrations.png`).
 
 ## Règles
@@ -28,6 +29,9 @@ Un nouveau dessin doit suivre ces règles pour rester cohérent avec les 91 exis
 | Violets | `#7B4B8F` `#5B2D6B` `#9A6AA8` `#6B3A6B` |
 | Bruns, coques | `#8A4B2A` `#B5763A` `#C9A46A` `#E3B779` |
 | Lien, ficelle | `#E07B53` |
+| Viandes, charcuterie | `#C8243A` `#A8452E` `#D9873A` `#F2A7A0` |
+| Poissons, mer | `#A9C1CC` `#F08A5D` `#2E3A55` |
+| Emballages (pot, bouteille, boîte) | `#FFFFFF` `#7FB0D6` `#4F7FA8` `#C9CDBF` |
 
 ## Illustrations génériques
 
