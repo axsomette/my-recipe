@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ma semaine — compléter hors saison</title>
+<title>Ma semaine — idées de saison</title>
 <script src="./support.js"></script>
 <link rel="stylesheet" href="./rs.css">
 </head>
@@ -16,10 +16,13 @@
 .voile{z-index:4}
 .feuille{z-index:5}
 .choix-hs input{width:20px;height:20px;flex:none;accent-color:var(--encre)}
-.choix-hs .corps{display:flex;flex-direction:column;flex:1;min-width:0}
+.choix-hs .corps{display:flex;flex-direction:column;flex:1;min-width:0;gap:4px}
+.choix-hs .vedettes{display:flex;align-items:center;gap:8px}
+.choix-hs .vedettes .etal{flex-wrap:nowrap;gap:2px}
+.choix-hs .vedettes .vig-s{width:24px;height:24px}
 </style>
 </helmet>
-<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 900px">
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 1180px">
 <main class="defile" aria-hidden="true" style="gap: 18px">
   <header style="display: flex; flex-direction: column; gap: 4px; padding-top: 8px">
     <p class="etiq">Automne · semaine 41</p>
@@ -29,9 +32,9 @@
   <div class="alerte a-info" role="status">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.5v.01"/></svg>
     <div style="display: flex; flex-direction: column; gap: 10px">
-      <p><strong>Il manque 4 recettes de saison pour remplir la semaine.</strong> Les recettes hors saison ne sont ajoutées que si vous le choisissez.</p>
+      <p><strong>Il manque 4 recettes de saison pour remplir la semaine.</strong> Des idées de saison, faites avec les produits du moment, peuvent compléter les repas vides.</p>
       <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-left: -12px">
-        <a class="btn btn-texte" href="SemaineHorsSaison.dc.html">Compléter hors saison</a>
+        <a class="btn btn-texte" href="SemaineHorsSaison.dc.html">Voir les idées de saison</a>
         <a class="btn btn-texte" href="RecetteEdition.dc.html">Ajouter une recette</a>
         <a class="btn btn-texte" href="Reglages.dc.html">Prévoir moins de repas</a>
       </div>
@@ -78,22 +81,31 @@
 <div class="voile"></div>
 <section class="feuille" role="dialog" aria-modal="true" aria-labelledby="hs-titre" style="gap: 16px">
   <span class="poignee"></span>
-  <h2 id="hs-titre" class="display" style="font-size: 24px; line-height: 1.15">Pas assez de recettes de saison</h2>
-  <p class="doux">4 repas restent sans recette de saison. Vous pouvez compléter avec des recettes hors saison, ou en ajouter une nouvelle.</p>
+  <h2 id="hs-titre" class="display" style="font-size: 24px; line-height: 1.15">Des idées de saison pour compléter</h2>
+  <p class="doux">4 repas restent sans recette de saison. Voici des idées d’octobre, avec les produits du moment : celles que vous cochez rejoignent vos recettes.</p>
   <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px">
-    <legend class="etiq" style="margin-bottom: 8px">Proposées hors saison</legend>
-    <label class="choix-hs"><input type="checkbox" checked><span class="corps"><b>Ratatouille</b><span class="petit doux">Saison : de juin à septembre</span></span><span class="badge b-hors"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Hors saison</span></label>
-    <label class="choix-hs"><input type="checkbox" checked><span class="corps"><b>Asperges vinaigrette</b><span class="petit doux">Saison : d’avril à juin</span></span><span class="badge b-hors"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Hors saison</span></label>
+    <legend class="etiq" style="margin-bottom: 8px">Idées d’octobre</legend>
+    <label class="choix-hs"><input type="checkbox" checked><span class="corps"><b>Velouté de courge aux châtaignes</b><span class="vedettes"><span class="etal" aria-hidden="true"><img class="vig vig-s" src="./icons/courge.svg" alt=""><img class="vig vig-s" src="./icons/chataigne.svg" alt=""></span><span class="petit doux">Courge et châtaigne</span></span></span><span class="pictos" role="img" aria-label="Végé"><img class="vig" src="./icons/laitue.svg" alt=""></span></label>
+    <label class="choix-hs"><input type="checkbox" checked><span class="corps"><b>Rougets et fenouil rôti</b><span class="vedettes"><span class="etal" aria-hidden="true"><img class="vig vig-s" src="./icons/rougetbarbet.svg" alt=""><img class="vig vig-s" src="./icons/fenouil.svg" alt=""></span><span class="petit doux">Rouget-barbet et fenouil</span></span></span><span class="pictos" role="img" aria-label="Poisson"><img class="vig" src="./icons/cabillaud.svg" alt=""></span></label>
+    <label class="choix-hs"><input type="checkbox" checked><span class="corps"><b>Pintade aux raisins</b><span class="vedettes"><span class="etal" aria-hidden="true"><img class="vig vig-s" src="./icons/raisin.svg" alt=""></span><span class="petit doux">Raisin</span></span></span><span class="pictos" role="img" aria-label="Viande"><img class="vig" src="./icons/boeuf.svg" alt=""></span></label>
+    <label class="choix-hs"><input type="checkbox" checked><span class="corps"><b>Gratin de brocoli</b><span class="vedettes"><span class="etal" aria-hidden="true"><img class="vig vig-s" src="./icons/brocoli.svg" alt=""></span><span class="petit doux">Brocoli</span></span></span><span class="pictos" role="img" aria-label="Végé"><img class="vig" src="./icons/laitue.svg" alt=""></span></label>
+    <label class="choix-hs"><input type="checkbox"><span class="corps"><b>Sole meunière et épinards</b><span class="vedettes"><span class="etal" aria-hidden="true"><img class="vig vig-s" src="./icons/sole.svg" alt=""><img class="vig vig-s" src="./icons/epinard.svg" alt=""></span><span class="petit doux">Sole et épinard</span></span></span><span class="pictos" role="img" aria-label="Poisson"><img class="vig" src="./icons/cabillaud.svg" alt=""></span></label>
+    <label class="choix-hs"><input type="checkbox"><span class="corps"><b>Porc aux pommes et oignons</b><span class="vedettes"><span class="etal" aria-hidden="true"><img class="vig vig-s" src="./icons/pomme.svg" alt=""><img class="vig vig-s" src="./icons/oignon.svg" alt=""></span><span class="petit doux">Pomme et oignon</span></span></span><span class="pictos" role="img" aria-label="Viande"><img class="vig" src="./icons/boeuf.svg" alt=""></span></label>
+    <a class="btn btn-texte" href="SemaineHorsSaison.dc.html" style="align-self: flex-start; margin-left: -12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg>Autres idées</a>
+  </fieldset>
+  <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px">
+    <legend class="etiq" style="margin-bottom: 8px">Vos recettes hors saison</legend>
+    <label class="choix-hs"><input type="checkbox"><span class="corps"><b>Ratatouille</b><span class="petit doux">Saison : de juin à septembre</span></span><span class="badge b-hors"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Hors saison</span></label>
   </fieldset>
   <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px">
-    <a class="btn btn-plein btn-large" href="Main.dc.html">Utiliser ces 2 recettes</a>
+    <a class="btn btn-plein btn-large" href="Main.dc.html">Ajouter ces 4 repas à la semaine</a>
     <a class="btn btn-ligne btn-large" href="RecetteEdition.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter une recette</a>
     <a class="btn btn-texte" href="SemaineIncomplete.dc.html" style="align-self: center">Laisser ces repas vides</a>
   </div>
 </section>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":1180}}'>
 class Component extends DCLogic {
   renderVals() {
     return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };

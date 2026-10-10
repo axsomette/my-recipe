@@ -12,7 +12,7 @@ export interface Legume {
   nom: string;
   categorie: CategorieId;
   mois: Mois[];
-  source: 'ademe' | 'base' | 'perso';
+  source: 'ademe' | 'metro' | 'base' | 'perso';
   /** Disponible toute l'année : exclu du calcul de saison. */
   touteLannee: boolean;
   /** Chemin relatif à la base du site, ex. `legumes/icones/potiron.svg`. */

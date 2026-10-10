@@ -5,16 +5,18 @@ import { BilanSemaine, PictosTypes } from '../components/Equilibre';
 import { Icone } from '../components/Icone';
 import { BadgeSaison } from '../components/Saison';
 import { Vignette } from '../components/Vignette';
-import { MOIS_ABREGES, NOMS_JOURS, NOMS_MOIS, NOMS_SAISONS, majuscule, moisCourant, saisonDuMois, semaineIso } from '../lib/calendrier';
+import { MOIS_ABREGES, NOMS_JOURS, NOMS_MOIS, NOMS_SAISONS, deMois, majuscule, moisCourant, saisonDuMois, semaineIso } from '../lib/calendrier';
 import { deSaison } from '../lib/catalogue';
 import { useDonnees } from '../lib/donnees';
 import { compter, typesRecette, type TypeRepas } from '../lib/equilibre';
+import { ideesDeSaison, type IdeeProposee } from '../lib/idees';
 import { prendreMessage, reserverPourLaSemaine } from '../lib/intention';
 import { alignerPlanning, basculerDehors, basculerGarde, changerRecette, estDehors, genererSemaine, propositionsHorsSaison, rangerPlanning, remplirVides, semainePrecedente } from '../lib/planning';
+import { enregistrerRecette } from '../lib/recettes';
 import { lien, naviguer } from '../lib/routeur';
 import { libelleSaison, niveauSaison } from '../lib/saison';
 import type { Legume, Moment, Planning, Slot } from '../lib/types';
-import { pluriel } from '../lib/texte';
+import { listeNaturelle, pluriel } from '../lib/texte';
 import { useLarge } from '../lib/useLarge';
 import { DetailRecette } from './RecetteDetail';
 
@@ -52,7 +54,7 @@ function EnCeMoment({ monde, mois }: { monde: Monde; mois: number }) {
   );
 }
 
-function PremierLancement() {
+function PremierLancement({ onIdees }: { onIdees: (() => void) | null }) {
   return (
     <section aria-labelledby="titre-carnet" class="bloc flex flex-col gap-4.5 px-5 py-5.5">
       <h2 id="titre-carnet" class="display text-2xl leading-tight">
@@ -70,7 +72,13 @@ function PremierLancement() {
           ),
         )}
       </ol>
-      <a class="btn btn-plein w-full" href={lien({ nom: 'nouvelle-recette' })}>
+      {onIdees && (
+        <button type="button" class="btn btn-plein w-full" onClick={onIdees}>
+          <Icone nom="changer" taille={22} />
+          Partir d’idées de saison
+        </button>
+      )}
+      <a class={`btn w-full ${onIdees ? 'btn-ligne' : 'btn-plein'}`} href={lien({ nom: 'nouvelle-recette' })}>
         <Icone nom="plus" taille={20} />
         Ajouter ma première recette
       </a>
@@ -79,6 +87,31 @@ function PremierLancement() {
       </a>
       <p class="text-center text-sm text-encre-2">Pas de compte : tout reste sur cet appareil.</p>
     </section>
+  );
+}
+
+/** « Courge » → « courge », mais « Saint-Jacques » reste un nom propre. */
+const enMinuscule = (nom: string) => (/^Saint-/.test(nom) ? nom : nom.charAt(0).toLowerCase() + nom.slice(1));
+
+/** Une idée de saison à cocher : son nom, ses produits du moment et ses types. */
+function LigneIdee({ proposee, coche, onBasculer }: { proposee: IdeeProposee; coche: boolean; onBasculer: () => void }) {
+  const { idee, vedettes, types } = proposee;
+  return (
+    <label class="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-trait bg-carte px-3.5 py-2.5">
+      <input type="checkbox" class="size-5 shrink-0 accent-[var(--encre)]" checked={coche} onChange={onBasculer} />
+      <span class="flex min-w-0 flex-1 flex-col gap-1">
+        <span class="font-semibold leading-snug">{idee.nom}</span>
+        <span class="flex items-center gap-2 text-sm text-encre-2">
+          <span class="flex shrink-0" aria-hidden="true">
+            {vedettes.slice(0, 3).map((l) => (
+              <Vignette key={l.id} icone={l.icone} taille={24} />
+            ))}
+          </span>
+          <span>{majuscule(listeNaturelle(vedettes.map((l) => enMinuscule(l.nom.replace(/ \(.*\)$/, '')))))}</span>
+        </span>
+      </span>
+      <PictosTypes types={types} />
+    </label>
   );
 }
 
@@ -206,8 +239,17 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   const [annonce, setAnnonce] = useState('');
   const [cascade, setCascade] = useState(false);
   const [choisi, setChoisi] = useState<string | null>(null);
-  // Fenêtre « pas assez de recettes de saison » : recettes hors saison proposées, et celles cochées.
-  const [manque, setManque] = useState<{ repas: number; ids: string[]; coches: string[]; ecartees: number } | null>(null);
+  // Fenêtre « compléter la semaine » : idées de saison du carnet intégré, recettes hors saison, et celles cochées.
+  const [manque, setManque] = useState<{
+    repas: number;
+    idees: IdeeProposee[];
+    ideesCochees: string[];
+    /** Idées déjà montrées, pour que « Autres idées » en propose de nouvelles. */
+    vues: string[];
+    ids: string[];
+    coches: string[];
+    ecartees: number;
+  } | null>(null);
   // Retour d'une recette créée depuis cette fenêtre.
   const [message] = useState(prendreMessage);
 
@@ -232,16 +274,47 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   const typesDe = (id: string) => typesParId.get(id) ?? [];
   const contexte = { recettes: donnees.recettes, reglages: donnees.reglages, mois, precedent, typesDe };
   const limitesActives = Object.values(donnees.reglages.limites).some((l) => l !== null);
+  // Idées de saison : jamais plus que de quoi remplir les repas vides, plus deux pour choisir.
+  const chercherIdees = (p: Planning, nombre: number, vues: string[] = []) =>
+    ideesDeSaison({ mois, index: monde.index, recettes: donnees.recettes, compte: compter(p.slots.map((s) => s.recetteId), typesDe), limites: donnees.reglages.limites, nombre, dejaVues: vues });
   const proposer = (p: Planning, repas: number, ecartees = 0) => {
+    const idees = chercherIdees(p, Math.min(repas + 2, 16));
+    const ideesCochees = idees.slice(0, repas).map((x) => x.idee.nom);
     const ids = propositionsHorsSaison(p, contexte).slice(0, repas).map((r) => r.id);
-    setManque({ repas, ids, coches: ids, ecartees });
+    // Les idées de saison passent avant les recettes hors saison.
+    setManque({ repas, idees, ideesCochees, vues: [], ids, coches: ids.slice(0, Math.max(0, repas - ideesCochees.length)), ecartees });
+  };
+  const autresIdees = () => {
+    if (!manque) return;
+    const vues = [...manque.vues, ...manque.idees.map((x) => x.idee.nom)];
+    const idees = chercherIdees(planning, manque.idees.length, vues);
+    setManque({ ...manque, idees, vues, ideesCochees: idees.slice(0, Math.max(0, manque.repas - manque.coches.length)).map((x) => x.idee.nom) });
+    setAnnonce('Nouvelles idées de saison proposées.');
   };
   const horsSaisonDisponibles = propositionsHorsSaison(planning, contexte).length;
+  const ideesDisponibles = chercherIdees(planning, 1).length > 0;
+  const repasALaMaison = planning.slots.filter((s) => !estDehors(s, donnees.reglages)).length;
 
-  const utiliserHorsSaison = () => {
+  /** Les idées cochées deviennent des recettes ; elles et les recettes hors saison cochées vont dans les repas vides. */
+  const completer = () => {
     if (!manque) return;
-    enregistrer(remplirVides(planning, manque.coches, donnees.reglages));
-    setAnnonce(`${pluriel(manque.coches.length, 'recette')} hors saison ${manque.coches.length > 1 ? 'ajoutées' : 'ajoutée'} à la semaine.`);
+    const choisies = manque.idees.filter((x) => manque.ideesCochees.includes(x.idee.nom));
+    modifier((d) => {
+      let suite = d;
+      const nouvelles: string[] = [];
+      for (const { idee } of choisies) {
+        const { donnees: apres, recette } = enregistrerRecette(suite, { nom: idee.nom, legumes: idee.ingredients, notes: '' }, monde.index);
+        suite = apres;
+        nouvelles.push(recette.id);
+      }
+      const actuel = alignerPlanning(suite.plannings.find((x) => x.semaine === cle), suite.reglages, cle);
+      return { ...suite, plannings: rangerPlanning(suite.plannings, remplirVides(actuel, [...nouvelles, ...manque.coches], suite.reglages), precedente) };
+    });
+    const total = choisies.length + manque.coches.length;
+    setAnnonce(
+      `${pluriel(Math.min(total, manque.repas), 'repas')} ${Math.min(total, manque.repas) > 1 ? 'ajoutés' : 'ajouté'} à la semaine` +
+        (choisies.length > 0 ? `, ${pluriel(choisies.length, 'nouvelle recette', 'nouvelles recettes')} dans le carnet.` : '.'),
+    );
     setManque(null);
   };
 
@@ -283,6 +356,121 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   const idChoisi = large
     ? (choisi ?? (planning.slots.find((s) => s.jour >= aujourdHui && s.recetteId) ?? planning.slots.find((s) => s.recetteId))?.recetteId ?? null)
     : null;
+
+  const nbCoches = manque ? manque.ideesCochees.length + manque.coches.length : 0;
+  const fenetre = (
+    <Dialogue ouvert={manque !== null} onFermer={() => setManque(null)} titreId="titre-manque">
+      {manque && (
+        <div class="flex flex-col gap-4">
+          <h2 id="titre-manque" class="display text-2xl leading-tight">
+            {manque.idees.length > 0 ? 'Des idées de saison pour compléter' : 'Pas assez de recettes de saison'}
+          </h2>
+          <p class="text-encre-2">
+            {manque.repas === 1 ? 'Un repas reste' : `${manque.repas} repas restent`} sans recette de saison.{' '}
+            {manque.idees.length > 0
+              ? `Voici des idées ${deMois(NOMS_MOIS[mois - 1] ?? '')}, avec les produits du moment : celles que vous cochez rejoignent vos recettes.`
+              : manque.ids.length > 0
+                ? 'Vous pouvez compléter avec des recettes hors saison, ou en ajouter une nouvelle.'
+                : 'Toutes vos autres recettes sont déjà dans la semaine : ajoutez-en une pour compléter.'}
+          </p>
+          {manque.ecartees > 0 && (
+            <p class="alerte bg-creux">
+              <Icone nom="info" taille={22} class="mt-px shrink-0" />
+              <span>
+                {manque.ecartees === 1 ? 'Une recette de saison est écartée' : `${manque.ecartees} recettes de saison sont écartées`} par vos limites de la semaine.{' '}
+                <a href={lien({ nom: 'reglages' })} onClick={() => setManque(null)}>
+                  Ajuster les limites
+                </a>
+              </span>
+            </p>
+          )}
+          {manque.idees.length > 0 && (
+            <fieldset class="flex flex-col gap-2">
+              <legend class="etiq mb-2">Idées {deMois(NOMS_MOIS[mois - 1] ?? '')}</legend>
+              {manque.idees.map((x) => {
+                const coche = manque.ideesCochees.includes(x.idee.nom);
+                return (
+                  <LigneIdee
+                    key={x.idee.nom}
+                    proposee={x}
+                    coche={coche}
+                    onBasculer={() =>
+                      setManque({ ...manque, ideesCochees: coche ? manque.ideesCochees.filter((n) => n !== x.idee.nom) : [...manque.ideesCochees, x.idee.nom] })
+                    }
+                  />
+                );
+              })}
+              <button type="button" class="btn btn-texte -ml-3 self-start" onClick={autresIdees}>
+                <Icone nom="changer" taille={20} />
+                Autres idées
+              </button>
+            </fieldset>
+          )}
+          {manque.ids.length > 0 && (
+            <fieldset class="flex flex-col gap-2">
+              <legend class="etiq mb-2">{manque.idees.length > 0 ? 'Vos recettes hors saison' : 'Proposées hors saison'}</legend>
+              {manque.ids.map((id) => {
+                const recette = donnees.recettes.find((r) => r.id === id);
+                if (!recette) return null;
+                const coche = manque.coches.includes(id);
+                return (
+                  <label key={id} class="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-trait bg-carte px-3.5 py-2.5">
+                    <input
+                      type="checkbox"
+                      class="size-5 shrink-0 accent-[var(--encre)]"
+                      checked={coche}
+                      onChange={() => setManque({ ...manque, coches: coche ? manque.coches.filter((c) => c !== id) : [...manque.coches, id] })}
+                    />
+                    <span class="flex min-w-0 flex-1 flex-col">
+                      <span class="font-semibold">{recette.nom}</span>
+                      <span class="text-sm text-encre-2">Saison : {libelleSaison(recette.scoreParMois)}</span>
+                    </span>
+                    <BadgeSaison niveau="hors" />
+                  </label>
+                );
+              })}
+            </fieldset>
+          )}
+          <div class="flex flex-col gap-2 pt-1">
+            {nbCoches > manque.repas && (
+              <p class="text-center text-sm text-encre-2">
+                {pluriel(nbCoches - manque.repas, 'recette cochée', 'recettes cochées')} en trop : les idées en trop rejoignent seulement vos recettes.
+              </p>
+            )}
+            {(manque.idees.length > 0 || manque.ids.length > 0) && (
+              <button type="button" class="btn btn-plein w-full" aria-disabled={nbCoches === 0} onClick={() => nbCoches > 0 && completer()}>
+                {nbCoches === 0
+                  ? 'Cochez au moins une recette'
+                  : Math.min(nbCoches, manque.repas) === 1
+                    ? 'Ajouter ce repas à la semaine'
+                    : `Ajouter ces ${Math.min(nbCoches, manque.repas)} repas à la semaine`}
+              </button>
+            )}
+            <button type="button" class={`btn w-full ${manque.idees.length > 0 || manque.ids.length > 0 ? 'btn-ligne' : 'btn-plein'}`} onClick={ajouterRecette}>
+              <Icone nom="plus" taille={20} />
+              Ajouter une recette
+            </button>
+            <button type="button" class="btn btn-texte self-center" onClick={() => setManque(null)}>
+              {manque.repas === 1 ? 'Laisser ce repas vide' : 'Laisser ces repas vides'}
+            </button>
+          </div>
+        </div>
+      )}
+    </Dialogue>
+  );
+
+  // Carnet vide : on part d'idées de saison ou d'une première recette.
+  if (donnees.recettes.length === 0) {
+    return (
+      <>
+        <PremierLancement onIdees={ideesDisponibles ? () => proposer(planning, repasALaMaison) : null} />
+        <p class="sr-only" aria-live="polite">
+          {annonce}
+        </p>
+        {fenetre}
+      </>
+    );
+  }
 
   const liste = (
     <section aria-labelledby="titre-semaine" class="flex flex-col gap-4">
@@ -328,14 +516,16 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
           <div class="flex flex-col gap-1">
             <p>
               <strong>Il manque {pluriel(vides, 'recette')} de saison pour remplir la semaine.</strong>{' '}
-              {horsSaisonDisponibles > 0
-                ? 'Les recettes hors saison ne sont ajoutées que si vous le choisissez.'
-                : 'Une recette ne revient pas deux fois dans la semaine.'}
+              {ideesDisponibles
+                ? 'Des idées de saison, faites avec les produits du moment, peuvent compléter les repas vides.'
+                : horsSaisonDisponibles > 0
+                  ? 'Les recettes hors saison ne sont ajoutées que si vous le choisissez.'
+                  : 'Une recette ne revient pas deux fois dans la semaine.'}
             </p>
             <div class="-ml-3 flex flex-wrap">
-              {horsSaisonDisponibles > 0 && (
+              {(ideesDisponibles || horsSaisonDisponibles > 0) && (
                 <button type="button" class="btn btn-texte" onClick={() => proposer(planning, vides)}>
-                  Compléter hors saison
+                  {ideesDisponibles ? 'Voir les idées de saison' : 'Compléter hors saison'}
                 </button>
               )}
               <button type="button" class="btn btn-texte" onClick={ajouterRecette}>
@@ -349,75 +539,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
         </div>
       )}
 
-      <Dialogue ouvert={manque !== null} onFermer={() => setManque(null)} titreId="titre-manque">
-        {manque && (
-          <div class="flex flex-col gap-4">
-            <h2 id="titre-manque" class="display text-2xl leading-tight">
-              Pas assez de recettes de saison
-            </h2>
-            <p class="text-encre-2">
-              {manque.repas === 1 ? 'Un repas reste' : `${manque.repas} repas restent`} sans recette de saison.{' '}
-              {manque.ids.length > 0
-                ? 'Vous pouvez compléter avec des recettes hors saison, ou en ajouter une nouvelle.'
-                : 'Toutes vos autres recettes sont déjà dans la semaine : ajoutez-en une pour compléter.'}
-            </p>
-            {manque.ecartees > 0 && (
-              <p class="alerte bg-creux">
-                <Icone nom="info" taille={22} class="mt-px shrink-0" />
-                <span>
-                  {manque.ecartees === 1 ? 'Une recette de saison est écartée' : `${manque.ecartees} recettes de saison sont écartées`} par vos limites de la semaine.{' '}
-                  <a href={lien({ nom: 'reglages' })} onClick={() => setManque(null)}>
-                    Ajuster les limites
-                  </a>
-                </span>
-              </p>
-            )}
-            {manque.ids.length > 0 && (
-              <fieldset class="flex flex-col gap-2">
-                <legend class="etiq mb-2">Proposées hors saison</legend>
-                {manque.ids.map((id) => {
-                  const recette = donnees.recettes.find((r) => r.id === id);
-                  if (!recette) return null;
-                  const coche = manque.coches.includes(id);
-                  return (
-                    <label key={id} class="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-trait bg-carte px-3.5 py-2.5">
-                      <input
-                        type="checkbox"
-                        class="size-5 shrink-0 accent-[var(--encre)]"
-                        checked={coche}
-                        onChange={() => setManque({ ...manque, coches: coche ? manque.coches.filter((c) => c !== id) : [...manque.coches, id] })}
-                      />
-                      <span class="flex min-w-0 flex-1 flex-col">
-                        <span class="font-semibold">{recette.nom}</span>
-                        <span class="text-sm text-encre-2">Saison : {libelleSaison(recette.scoreParMois)}</span>
-                      </span>
-                      <BadgeSaison niveau="hors" />
-                    </label>
-                  );
-                })}
-              </fieldset>
-            )}
-            <div class="flex flex-col gap-2 pt-1">
-              {manque.ids.length > 0 && (
-                <button type="button" class="btn btn-plein w-full" aria-disabled={manque.coches.length === 0} onClick={() => manque.coches.length > 0 && utiliserHorsSaison()}>
-                  {manque.coches.length === 0
-                    ? 'Cochez au moins une recette'
-                    : manque.coches.length === 1
-                      ? 'Utiliser cette recette'
-                      : `Utiliser ces ${manque.coches.length} recettes`}
-                </button>
-              )}
-              <button type="button" class={`btn w-full ${manque.ids.length > 0 ? 'btn-ligne' : 'btn-plein'}`} onClick={ajouterRecette}>
-                <Icone nom="plus" taille={20} />
-                Ajouter une recette
-              </button>
-              <button type="button" class="btn btn-texte self-center" onClick={() => setManque(null)}>
-                {manque.repas === 1 ? 'Laisser ce repas vide' : 'Laisser ces repas vides'}
-              </button>
-            </div>
-          </div>
-        )}
-      </Dialogue>
+      {fenetre}
 
       {enregistre && (
         <ol class={`flex flex-col gap-2.5 ${deuxMoments ? 'md:gap-2' : ''}`}>
@@ -483,7 +605,6 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
 export function Semaine() {
   const mois = moisCourant();
   const { numero } = semaineIso();
-  const { donnees } = useDonnees();
   const large = useLarge();
   return (
     <AvecCatalogue titre={majuscule(NOMS_MOIS[mois - 1] ?? '')}>
@@ -498,7 +619,7 @@ export function Semaine() {
             </h1>
             <EnCeMoment monde={monde} mois={mois} />
           </header>
-          {donnees.recettes.length === 0 ? <PremierLancement /> : <MaSemaine monde={monde} large={large} />}
+          <MaSemaine monde={monde} large={large} />
         </div>
       )}
     </AvecCatalogue>

@@ -16,7 +16,7 @@
 .pas .n{font-family:var(--display);font-size:24px;line-height:1;color:var(--saison-texte)}
 </style>
 </helmet>
-<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 812px">
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 900px">
 <main class="defile" style="gap: 26px">
   <header style="display: flex; flex-direction: column; gap: 10px; padding-top: 8px">
     <p class="etiq">Automne · semaine 41</p>
@@ -32,7 +32,8 @@
       <li class="pas"><span class="n" aria-hidden="true">2</span><p>L’app calcule ses mois de saison.</p></li>
       <li class="pas"><span class="n" aria-hidden="true">3</span><p>Elle compose vos repas de la semaine, de saison d’abord.</p></li>
     </ol>
-    <a class="btn btn-plein btn-large" href="RecetteEdition.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter ma première recette</a>
+    <a class="btn btn-plein btn-large" href="SemaineHorsSaison.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg>Partir d’idées de saison</a>
+    <a class="btn btn-ligne btn-large" href="RecetteEdition.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter ma première recette</a>
     <a class="btn btn-texte" href="ImportChoix.dc.html" style="align-self: center">Importer une sauvegarde</a>
   </section>
   <p class="petit doux" style="text-align: center">Pas de compte : tout reste sur cet appareil.</p>
@@ -45,7 +46,7 @@
 </nav>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":812}}'>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
     return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };

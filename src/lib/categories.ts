@@ -6,7 +6,10 @@ export const ORDRE_CATEGORIES: CategorieId[] = [
   'viandes', 'poissons', 'cremerie', 'feculents', 'epicerie',
 ];
 
-/** Garde-manger : disponible toute l'année, hors du calendrier des saisons (on n'y invente aucun mois). */
+/**
+ * Garde-manger : viandes, poissons, crèmerie… Sans saison, sauf les poissons et fruits de mer
+ * dont l'Agenda METRO donne les mois : ceux-là entrent dans le calcul et le calendrier.
+ */
 export const GARDE_MANGER: CategorieId[] = ['viandes', 'poissons', 'cremerie', 'feculents', 'epicerie'];
 export const estDuGardeManger = (categorie: CategorieId) => GARDE_MANGER.includes(categorie);
 

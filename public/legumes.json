@@ -1,5 +1,5 @@
 {
- "majLe": "2026-10-09",
+ "majLe": "2026-10-10",
  "version": 1,
  "sources": [
   {
@@ -14,7 +14,7 @@
    "nom": "Agenda des Chefs – METRO France",
    "url": "https://www.data.gouv.fr/datasets/calendrier-des-produits-de-saison-pour-les-chefs-fruits-et-legumes-poissons-fromages",
    "licence": "Licence Ouverte 2.0",
-   "usage": "suggestions de mois pour les légumes perso"
+   "usage": "mois de saison des poissons, suggestions de mois pour les légumes perso"
   }
  ],
  "legumes": [
@@ -53,6 +53,15 @@
    "source": "ademe",
    "touteLannee": true,
    "icone": "legumes/icones/ananas.svg"
+  },
+  {
+   "id": "anchois",
+   "nom": "Anchois",
+   "categorie": "poissons",
+   "mois": [8,9,10],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/anchois.svg"
   },
   {
    "id": "artichaut",
@@ -100,6 +109,15 @@
    "icone": "legumes/icones/banane.svg"
   },
   {
+   "id": "bar",
+   "nom": "Bar",
+   "categorie": "poissons",
+   "mois": [11,12],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/bar.svg"
+  },
+  {
    "id": "basilic",
    "nom": "Basilic",
    "categorie": "herbes",
@@ -145,6 +163,15 @@
    "icone": "legumes/icones/boeuf.svg"
   },
   {
+   "id": "boudinnoir",
+   "nom": "Boudin noir",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/boudinnoir.svg"
+  },
+  {
    "id": "brocoli",
    "nom": "Brocoli",
    "categorie": "legumes",
@@ -163,6 +190,24 @@
    "icone": "legumes/icones/cabillaud.svg"
   },
   {
+   "id": "calmar",
+   "nom": "Calmar (encornet)",
+   "categorie": "poissons",
+   "mois": [1,2,3,8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/calmar.svg"
+  },
+  {
+   "id": "canard",
+   "nom": "Canard",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/canard.svg"
+  },
+  {
    "id": "carambole",
    "nom": "Carambole",
    "categorie": "fruits",
@@ -170,6 +215,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/carambole.svg"
+  },
+  {
+   "id": "cardine",
+   "nom": "Cardine",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": true,
+   "icone": "legumes/icones/cardine.svg"
   },
   {
    "id": "carotte",
@@ -226,6 +280,15 @@
    "icone": "legumes/icones/chataigne.svg"
   },
   {
+   "id": "chinchard",
+   "nom": "Chinchard",
+   "categorie": "poissons",
+   "mois": [2,3,4,5,6],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/chinchard.svg"
+  },
+  {
    "id": "chocolat",
    "nom": "Chocolat",
    "categorie": "epicerie",
@@ -233,6 +296,15 @@
    "source": "base",
    "touteLannee": true,
    "icone": "legumes/icones/chocolat.svg"
+  },
+  {
+   "id": "chorizo",
+   "nom": "Chorizo",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/chorizo.svg"
   },
   {
    "id": "chou",
@@ -307,6 +379,15 @@
    "icone": "legumes/icones/concombre.svg"
   },
   {
+   "id": "congre",
+   "nom": "Congre",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,10,11,12],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/congre.svg"
+  },
+  {
    "id": "coriandre",
    "nom": "Coriandre",
    "categorie": "herbes",
@@ -332,6 +413,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/courgette.svg"
+  },
+  {
+   "id": "crabe",
+   "nom": "Crabe",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/crabe.svg"
   },
   {
    "id": "creme",
@@ -370,6 +460,24 @@
    "icone": "legumes/icones/datte.svg"
   },
   {
+   "id": "dinde",
+   "nom": "Dinde",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/dinde.svg"
+  },
+  {
+   "id": "doradegrise",
+   "nom": "Dorade grise",
+   "categorie": "poissons",
+   "mois": [1,2,3,6,7,8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/doradegrise.svg"
+  },
+  {
    "id": "echalote",
    "nom": "Échalote",
    "categorie": "legumes",
@@ -377,6 +485,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/echalote.svg"
+  },
+  {
+   "id": "eglefin",
+   "nom": "Églefin",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": true,
+   "icone": "legumes/icones/eglefin.svg"
   },
   {
    "id": "endive",
@@ -478,6 +595,15 @@
    "icone": "legumes/icones/grenade.svg"
   },
   {
+   "id": "grondinrouge",
+   "nom": "Grondin rouge",
+   "categorie": "poissons",
+   "mois": [1,2,3,9,10,11,12],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/grondinrouge.svg"
+  },
+  {
    "id": "groseille",
    "nom": "Groseille",
    "categorie": "fruits",
@@ -485,6 +611,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/groseille.svg"
+  },
+  {
+   "id": "hareng",
+   "nom": "Hareng",
+   "categorie": "poissons",
+   "mois": [4,5,6,7,8,9],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/hareng.svg"
   },
   {
    "id": "haricotvert",
@@ -512,6 +647,15 @@
    "source": "base",
    "touteLannee": true,
    "icone": "legumes/icones/huileolive.svg"
+  },
+  {
+   "id": "huitre",
+   "nom": "Huître",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/huitre.svg"
   },
   {
    "id": "jambon",
@@ -559,6 +703,24 @@
    "icone": "legumes/icones/laitue.svg"
   },
   {
+   "id": "langoustine",
+   "nom": "Langoustine",
+   "categorie": "poissons",
+   "mois": [3,4,5,6,7,8],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/langoustine.svg"
+  },
+  {
+   "id": "lapin",
+   "nom": "Lapin",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/lapin.svg"
+  },
+  {
    "id": "lardons",
    "nom": "Lardons",
    "categorie": "viandes",
@@ -584,6 +746,33 @@
    "source": "base",
    "touteLannee": true,
    "icone": "legumes/icones/lentilles.svg"
+  },
+  {
+   "id": "lieunoir",
+   "nom": "Lieu noir",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": true,
+   "icone": "legumes/icones/lieunoir.svg"
+  },
+  {
+   "id": "limandesole",
+   "nom": "Limande-sole",
+   "categorie": "poissons",
+   "mois": [9,10],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/limandesole.svg"
+  },
+  {
+   "id": "baudroie",
+   "nom": "Lotte (baudroie)",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": true,
+   "icone": "legumes/icones/baudroie.svg"
   },
   {
    "id": "mache",
@@ -631,6 +820,15 @@
    "icone": "legumes/icones/manguebateau.svg"
   },
   {
+   "id": "maquereau",
+   "nom": "Maquereau",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/maquereau.svg"
+  },
+  {
    "id": "melon",
    "nom": "Melon",
    "categorie": "fruits",
@@ -647,6 +845,33 @@
    "source": "base",
    "touteLannee": true,
    "icone": "legumes/icones/menthe.svg"
+  },
+  {
+   "id": "merguez",
+   "nom": "Merguez",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/merguez.svg"
+  },
+  {
+   "id": "merlan",
+   "nom": "Merlan",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": true,
+   "icone": "legumes/icones/merlan.svg"
+  },
+  {
+   "id": "merlu",
+   "nom": "Merlu (colin)",
+   "categorie": "poissons",
+   "mois": [3,4,5,6,7],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/merlu.svg"
   },
   {
    "id": "miel",
@@ -847,6 +1072,24 @@
    "icone": "legumes/icones/petitpois.svg"
   },
   {
+   "id": "pintade",
+   "nom": "Pintade",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/pintade.svg"
+  },
+  {
+   "id": "pliecarrelet",
+   "nom": "Plie (carrelet)",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": true,
+   "icone": "legumes/icones/pliecarrelet.svg"
+  },
+  {
    "id": "poire",
    "nom": "Poire",
    "categorie": "fruits",
@@ -928,6 +1171,15 @@
    "icone": "legumes/icones/poulet.svg"
   },
   {
+   "id": "poulpe",
+   "nom": "Poulpe",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/poulpe.svg"
+  },
+  {
    "id": "prune",
    "nom": "Prune",
    "categorie": "fruits",
@@ -944,6 +1196,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/radis.svg"
+  },
+  {
+   "id": "raie",
+   "nom": "Raie",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": true,
+   "icone": "legumes/icones/raie.svg"
   },
   {
    "id": "raisin",
@@ -991,6 +1252,42 @@
    "icone": "legumes/icones/romarin.svg"
   },
   {
+   "id": "rougetbarbet",
+   "nom": "Rouget-barbet",
+   "categorie": "poissons",
+   "mois": [9,10,11,12],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/rougetbarbet.svg"
+  },
+  {
+   "id": "roussette",
+   "nom": "Roussette",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": true,
+   "icone": "legumes/icones/roussette.svg"
+  },
+  {
+   "id": "saintjacques",
+   "nom": "Saint-Jacques",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,10,11,12],
+   "source": "base",
+   "touteLannee": false,
+   "icone": "legumes/icones/saintjacques.svg"
+  },
+  {
+   "id": "saintpierre",
+   "nom": "Saint-Pierre",
+   "categorie": "poissons",
+   "mois": [4,5,6,7],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/saintpierre.svg"
+  },
+  {
    "id": "salsifis",
    "nom": "Salsifis",
    "categorie": "legumes",
@@ -998,6 +1295,15 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/salsifis.svg"
+  },
+  {
+   "id": "sardine",
+   "nom": "Sardine",
+   "categorie": "poissons",
+   "mois": [5,6,7,8,9,10],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/sardine.svg"
   },
   {
    "id": "saucisse",
@@ -1036,6 +1342,33 @@
    "icone": "legumes/icones/semoule.svg"
   },
   {
+   "id": "sole",
+   "nom": "Sole",
+   "categorie": "poissons",
+   "mois": [9,10,11],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/sole.svg"
+  },
+  {
+   "id": "steakhache",
+   "nom": "Steak haché",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/steakhache.svg"
+  },
+  {
+   "id": "tacaud",
+   "nom": "Tacaud",
+   "categorie": "poissons",
+   "mois": [5,6,7,8,9,10,11],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/tacaud.svg"
+  },
+  {
    "id": "thon",
    "nom": "Thon",
    "categorie": "poissons",
@@ -1043,6 +1376,24 @@
    "source": "base",
    "touteLannee": true,
    "icone": "legumes/icones/thon.svg"
+  },
+  {
+   "id": "thonblanc",
+   "nom": "Thon blanc (germon)",
+   "categorie": "poissons",
+   "mois": [5,6,7,8,9],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/thonblanc.svg"
+  },
+  {
+   "id": "thonrouge",
+   "nom": "Thon rouge",
+   "categorie": "poissons",
+   "mois": [8,9,10,11,12],
+   "source": "metro",
+   "touteLannee": false,
+   "icone": "legumes/icones/thonrouge.svg"
   },
   {
    "id": "thym",
@@ -1079,6 +1430,24 @@
    "source": "ademe",
    "touteLannee": false,
    "icone": "legumes/icones/topinambour.svg"
+  },
+  {
+   "id": "truite",
+   "nom": "Truite",
+   "categorie": "poissons",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/truite.svg"
+  },
+  {
+   "id": "veau",
+   "nom": "Veau",
+   "categorie": "viandes",
+   "mois": [1,2,3,4,5,6,7,8,9,10,11,12],
+   "source": "base",
+   "touteLannee": true,
+   "icone": "legumes/icones/veau.svg"
   },
   {
    "id": "yaourt",
@@ -1299,7 +1668,7 @@
    "nom": "Navet nouveau",
    "categorie": "legumes",
    "mois": [4,5],
-   "icone": "legumes/icones/boeuf.svg"
+   "icone": "legumes/icones/navet.svg"
   },
   {
    "id": "nectarineblanche",
@@ -1516,22 +1885,32 @@
   "yuzu": "citron",
   "butternut": "courge",
   "steak": "boeuf",
-  "veau": "boeuf",
-  "bavette": "boeuf",
-  "dinde": "poulet",
   "volaille": "poulet",
-  "canard": "poulet",
-  "chorizo": "saucisse",
-  "merguez": "saucisse",
+  "magret": "canard",
+  "chipolata": "saucisse",
+  "boudin": "boudinnoir",
   "bacon": "lardons",
-  "colin": "cabillaud",
-  "merlu": "cabillaud",
-  "lieu": "cabillaud",
-  "dorade": "cabillaud",
-  "truite": "cabillaud",
-  "sardine": "cabillaud",
-  "maquereau": "cabillaud",
   "poisson": "cabillaud",
+  "colin": "merlu",
+  "lieu": "lieunoir",
+  "dorade": "doradegrise",
+  "daurade": "doradegrise",
+  "lotte": "baudroie",
+  "loup": "bar",
+  "rouget": "rougetbarbet",
+  "grondin": "grondinrouge",
+  "limande": "limandesole",
+  "carrelet": "pliecarrelet",
+  "plie": "pliecarrelet",
+  "saumonette": "roussette",
+  "haddock": "eglefin",
+  "germon": "thonblanc",
+  "encornet": "calmar",
+  "seiche": "calmar",
+  "pieuvre": "poulpe",
+  "tourteau": "crabe",
+  "araignee": "crabe",
+  "coquille": "saintjacques",
   "gambas": "crevette",
   "spaghetti": "pates",
   "tagliatelle": "pates",

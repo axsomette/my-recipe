@@ -16,11 +16,14 @@ s'importe en fichier JSON. L'app s'installe sur l'écran d'accueil et fonctionne
   Chaque recette a un type déduit de ses ingrédients (viande, poisson, féculents, végé) : la semaine
   affiche son bilan et respecte les limites choisies (« viande au plus 3 fois »). Les repas pris
   dehors, habituels ou pour une fois, restent libres.
+- **Idées de saison** : quand des repas restent vides, ou dès le premier lancement, une fenêtre
+  propose des idées de recettes pleinement de saison ce mois-ci, faites avec les produits de l'app.
+  Celles qu'on coche rejoignent le carnet et remplissent les repas vides.
 - **Mes recettes** : recherche par recette ou par ingrédient, filtre par mois de saison, fiche avec la
   frise des 12 mois.
-- **Ajout d'une recette** : sélection rapide parmi 88 produits (légumes cités dans le nom, produits du
+- **Ajout d'une recette** : sélection rapide parmi 160 produits (légumes cités dans le nom, produits du
   mois, catégories, recherche) et légumes perso, avec la saison calculée en direct.
-- **Calendrier des saisons** : ce qui est de saison, mois par mois.
+- **Calendrier des saisons** : ce qui est de saison, mois par mois, poissons et fruits de mer compris.
 - **Réglages** : repas à générer, repas pris dehors, équilibre de la semaine, apparence (automatique, clair ou sombre), export et import de la sauvegarde, rappel d'installation.
 
 ### Calcul de saison
@@ -36,7 +39,16 @@ une recette sans légume saisonnier est « toutes saisons » et sert de joker au
 `src/lib/planning.ts` classe les recettes pour le mois en cours : de saison, puis en partie de saison,
 puis jokers, puis hors saison. Dans chaque groupe, les recettes de la semaine précédente passent
 après les autres, et les recettes de score proche sont mélangées pour varier. Pas de doublon dans la
-semaine ; s'il manque des recettes, l'écran le dit et propose d'en ajouter ou de prévoir moins de repas.
+semaine ; s'il manque des recettes, l'écran le dit et propose des idées de saison, d'en ajouter ou de
+prévoir moins de repas.
+
+### Idées de saison
+
+`src/lib/idees.ts` contient un carnet de 135 idées de plats, écrites avec les seuls ids du catalogue.
+Pour le mois en cours, il ne garde que celles qui sont pleinement de saison (score ≥ 0,75), absentes
+des recettes et compatibles avec les limites de la semaine. Celles dont un produit vit son dernier mois
+passent d'abord ; le choix alterne viande, poisson et végé, et évite de montrer deux fois le même produit
+de saison. « Autres idées » en propose de nouvelles. Chaque mois en compte au moins 35.
 
 ## Installation
 
@@ -102,7 +114,7 @@ Installée, l'app échappe à l'effacement des données de Safari après 7 jours
   navigation au clavier, focus visible et replacé à chaque écran, fenêtres en `<dialog>` natif,
   graphiques décrits pour les lecteurs d'écran, animations coupées si l'appareil le demande,
   mise en page sans défilement horizontal à 320 px.
-- `npm run verifier` : 65 vérifications des fonctions pures, lancées aussi avant chaque déploiement.
+- `npm run verifier` : 102 vérifications des fonctions pures, du catalogue et du carnet d'idées.
 
 ## Déploiement
 
@@ -117,12 +129,17 @@ Le script `scripts/fetch-legumes.mjs` le régénère à partir de :
 - **ADEME — Impact CO₂** : les mois de saison de 76 fruits et légumes, lus directement dans le dépôt
   open source de l'ADEME ([incubateur-ademe/impactco2](https://github.com/incubateur-ademe/impactco2),
   licence MIT) — la source même de leur API, sans clé, sans compte, sans demande à faire ;
-- **une liste de base** de 43 produits absents de l'ADEME, disponibles toute l'année et donc hors
-  du calcul de saison : pomme de terre et aromates, et le garde-manger (viandes, poissons,
-  œufs et crèmerie, pâtes, riz, pain et légumineuses, épicerie), qui n'apparaît pas dans le
-  calendrier des saisons ;
-- **l'Agenda des Chefs METRO** (data.gouv.fr, Licence Ouverte) : 58 autres produits dont les mois
-  phares servent seulement de suggestion quand on ajoute un légume perso.
+- **l'Agenda des Chefs METRO** (data.gouv.fr, Licence Ouverte) : les mois de saison de 26 poissons et
+  fruits de mer (sardine, bar, sole, langoustine…), lus dans la version CSV ; ceux qui ne sont pas
+  disponibles toute l'année entrent dans le calcul de saison et le calendrier. Si cette ressource
+  devient illisible, la synchro garde les poissons déjà connus et le signale. Le même jeu de données
+  (version JSON) donne aussi les mois phares de 58 autres fruits et légumes, qui servent seulement de
+  suggestion quand on ajoute un légume perso ;
+- **une liste de base** de 58 produits absents des deux sources, disponibles toute l'année et donc hors
+  du calcul de saison : pomme de terre et aromates, et le garde-manger (viandes, poissons courants
+  comme le saumon ou le maquereau, œufs et crèmerie, pâtes, riz, pain et légumineuses, épicerie), qui
+  n'apparaît pas dans le calendrier des saisons. Seule exception : la Saint-Jacques, dont la pêche est
+  fermée du 15 mai au 30 septembre.
 
 Le fichier n'est réécrit que si les données changent. Si une source répond anormalement,
 le script s'arrête sans rien modifier.
@@ -136,7 +153,7 @@ Aucune clé ni aucun secret n'est nécessaire : toutes les sources sont publique
 
 ## Illustrations
 
-Les 91 illustrations sont dessinées pour le projet (`scripts/icones-maison/`). Un nouveau produit
+Les 163 illustrations sont dessinées pour le projet (`scripts/icones-maison/`). Un nouveau produit
 sans dessin reçoit le panier générique et la synchro le signale : il faut alors le dessiner en suivant
 la [charte des illustrations](design/ILLUSTRATIONS.md).
 

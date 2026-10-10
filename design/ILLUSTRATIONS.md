@@ -1,8 +1,8 @@
 # Charte des illustrations
 
-Toutes les illustrations (fruits, légumes, aromates, et le garde-manger : viandes, poissons,
-crèmerie, féculents, épicerie) sont dessinées pour l'app.
-Un nouveau dessin doit suivre ces règles pour rester cohérent avec les 122 existants
+Toutes les illustrations (fruits, légumes, aromates, et le garde-manger : viandes, poissons et
+fruits de mer, crèmerie, féculents, épicerie) sont dessinées pour l'app.
+Un nouveau dessin doit suivre ces règles pour rester cohérent avec les 163 existants
 (voir `planche-illustrations.png`).
 
 ## Règles
@@ -15,6 +15,9 @@ Un nouveau dessin doit suivre ces règles pour rester cohérent avec les 122 exi
 - **Reflet** : un seul trait ou point blanc par volume, en haut à gauche.
 - **Cadrage** : le sujet occupe la grille avec une marge de 4 à 8 px ; lisible à 28 px.
 - **Composition** : le produit entier, éventuellement avec une tranche ou une feuille ; pas de décor, pas de texte.
+  Poissons de profil, tête à gauche, le dos plus foncé que le ventre ; poissons plats vus de dessus.
+  Chaque espèce garde un signe distinctif (taches orange de la plie, rayures du maquereau,
+  tache noire du saint-pierre, barbillons du rouget…) pour rester reconnaissable à 28 px.
 
 ## Palette
 
@@ -29,8 +32,8 @@ Un nouveau dessin doit suivre ces règles pour rester cohérent avec les 122 exi
 | Violets | `#7B4B8F` `#5B2D6B` `#9A6AA8` `#6B3A6B` |
 | Bruns, coques | `#8A4B2A` `#B5763A` `#C9A46A` `#E3B779` |
 | Lien, ficelle | `#E07B53` |
-| Viandes, charcuterie | `#C8243A` `#A8452E` `#D9873A` `#F2A7A0` |
-| Poissons, mer | `#A9C1CC` `#F08A5D` `#2E3A55` |
+| Viandes, charcuterie | `#C8243A` `#A8452E` `#D9873A` `#F2A7A0` `#8A4B2A` `#6B3A6B` |
+| Poissons, mer | `#A9C1CC` `#F08A5D` `#2E3A55` `#7E8C94` `#4F7FA8` `#7FB0D6` `#E3E6DA` |
 | Emballages (pot, bouteille, boîte) | `#FFFFFF` `#7FB0D6` `#4F7FA8` `#C9CDBF` |
 
 ## Illustrations génériques

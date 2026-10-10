@@ -18,7 +18,7 @@ export const ICONES_TYPES: Record<TypeRepas, string> = {
 const CATEGORIES: Partial<Record<CategorieId, TypeLimite>> = { viandes: 'viande', poissons: 'poisson', feculents: 'feculents', tubercules: 'feculents' };
 
 /** Types d'une recette : viande, poisson, féculents, et « végé » quand il n'y a ni viande ni poisson. */
-export function typesRecette(recette: Recette, index: Map<string, Legume>): TypeRepas[] {
+export function typesRecette(recette: Pick<Recette, 'legumes'>, index: Map<string, Legume>): TypeRepas[] {
   const types = new Set<TypeRepas>();
   for (const id of recette.legumes) {
     const type = CATEGORIES[index.get(id)?.categorie as CategorieId];

@@ -244,8 +244,9 @@ export function Saisons() {
   return (
     <AvecCatalogue titre="Calendrier des saisons">
       {(tout) => {
-        // Viandes, poissons, crèmerie, féculents, épicerie : pas de saison, pas de place dans le calendrier.
-        const monde = { ...tout, legumes: tout.legumes.filter((l) => !estDuGardeManger(l.categorie)) };
+        // Garde-manger disponible toute l'année (viandes, crèmerie, poissons sans saison…) : hors du calendrier.
+        // Les poissons de saison, eux, y ont leur place.
+        const monde = { ...tout, legumes: tout.legumes.filter((l) => !estDuGardeManger(l.categorie) || !l.touteLannee) };
         return large ? <Tableau monde={monde} /> : <ParMois monde={monde} />;
       }}
     </AvecCatalogue>

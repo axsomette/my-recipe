@@ -17,7 +17,8 @@ import { alignerPlanning, basculerDehors, basculerGarde, changerRecette, classer
 import { calculerScores, libelleSaison, niveauSaison, plagesDeMois } from '../../src/lib/saison.ts';
 import { analyserImport, contenuExport, fusionner, nomFichierExport, supprimerLegumePerso } from '../../src/lib/sauvegarde.ts';
 import { donneesVides, limitesLibres, lireDonnees } from '../../src/lib/stockage.ts';
-import { typesRecette } from '../../src/lib/equilibre.ts';
+import { compteVide, typesRecette } from '../../src/lib/equilibre.ts';
+import { IDEES, ideesDeSaison } from '../../src/lib/idees.ts';
 import type { Moment, Reglages } from '../../src/lib/types.ts';
 const reg = (jours: number, moments: Moment[], extra: Partial<Reglages> = {}): Reglages => ({ jours, moments, dehors: [], limites: limitesLibres(), ...extra });
 import type { Catalogue } from '../../src/lib/types.ts';
@@ -157,6 +158,41 @@ eq(fusion.donnees.recettes.find((x) => x.id === 'b')!.scoreParMois?.[7], 1, 'fus
 const avecPerso = { ...base, legumesPerso: [{ id: 'perso-cepe', nom: 'Cèpe', categorie: 'legumes' as const, mois: [9, 10, 11], source: 'perso' as const, touteLannee: false, icone: 'legumes/icones/champignon.svg' }], recettes: [{ ...r('c', null), legumes: ['perso-cepe', 'poireau'] }] };
 const sansPerso = supprimerLegumePerso(avecPerso, 'perso-cepe', cat);
 eq([sansPerso.legumesPerso.length, sansPerso.recettes[0]!.legumes], [0, ['poireau']], 'légume perso retiré des recettes');
+
+// --- Catalogue : viandes, poissons de saison, illustrations ---
+const produit = (id: string) => cat.legumes.find((l) => l.id === id);
+eq([produit('sardine')?.mois, produit('sardine')?.source, produit('sardine')?.touteLannee], [[5, 6, 7, 8, 9, 10], 'metro', false], 'sardine : saison METRO');
+eq([produit('baudroie')?.nom, produit('baudroie')?.touteLannee], ['Lotte (baudroie)', true], 'lotte : nom familier, toute l’année');
+eq(produit('saintjacques')?.mois, [1, 2, 3, 4, 5, 10, 11, 12], 'Saint-Jacques : pêche fermée de mi-mai à septembre');
+eq(['dinde', 'canard', 'veau', 'lapin', 'pintade', 'steakhache', 'merguez', 'chorizo', 'boudinnoir'].every((id) => produit(id)?.categorie === 'viandes'), true, 'viandes ajoutées');
+eq(cat.legumes.filter((l) => l.icone !== `legumes/icones/${l.id}.svg`).map((l) => l.id), [], 'chaque produit a son illustration dédiée');
+eq(calculerScores(['sardine', 'tomate'], idx)?.slice(5, 10), [1, 1, 1, 1, 0.5], 'les poissons de saison comptent dans le calcul');
+eq(calculerScores(['merlan', 'cabillaud'], idx), null, 'poissons de toute l’année : joker');
+eq([iconeProche('Magret de canard', 'viandes', cat), iconeProche('Dos de colin', 'poissons', cat), iconeProche('Navet nouveau', 'legumes', cat)],
+  ['legumes/icones/canard.svg', 'legumes/icones/merlu.svg', 'legumes/icones/navet.svg'], 'illustrations proches des nouveaux produits');
+eq(legumesDansLeNom('Thon rouge mi-cuit', cat.legumes).map((l) => l.id).sort(), ['thon', 'thonrouge'], 'thon rouge repéré dans le nom');
+eq([typesRecette({ legumes: ['dinde'] }, indexCatalogue), typesRecette({ legumes: ['sardine', 'riz'] }, indexCatalogue)], [['viande'], ['poisson', 'feculents']], 'types des nouveaux produits');
+
+// --- Idées de saison ---
+eq(IDEES.flatMap((i) => i.ingredients.filter((id) => !idx.has(id)).map((id) => `${i.nom} : ${id}`)), [], 'idées : ingrédients tous au catalogue');
+eq(IDEES.length, new Set(IDEES.map((i) => i.nom)).size, 'idées : pas de doublon');
+eq(IDEES.filter((i) => !Array.from({ length: 12 }, (_, m) => niveauSaison(calculerScores(i.ingredients, idx), m + 1)).includes('pleine')).map((i) => i.nom), [], 'idées : chacune pleinement de saison un mois au moins');
+eq(Array.from({ length: 12 }, (_, m) => IDEES.filter((i) => niveauSaison(calculerScores(i.ingredients, idx), m + 1) === 'pleine').length >= 14).every(Boolean), true, 'idées : de quoi remplir 14 repas chaque mois');
+const demande = { mois: 10, index: idx, recettes: [], compte: compteVide(), limites: limitesLibres(), aleatoire: graine(11) };
+const octobre = ideesDeSaison({ ...demande, nombre: 8 });
+eq([octobre.length, octobre.every((x) => niveauSaison(x.scores, 10) === 'pleine')], [8, true], 'idées d’octobre pleinement de saison');
+const vedettes = octobre.flatMap((x) => x.vedettes.map((l) => l.id));
+eq(vedettes.length, new Set(vedettes).size, 'idées variées : pas deux fois le même produit de saison');
+const principaux = new Set(octobre.map((x) => (x.types.includes('viande') ? 'viande' : x.types.includes('poisson') ? 'poisson' : 'vege')));
+eq(principaux.size, 3, 'idées variées : viande, poisson et végé');
+eq(ideesDeSaison({ ...demande, nombre: 40, limites: { viande: 0, poisson: null, feculents: null } }).some((x) => x.types.includes('viande')), false, 'idées dans les limites de la semaine');
+const dejaNotee = { ...r('x', null), nom: octobre[0]!.idee.nom.toUpperCase() };
+eq(ideesDeSaison({ ...demande, nombre: 200, recettes: [dejaNotee] }).some((x) => x.idee.nom === octobre[0]!.idee.nom), false, 'idée déjà dans les recettes : écartée');
+const autres = ideesDeSaison({ ...demande, nombre: 8, dejaVues: octobre.map((x) => x.idee.nom), aleatoire: graine(12) });
+eq(autres.some((x) => octobre.some((o) => o.idee.nom === x.idee.nom)), false, '« Autres idées » : de nouvelles idées');
+eq(ideesDeSaison({ ...demande, nombre: 3, dejaVues: IDEES.map((i) => i.nom) }).length, 3, 'toutes vues : on recommence');
+const urgence = ideesDeSaison({ ...demande, mois: 9, nombre: 1, idees: [{ nom: 'Tomates', ingredients: ['tomate'] }, { nom: 'Courge', ingredients: ['courge'] }] });
+eq(urgence.map((x) => x.idee.nom), ['Tomates'], 'un produit qui finit sa saison passe d’abord');
 
 console.log(echecs ? `\n${echecs} échec(s)` : '\nTout est bon.');
 process.exitCode = echecs ? 1 : 0;

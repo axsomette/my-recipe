@@ -5,8 +5,9 @@
 //    open source de l'ADEME (licence MIT) — la source même de leur API, sans clé ni compte.
 //  - Liste « base » : produits absents de l'ADEME (pomme de terre, aromates…),
 //    disponibles toute l'année.
-//  - Agenda des Chefs METRO (data.gouv.fr) : mois phares d'autres produits,
-//    utilisés seulement comme suggestion quand on ajoute un légume perso.
+//  - Agenda des Chefs METRO (data.gouv.fr) : mois de saison des poissons et fruits de mer
+//    (version CSV), et mois phares d'autres fruits et légumes (version JSON), utilisés
+//    seulement comme suggestion quand on ajoute un légume perso.
 //  - Illustrations : dessinées pour le projet, dans scripts/icones-maison/<id>.svg,
 //    copiées dans public/legumes/icones/. Aucune image n'est téléchargée.
 //
@@ -27,6 +28,7 @@ const ICONES_PUBLIC = join(PUBLIC, 'legumes', 'icones');
 const ADEME_DEPOT = 'https://raw.githubusercontent.com/incubateur-ademe/impactco2/main';
 const METRO_DATASET = 'https://www.data.gouv.fr/api/1/datasets/6ac3b2518a941afc6ea8e4b0/';
 const METRO_RESSOURCE = 'ffd48740-e61e-49fe-a564-d0c148234825'; // version JSON
+const METRO_CSV = 'b4f00fdc-1398-4a54-854a-ea43bc646fa1'; // version CSV : seule à donner les poissons colonne par colonne
 const USER_AGENT = 'recettes-de-saison/1.0 (https://github.com/axsomette/my-recipe)';
 
 // Catégories ADEME → identifiants de l'app.
@@ -62,11 +64,28 @@ const BASE = [
   { id: 'jambon', nom: 'Jambon', categorie: 'viandes' },
   { id: 'lardons', nom: 'Lardons', categorie: 'viandes' },
   { id: 'saucisse', nom: 'Saucisse', categorie: 'viandes' },
+  { id: 'dinde', nom: 'Dinde', categorie: 'viandes' },
+  { id: 'canard', nom: 'Canard', categorie: 'viandes' },
+  { id: 'veau', nom: 'Veau', categorie: 'viandes' },
+  { id: 'lapin', nom: 'Lapin', categorie: 'viandes' },
+  { id: 'pintade', nom: 'Pintade', categorie: 'viandes' },
+  { id: 'steakhache', nom: 'Steak haché', categorie: 'viandes' },
+  { id: 'merguez', nom: 'Merguez', categorie: 'viandes' },
+  { id: 'chorizo', nom: 'Chorizo', categorie: 'viandes' },
+  { id: 'boudinnoir', nom: 'Boudin noir', categorie: 'viandes' },
   { id: 'saumon', nom: 'Saumon', categorie: 'poissons' },
   { id: 'cabillaud', nom: 'Cabillaud', categorie: 'poissons' },
   { id: 'thon', nom: 'Thon', categorie: 'poissons' },
   { id: 'crevette', nom: 'Crevette', categorie: 'poissons' },
   { id: 'moule', nom: 'Moule', categorie: 'poissons' },
+  // Courants mais absents de l'Agenda METRO : toute l'année, sauf la Saint-Jacques,
+  // dont la pêche est fermée du 15 mai au 30 septembre (saison réglementaire, pas inventée).
+  { id: 'maquereau', nom: 'Maquereau', categorie: 'poissons' },
+  { id: 'truite', nom: 'Truite', categorie: 'poissons' },
+  { id: 'saintjacques', nom: 'Saint-Jacques', categorie: 'poissons', mois: [1, 2, 3, 4, 5, 10, 11, 12] },
+  { id: 'huitre', nom: 'Huître', categorie: 'poissons' },
+  { id: 'crabe', nom: 'Crabe', categorie: 'poissons' },
+  { id: 'poulpe', nom: 'Poulpe', categorie: 'poissons' },
   { id: 'oeuf', nom: 'Œuf', categorie: 'cremerie' },
   { id: 'fromage', nom: 'Fromage', categorie: 'cremerie' },
   { id: 'beurre', nom: 'Beurre', categorie: 'cremerie' },
@@ -98,10 +117,13 @@ const CORRESPONDANCES = {
   mirabelle: 'prune', truffe: 'champignon', girolle: 'champignon', cepe: 'champignon',
   salade: 'laitue', roquette: 'laitue', yuzu: 'citron', butternut: 'courge',
   // Garde-manger
-  steak: 'boeuf', veau: 'boeuf', bavette: 'boeuf', dinde: 'poulet', volaille: 'poulet', canard: 'poulet',
-  chorizo: 'saucisse', merguez: 'saucisse', bacon: 'lardons', colin: 'cabillaud', merlu: 'cabillaud',
-  lieu: 'cabillaud', dorade: 'cabillaud', truite: 'cabillaud', sardine: 'cabillaud', maquereau: 'cabillaud',
-  poisson: 'cabillaud', gambas: 'crevette', spaghetti: 'pates', tagliatelle: 'pates', lasagne: 'pates',
+  steak: 'boeuf', volaille: 'poulet', magret: 'canard', chipolata: 'saucisse', boudin: 'boudinnoir',
+  bacon: 'lardons', poisson: 'cabillaud', colin: 'merlu', lieu: 'lieunoir', dorade: 'doradegrise',
+  daurade: 'doradegrise', lotte: 'baudroie', loup: 'bar', rouget: 'rougetbarbet', grondin: 'grondinrouge',
+  limande: 'limandesole', carrelet: 'pliecarrelet', plie: 'pliecarrelet', saumonette: 'roussette',
+  haddock: 'eglefin', germon: 'thonblanc', encornet: 'calmar', seiche: 'calmar', pieuvre: 'poulpe',
+  tourteau: 'crabe', araignee: 'crabe', coquille: 'saintjacques', gambas: 'crevette',
+  spaghetti: 'pates', tagliatelle: 'pates', lasagne: 'pates',
   nouille: 'pates', macaroni: 'pates', baguette: 'pain', parmesan: 'fromage', comte: 'fromage',
   emmental: 'fromage', gruyere: 'fromage', chevre: 'fromage', feta: 'fromage', ricotta: 'creme',
   mascarpone: 'creme', couscous: 'semoule', boulgour: 'semoule', quinoa: 'semoule', cacao: 'chocolat',
@@ -110,6 +132,14 @@ const CORRESPONDANCES = {
 const TOUS_LES_MOIS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 // Garde-fous : en dessous, on considère que l'API a mal répondu et on n'écrit rien.
 const MIN_PRODUITS_ADEME = 60;
+const MIN_POISSONS_METRO = 15;
+
+// Noms METRO rendus plus familiers ; l'id reste celui du nom METRO.
+const NOMS_POISSONS = {
+  baudroie: 'Lotte (baudroie)', pliecarrelet: 'Plie (carrelet)', calmar: 'Calmar (encornet)',
+  merlu: 'Merlu (colin)', thonblanc: 'Thon blanc (germon)', limandesole: 'Limande-sole',
+};
+const MOIS_CSV = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
 const slugifier = (texte) =>
   texte
@@ -231,8 +261,58 @@ function iconeProche(nom, idsIllustres, categorie) {
   return categorie === 'champignons' ? 'champignon' : categorie === 'herbes' ? 'herbe' : 'panier';
 }
 
-async function suggestionsMetro(idsConnus, idsIllustres) {
-  const jeu = await telechargerJson(METRO_DATASET);
+// CSV (RFC 4180) : champs entre guillemets, guillemets doublés, séparateur deviné sur l'en-tête.
+function lireCsv(texte) {
+  const enTete = texte.slice(0, texte.indexOf('\n'));
+  const separateur = [';', ',', '\t'].sort((a, b) => enTete.split(b).length - enTete.split(a).length)[0];
+  const lignes = [];
+  let ligne = [], champ = '', guillemets = false;
+  for (let i = 0; i < texte.length; i++) {
+    const c = texte[i];
+    if (guillemets) {
+      if (c === '"' && texte[i + 1] === '"') { champ += '"'; i++; }
+      else if (c === '"') guillemets = false;
+      else champ += c;
+    } else if (c === '"') guillemets = true;
+    else if (c === separateur) { ligne.push(champ); champ = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && texte[i + 1] === '\n') i++;
+      ligne.push(champ); champ = '';
+      if (ligne.some((x) => x !== '')) lignes.push(ligne);
+      ligne = [];
+    } else champ += c;
+  }
+  ligne.push(champ);
+  if (ligne.some((x) => x !== '')) lignes.push(ligne);
+  const [colonnes, ...donnees] = lignes;
+  return donnees.map((valeurs) => Object.fromEntries(colonnes.map((col, i) => [col.replace(/^\uFEFF/, '').trim(), (valeurs[i] ?? '').trim()])));
+}
+
+function booleen(valeur, contexte) {
+  if (/^(true|vrai|oui|1|x)$/i.test(valeur)) return true;
+  if (/^(false|faux|non|0|)$/i.test(valeur)) return false;
+  throw new Error(`METRO : valeur « ${valeur} » inattendue (${contexte})`);
+}
+
+// Poissons et fruits de mer de l'Agenda des Chefs : leurs mois de saison entrent dans le calcul.
+async function poissonsMetro(jeu) {
+  const ressource = jeu.resources?.find((r) => r.id === METRO_CSV);
+  if (!ressource?.url) throw new Error('METRO : ressource CSV introuvable sur data.gouv.fr');
+  const lignes = lireCsv(await telechargerTexte(ressource.url)).filter((l) => /^poissons?/i.test(l.category_fr ?? ''));
+  const poissons = lignes.map((l) => {
+    const id = slugifier(l.product_fr ?? '');
+    const mois = MOIS_CSV.flatMap((m, i) => (booleen(l[m], `${l.product_fr} › ${m}`) ? [i + 1] : []));
+    // Le nombre de mois annoncé doit correspondre aux colonnes cochées.
+    if (!id || mois.length === 0 || (l.month_count && Number(l.month_count) !== mois.length)) {
+      throw new Error(`METRO : poisson « ${l.product_fr} » incohérent`);
+    }
+    return { id, nom: NOMS_POISSONS[id] ?? l.product_fr, mois };
+  });
+  if (poissons.length < MIN_POISSONS_METRO) throw new Error(`METRO : seulement ${poissons.length} poissons`);
+  return poissons;
+}
+
+async function suggestionsMetro(jeu, idsConnus, idsIllustres) {
   const ressource = jeu.resources?.find((r) => r.id === METRO_RESSOURCE);
   if (!ressource?.url) throw new Error('METRO : ressource JSON introuvable sur data.gouv.fr');
   const calendrier = await telechargerJson(ressource.url);
@@ -279,23 +359,38 @@ async function main() {
       icone: await icone(p.slug),
     });
   }
+  console.log('→ Agenda des Chefs METRO…');
+  const jeuMetro = await telechargerJson(METRO_DATASET);
+  let poissons;
+  try {
+    poissons = (await poissonsMetro(jeuMetro)).map((p) => ({ ...p, categorie: 'poissons', source: 'metro' }));
+  } catch (erreur) {
+    // Les poissons ne doivent pas bloquer la synchro des légumes : on garde ceux déjà connus.
+    console.warn(`::warning::${erreur.message} : poissons METRO repris de legumes.json`);
+    const actuel = JSON.parse((await lireSiExiste(SORTIE, 'utf8')) ?? '{"legumes":[]}');
+    poissons = actuel.legumes.filter((l) => l.source === 'metro');
+  }
+  for (const p of poissons) {
+    if (legumes.some((l) => l.id === p.id)) continue;
+    legumes.push({ id: p.id, nom: p.nom, categorie: p.categorie, mois: p.mois, source: 'metro', touteLannee: p.mois.length === 12, icone: await icone(p.id) });
+  }
   for (const b of BASE) {
-    if (legumes.some((l) => l.id === b.id)) continue; // l'ADEME l'a ajouté entre-temps : sa version prime
-    legumes.push({ ...b, mois: TOUS_LES_MOIS, source: 'base', touteLannee: true, icone: await icone(b.id) });
+    if (legumes.some((l) => l.id === b.id)) continue; // l'ADEME ou METRO l'a ajouté entre-temps : leur version prime
+    const mois = b.mois ?? TOUS_LES_MOIS;
+    legumes.push({ ...b, mois, source: 'base', touteLannee: mois.length === 12, icone: await icone(b.id) });
   }
   legumes.sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
   for (const id of ICONES_GENERIQUES) await icone(id);
 
-  console.log('→ Agenda des Chefs METRO…');
   const illustres = new Set((await readdir(ICONES_SOURCE)).map((f) => f.replace(/\.svg$/, '')));
-  const suggestions = await suggestionsMetro(new Set(legumes.map((l) => l.id)), illustres);
+  const suggestions = await suggestionsMetro(jeuMetro, new Set(legumes.map((l) => l.id)), illustres);
   for (const s of suggestions) await icone(s.icone.match(/icones\/(.+)\.svg$/)[1]);
 
   const donnees = {
     version: 1,
     sources: [
       { id: 'ademe', nom: 'ADEME – Impact CO₂', url: 'https://github.com/incubateur-ademe/impactco2', licence: 'MIT', usage: 'mois de saison' },
-      { id: 'metro', nom: 'Agenda des Chefs – METRO France', url: 'https://www.data.gouv.fr/datasets/calendrier-des-produits-de-saison-pour-les-chefs-fruits-et-legumes-poissons-fromages', licence: 'Licence Ouverte 2.0', usage: 'suggestions de mois pour les légumes perso' },
+      { id: 'metro', nom: 'Agenda des Chefs – METRO France', url: 'https://www.data.gouv.fr/datasets/calendrier-des-produits-de-saison-pour-les-chefs-fruits-et-legumes-poissons-fromages', licence: 'Licence Ouverte 2.0', usage: 'mois de saison des poissons, suggestions de mois pour les légumes perso' },
     ],
     legumes,
     suggestions,
@@ -311,7 +406,7 @@ async function main() {
 
   const parSource = Object.groupBy(legumes, (l) => l.source);
   console.log(
-    `✓ ${legumes.length} légumes (ADEME ${parSource.ademe?.length ?? 0}, base ${parSource.base?.length ?? 0}), ` +
+    `✓ ${legumes.length} produits (ADEME ${parSource.ademe?.length ?? 0}, poissons METRO ${parSource.metro?.length ?? 0}, base ${parSource.base?.length ?? 0}), ` +
     `${suggestions.length} suggestions METRO — ${ecrit ? `legumes.json mis à jour (${majLe})` : 'aucun changement'}`,
   );
 }
