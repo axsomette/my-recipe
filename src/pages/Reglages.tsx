@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
 import { Dialogue } from '../components/Dialogue';
+import { FenetreNouveautes } from '../components/Nouveautes';
 import { Icone } from '../components/Icone';
 import { Vignette } from '../components/Vignette';
 import { MOIS_ABREGES, NOMS_JOURS } from '../lib/calendrier';
+import { urlPublique } from '../lib/catalogue';
 import { NOMS_CATEGORIES } from '../lib/categories';
 import { useApparence } from '../lib/apparence';
 import { useDonnees } from '../lib/donnees';
 import { ICONES_TYPES, NOMS_TYPES } from '../lib/equilibre';
 import { useInstallation } from '../lib/installation';
+import { demanderIdees } from '../lib/intention';
+import { VERSION_ACTUELLE, VERSIONS, cheminIllustration, dateDeVersion, type Nouveaute, type Version } from '../lib/nouveautes';
+import { naviguer } from '../lib/routeur';
 import { plagesDeMois } from '../lib/saison';
 import { analyserImport, contenuExport, fusionner, nomFichierExport, remplacer, supprimerLegumePerso, type AnalyseImport } from '../lib/sauvegarde';
 import { pluriel } from '../lib/texte';
@@ -341,7 +346,7 @@ function Sauvegarde({ monde, onSucces }: { monde: Monde; onSucces: (m: string) =
     const { donnees: importees } = aImporter.analyse;
     let bilan = { ajoutees: 0, misesAJour: 0 };
     modifier((d) => {
-      const resultat = mode === 'fusionner' ? fusionner(d, importees, monde.catalogue) : remplacer(importees, monde.catalogue);
+      const resultat = mode === 'fusionner' ? fusionner(d, importees, monde.catalogue) : remplacer(d, importees, monde.catalogue);
       bilan = resultat;
       return resultat.donnees;
     });
@@ -520,6 +525,52 @@ function LegumesPerso({ monde, onSucces }: { monde: Monde; onSucces: (m: string)
   );
 }
 
+/** « Quoi de neuf » : relire les nouveautés de la dernière version, et l'historique des précédentes. */
+function QuoiDeNeuf() {
+  const { modifier } = useDonnees();
+  const [ouverte, setOuverte] = useState<Version | null>(null);
+  const derniere = VERSIONS[0]!;
+  const illustration = derniere.nouveautes[0]?.illustrations[0];
+  const fermer = () => {
+    setOuverte(null);
+    modifier((d) => (d.nouveautesVue === VERSION_ACTUELLE ? d : { ...d, nouveautesVue: VERSION_ACTUELLE }));
+  };
+  const suivre = (lien: NonNullable<Nouveaute['lien']>) => {
+    fermer();
+    if (lien === 'idees') demanderIdees();
+    naviguer({ nom: lien === 'calendrier' ? 'saisons' : 'semaine' });
+  };
+
+  return (
+    <section aria-labelledby="r-app" class="flex flex-col gap-2.5">
+      <h2 id="r-app" class="etiq">
+        L’app
+      </h2>
+      <button type="button" class="bloc flex min-h-16 w-full items-center justify-between gap-3 py-2.5 pr-2.5 pl-4.5 text-left" onClick={() => setOuverte(derniere)}>
+        <span class="flex items-center gap-3">
+          <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-saison-pale" aria-hidden="true">
+            {illustration && <img class="vignette size-8" src={urlPublique(cheminIllustration(illustration))} alt="" width="32" height="32" />}
+          </span>
+          <span>
+            <span class="block font-semibold">Quoi de neuf</span>
+            <span class="text-sm text-encre-2">{derniere.resume}</span>
+          </span>
+        </span>
+        <Icone nom="suivant" taille={22} class="shrink-0 text-encre-2" />
+      </button>
+      <ol class="flex flex-col px-1" aria-label="Versions de l’app">
+        {VERSIONS.map((v, i) => (
+          <li key={v.id} class={`grid grid-cols-[118px_minmax(0,1fr)] gap-2.5 py-2.5 text-sm leading-snug ${i > 0 ? 'border-t border-trait' : ''}`}>
+            <span class="font-semibold">{dateDeVersion(v.id)}</span>
+            <span class="text-encre-2">{v.resume}</span>
+          </li>
+        ))}
+      </ol>
+      <FenetreNouveautes version={ouverte} onFermer={fermer} onLien={suivre} />
+    </section>
+  );
+}
+
 export function Reglages() {
   const [message, setMessage] = useState<string | null>(null);
   return (
@@ -547,6 +598,7 @@ export function Reglages() {
               <LegumesPerso monde={monde} onSucces={setMessage} />
             </div>
           </div>
+          <QuoiDeNeuf />
           <p class="text-sm text-encre-2">
             Saisons : ADEME (Impact CO₂) et Agenda des Chefs METRO (Licence Ouverte), mis à jour le {dateLongue(monde.catalogue.majLe)}.
             Illustrations dessinées pour l’app.

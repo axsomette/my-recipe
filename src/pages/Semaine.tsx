@@ -3,6 +3,7 @@ import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
 import { Dialogue } from '../components/Dialogue';
 import { BilanSemaine, PictosTypes } from '../components/Equilibre';
 import { Icone } from '../components/Icone';
+import { FenetreNouveautes } from '../components/Nouveautes';
 import { BadgeSaison } from '../components/Saison';
 import { Vignette } from '../components/Vignette';
 import { MOIS_ABREGES, NOMS_JOURS, NOMS_MOIS, NOMS_SAISONS, deMois, majuscule, moisCourant, saisonDuMois, semaineIso } from '../lib/calendrier';
@@ -10,7 +11,9 @@ import { deSaison } from '../lib/catalogue';
 import { useDonnees } from '../lib/donnees';
 import { compter, typesRecette, type TypeRepas } from '../lib/equilibre';
 import { ideesDeSaison, type IdeeProposee } from '../lib/idees';
-import { prendreMessage, reserverPourLaSemaine } from '../lib/intention';
+import { prendreDemandeIdees, prendreMessage, reserverPourLaSemaine } from '../lib/intention';
+import { finLancement } from '../lib/lancement';
+import { VERSION_ACTUELLE, versionAPresenter, type Nouveaute, type Version } from '../lib/nouveautes';
 import { alignerPlanning, basculerDehors, basculerGarde, changerRecette, estDehors, genererSemaine, propositionsHorsSaison, rangerPlanning, remplirVides, semainePrecedente } from '../lib/planning';
 import { enregistrerRecette } from '../lib/recettes';
 import { lien, naviguer } from '../lib/routeur';
@@ -252,6 +255,8 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   } | null>(null);
   // Retour d'une recette créée depuis cette fenêtre.
   const [message] = useState(prendreMessage);
+  // « Quoi de neuf » : présenté une fois par version, quand l'écran de lancement est parti.
+  const [nouveautes, setNouveautes] = useState<Version | null>(null);
 
   useEffect(() => {
     if (!cascade) return;
@@ -277,8 +282,9 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   // Idées de saison : jamais plus que de quoi remplir les repas vides, plus deux pour choisir.
   const chercherIdees = (p: Planning, nombre: number, vues: string[] = []) =>
     ideesDeSaison({ mois, index: monde.index, recettes: donnees.recettes, compte: compter(p.slots.map((s) => s.recetteId), typesDe), limites: donnees.reglages.limites, nombre, dejaVues: vues });
+  // Sans repas vide (« Voir les idées » d'une semaine complète), on parcourt simplement six idées.
   const proposer = (p: Planning, repas: number, ecartees = 0) => {
-    const idees = chercherIdees(p, Math.min(repas + 2, 16));
+    const idees = chercherIdees(p, repas > 0 ? Math.min(repas + 2, 16) : 6);
     const ideesCochees = idees.slice(0, repas).map((x) => x.idee.nom);
     const ids = propositionsHorsSaison(p, contexte).slice(0, repas).map((r) => r.id);
     // Les idées de saison passent avant les recettes hors saison.
@@ -294,6 +300,29 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   const horsSaisonDisponibles = propositionsHorsSaison(planning, contexte).length;
   const ideesDisponibles = chercherIdees(planning, 1).length > 0;
   const repasALaMaison = planning.slots.filter((s) => !estDehors(s, donnees.reglages)).length;
+  const ouvrirIdees = () => proposer(planning, planning.slots.filter((s) => !s.recetteId && !estDehors(s, donnees.reglages)).length);
+
+  useEffect(() => {
+    // Arrivée depuis « Voir les idées » des réglages.
+    if (prendreDemandeIdees()) return void ouvrirIdees();
+    const version = versionAPresenter(donnees);
+    if (!version) return;
+    let actif = true;
+    finLancement.then(() => actif && setNouveautes(version));
+    return () => {
+      actif = false;
+    };
+  }, []);
+
+  const fermerNouveautes = () => {
+    setNouveautes(null);
+    modifier((d) => ({ ...d, nouveautesVue: VERSION_ACTUELLE }));
+  };
+  const suivreNouveaute = (lien: NonNullable<Nouveaute['lien']>) => {
+    fermerNouveautes();
+    if (lien === 'calendrier') naviguer({ nom: 'saisons' });
+    else ouvrirIdees();
+  };
 
   /** Les idées cochées deviennent des recettes ; elles et les recettes hors saison cochées vont dans les repas vides. */
   const completer = () => {
@@ -310,11 +339,9 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
       const actuel = alignerPlanning(suite.plannings.find((x) => x.semaine === cle), suite.reglages, cle);
       return { ...suite, plannings: rangerPlanning(suite.plannings, remplirVides(actuel, [...nouvelles, ...manque.coches], suite.reglages), precedente) };
     });
-    const total = choisies.length + manque.coches.length;
-    setAnnonce(
-      `${pluriel(Math.min(total, manque.repas), 'repas')} ${Math.min(total, manque.repas) > 1 ? 'ajoutés' : 'ajouté'} à la semaine` +
-        (choisies.length > 0 ? `, ${pluriel(choisies.length, 'nouvelle recette', 'nouvelles recettes')} dans le carnet.` : '.'),
-    );
+    const places = Math.min(choisies.length + manque.coches.length, manque.repas);
+    const carnet = `${pluriel(choisies.length, 'nouvelle recette', 'nouvelles recettes')} dans le carnet.`;
+    setAnnonce(places === 0 ? majuscule(carnet) : `${pluriel(places, 'repas')} ${places > 1 ? 'ajoutés' : 'ajouté'} à la semaine` + (choisies.length > 0 ? `, ${carnet}` : '.'));
     setManque(null);
   };
 
@@ -363,10 +390,10 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
       {manque && (
         <div class="flex flex-col gap-4">
           <h2 id="titre-manque" class="display text-2xl leading-tight">
-            {manque.idees.length > 0 ? 'Des idées de saison pour compléter' : 'Pas assez de recettes de saison'}
+            {manque.repas === 0 ? 'Des idées de saison' : manque.idees.length > 0 ? 'Des idées de saison pour compléter' : 'Pas assez de recettes de saison'}
           </h2>
           <p class="text-encre-2">
-            {manque.repas === 1 ? 'Un repas reste' : `${manque.repas} repas restent`} sans recette de saison.{' '}
+            {manque.repas > 0 && `${manque.repas === 1 ? 'Un repas reste' : `${manque.repas} repas restent`} sans recette de saison. `}
             {manque.idees.length > 0
               ? `Voici des idées ${deMois(NOMS_MOIS[mois - 1] ?? '')}, avec les produits du moment : celles que vous cochez rejoignent vos recettes.`
               : manque.ids.length > 0
@@ -432,7 +459,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
             </fieldset>
           )}
           <div class="flex flex-col gap-2 pt-1">
-            {nbCoches > manque.repas && (
+            {manque.repas > 0 && nbCoches > manque.repas && (
               <p class="text-center text-sm text-encre-2">
                 {pluriel(nbCoches - manque.repas, 'recette cochée', 'recettes cochées')} en trop : les idées en trop rejoignent seulement vos recettes.
               </p>
@@ -441,7 +468,11 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
               <button type="button" class="btn btn-plein w-full" aria-disabled={nbCoches === 0} onClick={() => nbCoches > 0 && completer()}>
                 {nbCoches === 0
                   ? 'Cochez au moins une recette'
-                  : Math.min(nbCoches, manque.repas) === 1
+                  : manque.repas === 0
+                    ? nbCoches === 1
+                      ? 'Ajouter cette idée à mes recettes'
+                      : `Ajouter ces ${nbCoches} idées à mes recettes`
+                    : Math.min(nbCoches, manque.repas) === 1
                     ? 'Ajouter ce repas à la semaine'
                     : `Ajouter ces ${Math.min(nbCoches, manque.repas)} repas à la semaine`}
               </button>
@@ -451,7 +482,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
               Ajouter une recette
             </button>
             <button type="button" class="btn btn-texte self-center" onClick={() => setManque(null)}>
-              {manque.repas === 1 ? 'Laisser ce repas vide' : 'Laisser ces repas vides'}
+              {manque.repas === 0 ? 'Fermer' : manque.repas === 1 ? 'Laisser ce repas vide' : 'Laisser ces repas vides'}
             </button>
           </div>
         </div>
@@ -540,6 +571,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
       )}
 
       {fenetre}
+      <FenetreNouveautes version={nouveautes} onFermer={fermerNouveautes} onLien={suivreNouveaute} />
 
       {enregistre && (
         <ol class={`flex flex-col gap-2.5 ${deuxMoments ? 'md:gap-2' : ''}`}>

@@ -21,6 +21,17 @@ export const laisserMessage = (message: string) => {
   messagePourLaSemaine = message;
 };
 
+/** « Voir les idées » depuis les nouveautés des réglages : la semaine ouvre les idées de saison en arrivant. */
+let ideesDemandees = false;
+export const demanderIdees = () => {
+  ideesDemandees = true;
+};
+export function prendreDemandeIdees(): boolean {
+  const demande = ideesDemandees;
+  ideesDemandees = false;
+  return demande;
+}
+
 export function prendreMessage(): string | null {
   const message = messagePourLaSemaine;
   messagePourLaSemaine = null;

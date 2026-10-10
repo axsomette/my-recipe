@@ -7,6 +7,7 @@ const TRACES = {
   reglages: '<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>',
   fleche: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   retour: '<path d="m15 5-7 7 7 7"/>',
+  suivant: '<path d="m9 5 7 7-7 7"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   fermer: '<path d="M6 6l12 12M18 6 6 18"/>',
   coche: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',

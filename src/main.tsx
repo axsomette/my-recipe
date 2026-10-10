@@ -4,6 +4,7 @@ import { suivreApparence } from './lib/apparence';
 import { chargerCatalogue } from './lib/catalogue';
 import { FournisseurDonnees } from './lib/donnees';
 import { suivreInstallation } from './lib/installation';
+import { signalerFinLancement } from './lib/lancement';
 import './styles.css';
 
 suivreInstallation();
@@ -23,7 +24,7 @@ render(
  */
 function fermerLancement() {
   const ecran = document.getElementById('lancement');
-  if (!ecran) return;
+  if (!ecran) return signalerFinLancement();
   const mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const dureeMinimale = mouvementReduit ? 250 : 1600; // ms depuis l'ouverture de la page
   const pret = Promise.all([chargerCatalogue().catch(() => undefined), document.fonts?.ready]);
@@ -33,7 +34,10 @@ function fermerLancement() {
     setTimeout(() => {
       racine.inert = false;
       ecran.classList.add('fin');
-      setTimeout(() => ecran.remove(), 320);
+      setTimeout(() => {
+        ecran.remove();
+        signalerFinLancement();
+      }, 320);
     }, Math.max(0, dureeMinimale - performance.now()));
   });
 }

@@ -85,9 +85,13 @@ export function fusionner(actuelles: Donnees, importees: Donnees, catalogue: Cat
   return { donnees, ajoutees, misesAJour };
 }
 
-/** Remplace toutes les données par la sauvegarde. */
-export function remplacer(importees: Donnees, catalogue: Catalogue): BilanImport {
-  return { donnees: recalculerScores(importees, catalogue), ajoutees: importees.recettes.length, misesAJour: 0 };
+/** Remplace toutes les données par la sauvegarde ; les nouveautés déjà vues sur l'appareil le restent. */
+export function remplacer(actuelles: Donnees, importees: Donnees, catalogue: Catalogue): BilanImport {
+  return {
+    donnees: recalculerScores({ ...importees, nouveautesVue: actuelles.nouveautesVue }, catalogue),
+    ajoutees: importees.recettes.length,
+    misesAJour: 0,
+  };
 }
 
 /** Supprime un légume perso et le retire des recettes qui l'utilisaient. */

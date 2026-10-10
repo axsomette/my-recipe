@@ -93,4 +93,6 @@ export interface Donnees {
   plannings: Planning[];
   /** Date ISO du dernier export, pour le rappel dans les réglages. */
   dernierExport: string | null;
+  /** Dernière version de l'app présentée dans « Quoi de neuf » (src/lib/nouveautes.ts). */
+  nouveautesVue: string | null;
 }

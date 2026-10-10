@@ -1,13 +1,14 @@
 // Seul module à toucher au localStorage. Les données sont versionnées :
 // toute évolution du format passe par une migration ci-dessous.
 import { ORDRE_CATEGORIES } from './categories';
+import { VERSION_ACTUELLE } from './nouveautes';
 import type { CategorieId, Creneau, Donnees, Legume, Moment, Planning, Recette, Reglages, Slot, TypeLimite } from './types';
 
 const CLE = 'recettes-de-saison';
 const CLE_SECOURS = `${CLE}:illisible`;
 // Lue aussi par le script en tête d'index.html, avant le premier affichage.
 const CLE_APPARENCE = `${CLE}:apparence`;
-export const VERSION = 2;
+export const VERSION = 3;
 
 export const TYPES_LIMITES: TypeLimite[] = ['viande', 'poisson', 'feculents'];
 export const limitesLibres = (): Reglages['limites'] => ({ viande: null, poisson: null, feculents: null });
@@ -20,6 +21,8 @@ export const donneesVides = (): Donnees => ({
   reglages: reglagesParDefaut(),
   plannings: [],
   dernierExport: null,
+  // Un nouveau carnet découvre l'app par l'écran de premier lancement : rien à lui annoncer.
+  nouveautesVue: VERSION_ACTUELLE,
 });
 
 // --- Validation manuelle (pas de bibliothèque de schéma) ---
@@ -43,6 +46,8 @@ const MIGRATIONS: Record<number, (d: Brut) => Brut> = {
         )
       : d.plannings,
   }),
+  // v3 : dernière version présentée dans « Quoi de neuf » ; une personne qui utilisait déjà l'app ne l'a pas vue.
+  2: (d) => ({ ...d, version: 3, nouveautesVue: null }),
 };
 
 function estRecette(v: unknown): v is Recette {
@@ -114,7 +119,8 @@ export function lireDonnees(brut: unknown): Donnees | null {
     Array.isArray(d.legumesPerso) && d.legumesPerso.every(estLegumePerso) &&
     estReglages(d.reglages) &&
     Array.isArray(d.plannings) && d.plannings.every(estPlanning) &&
-    (d.dernierExport === null || estTexte(d.dernierExport));
+    (d.dernierExport === null || estTexte(d.dernierExport)) &&
+    (d.nouveautesVue === null || estTexte(d.nouveautesVue));
   return valide ? (d as unknown as Donnees) : null;
 }
 

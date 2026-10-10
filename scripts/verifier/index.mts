@@ -15,7 +15,9 @@ import {
 import { lien, lireRoute } from '../../src/lib/routeur.ts';
 import { alignerPlanning, basculerDehors, basculerGarde, changerRecette, classer, creneaux, estDehors, genererSemaine, propositionsHorsSaison, rangerPlanning, remplirVides, semainePrecedente } from '../../src/lib/planning.ts';
 import { calculerScores, libelleSaison, niveauSaison, plagesDeMois } from '../../src/lib/saison.ts';
-import { analyserImport, contenuExport, fusionner, nomFichierExport, supprimerLegumePerso } from '../../src/lib/sauvegarde.ts';
+import { analyserImport, contenuExport, fusionner, nomFichierExport, remplacer, supprimerLegumePerso } from '../../src/lib/sauvegarde.ts';
+import { VERSION_ACTUELLE, VERSIONS, cheminIllustration, versionAPresenter } from '../../src/lib/nouveautes.ts';
+import { existsSync } from 'node:fs';
 import { donneesVides, limitesLibres, lireDonnees } from '../../src/lib/stockage.ts';
 import { compteVide, typesRecette } from '../../src/lib/equilibre.ts';
 import { IDEES, ideesDeSaison } from '../../src/lib/idees.ts';
@@ -141,7 +143,7 @@ eq(relance.planning.slots.find((x) => x.jour === 2 && x.moment === 'soir')!.rece
 eq(changerRecette(gl.planning, gl.planning.slots.find((x) => x.recetteId === 'p1')!, { recettes: parType, reglages: reg(5, ['soir'], { limites: { viande: 1, poisson: null, feculents: null } }), mois: 10, typesDe: (id) => typesTest[id]! }), null, 'changer un repas respecte les limites');
 const v1 = { version: 1, recettes: [], legumesPerso: [], reglages: { jours: 5, moments: ['soir'] }, plannings: [{ semaine: '2026-W40', slots: [{ jour: 0, moment: 'soir', recetteId: null, verrouille: false }] }], dernierExport: null };
 const migree = lireDonnees(v1);
-eq([migree?.version, migree?.reglages.dehors, migree?.reglages.limites.viande, migree?.plannings[0]!.slots[0]!.dehors], [2, [], null, null], 'sauvegarde v1 migrée en v2');
+eq([migree?.version, migree?.reglages.dehors, migree?.reglages.limites.viande, migree?.plannings[0]!.slots[0]!.dehors, migree?.nouveautesVue], [3, [], null, null, null], 'sauvegarde v1 migrée jusqu’en v3');
 
 // --- Sauvegarde ---
 eq([libelleSaison([0,0,0,1,1,1,0,0,0,0,0,0]), libelleSaison([0,0,0,0,0,0,0,1,1,0,0,0]), libelleSaison([0,0,1,1,0,0,0,0,0,0,0,0])], ['d’avril à juin', 'd’août à septembre', 'de mars à avril'], 'élision des mois');
@@ -193,6 +195,22 @@ eq(autres.some((x) => octobre.some((o) => o.idee.nom === x.idee.nom)), false, '�
 eq(ideesDeSaison({ ...demande, nombre: 3, dejaVues: IDEES.map((i) => i.nom) }).length, 3, 'toutes vues : on recommence');
 const urgence = ideesDeSaison({ ...demande, mois: 9, nombre: 1, idees: [{ nom: 'Tomates', ingredients: ['tomate'] }, { nom: 'Courge', ingredients: ['courge'] }] });
 eq(urgence.map((x) => x.idee.nom), ['Tomates'], 'un produit qui finit sa saison passe d’abord');
+
+// --- Quoi de neuf ---
+eq(donneesVides().nouveautesVue, VERSION_ACTUELLE, 'nouveau carnet : rien à annoncer');
+const v2 = { ...donneesVides(), version: 2 } as Record<string, unknown>;
+delete v2.nouveautesVue;
+eq(lireDonnees(v2)?.nouveautesVue, null, 'sauvegarde v2 migrée : nouveautés pas encore vues');
+eq(lireDonnees({ ...donneesVides(), nouveautesVue: 3 }), null, 'version vue invalide refusée');
+const habitue = { nouveautesVue: null, recettes: [r('a', null)] };
+eq(versionAPresenter(habitue)?.id, VERSION_ACTUELLE, 'habitué : la dernière version est présentée');
+eq(versionAPresenter({ ...habitue, nouveautesVue: VERSION_ACTUELLE }), null, 'déjà vue : rien');
+eq(versionAPresenter({ nouveautesVue: null, recettes: [] }), null, 'carnet vide : pas de nouveautés');
+eq(versionAPresenter({ ...habitue, nouveautesVue: VERSIONS[1]!.id })?.id, VERSION_ACTUELLE, 'version précédente vue : la nouvelle est présentée');
+eq(VERSIONS.every((v, i) => /^\d{4}-\d{2}-\d{2}$/.test(v.id) && (i === 0 || v.id < VERSIONS[i - 1]!.id)), true, 'versions datées, la plus récente en tête');
+eq(VERSIONS.every((v) => v.nouveautes.length >= 1 && v.nouveautes.length <= 3 && v.resume.length > 0), true, 'une à trois nouveautés par version');
+eq(VERSIONS.flatMap((v) => v.nouveautes.flatMap((n) => n.illustrations.map((i) => cheminIllustration(i, 10)))).filter((c) => !existsSync(new URL(`../../public/${c}`, import.meta.url))), [], 'illustrations des nouveautés présentes');
+eq(remplacer({ ...donneesVides(), nouveautesVue: 'x' }, { ...donneesVides(), nouveautesVue: null }, cat).donnees.nouveautesVue, 'x', 'remplacer garde les nouveautés vues sur l’appareil');
 
 console.log(echecs ? `\n${echecs} échec(s)` : '\nTout est bon.');
 process.exitCode = echecs ? 1 : 0;

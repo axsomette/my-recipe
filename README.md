@@ -24,7 +24,8 @@ s'importe en fichier JSON. L'app s'installe sur l'écran d'accueil et fonctionne
 - **Ajout d'une recette** : sélection rapide parmi 160 produits (légumes cités dans le nom, produits du
   mois, catégories, recherche) et légumes perso, avec la saison calculée en direct.
 - **Calendrier des saisons** : ce qui est de saison, mois par mois, poissons et fruits de mer compris.
-- **Réglages** : repas à générer, repas pris dehors, équilibre de la semaine, apparence (automatique, clair ou sombre), export et import de la sauvegarde, rappel d'installation.
+- **Réglages** : repas à générer, repas pris dehors, équilibre de la semaine, apparence (automatique, clair ou sombre), export et import de la sauvegarde, rappel d'installation, « Quoi de neuf » et historique des versions.
+- **Quoi de neuf** : après une mise à jour, une fenêtre présente les nouveautés une seule fois, à l'ouverture.
 
 ### Calcul de saison
 
@@ -89,11 +90,23 @@ ne sait pas renvoyer `index.html` pour une URL inconnue.
 
 Les données de l'utilisateur passent toutes par `src/lib/stockage.ts`, seul module à toucher au
 `localStorage` (lectures et écritures protégées). Elles sont versionnées
-(`{ version, recettes, legumesPerso, reglages, plannings, dernierExport }`) ; une évolution du format
+(`{ version, recettes, legumesPerso, reglages, plannings, dernierExport, nouveautesVue }`, version 3) ; une évolution du format
 s'accompagne d'une migration dans ce même fichier. Des données illisibles sont mises de côté plutôt
 qu'écrasées. L'export télécharge `recettes-de-saison-AAAA-MM-JJ.json` ; l'import valide le fichier à la
 main (sans bibliothèque de schéma), puis fusionne (la version la plus récente de chaque recette gagne)
 ou remplace.
+
+## Annoncer une nouveauté
+
+Les nouveautés de chaque version sont écrites dans `src/lib/nouveautes.ts`. Pour annoncer une mise à jour,
+ajouter une entrée **en tête** de `VERSIONS` : sa date (`AAAA-MM-JJ`, qui sert d'identifiant), un résumé
+d'une ligne pour l'historique des réglages, et une à trois nouveautés (titre, une phrase, une ou deux
+illustrations du catalogue, et au besoin un lien vers le calendrier ou les idées de saison).
+
+À l'ouverture suivante, la fenêtre « Quoi de neuf » s'affiche une seule fois, une fois l'écran de lancement
+parti, chez les personnes qui ont déjà des recettes. Un nouveau carnet ne la voit pas : il a l'écran de
+premier lancement. La dernière version vue est enregistrée avec les données de l'appareil (`nouveautesVue`).
+`npm run verifier` contrôle l'ordre des dates, le nombre de nouveautés et la présence des illustrations.
 
 ## Hors connexion et installation
 
@@ -114,7 +127,7 @@ Installée, l'app échappe à l'effacement des données de Safari après 7 jours
   navigation au clavier, focus visible et replacé à chaque écran, fenêtres en `<dialog>` natif,
   graphiques décrits pour les lecteurs d'écran, animations coupées si l'appareil le demande,
   mise en page sans défilement horizontal à 320 px.
-- `npm run verifier` : 102 vérifications des fonctions pures, du catalogue et du carnet d'idées.
+- `npm run verifier` : 113 vérifications des fonctions pures, du catalogue, du carnet d'idées et des nouveautés.
 
 ## Déploiement
 
