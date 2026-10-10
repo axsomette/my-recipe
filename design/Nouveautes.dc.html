@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quoi de neuf</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}
+.voile{z-index:4}
+.feuille{z-index:5}
+.nouveau{display:inline-flex;align-items:center;font:700 12px/1 var(--etiq);letter-spacing:.08em;text-transform:uppercase;color:var(--saison-sur);background:var(--saison);padding:5px 7px 4px;border-radius:6px}
+.nouveautes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+.nouveautes li{display:grid;grid-template-columns:60px minmax(0,1fr);gap:14px;align-items:start}
+.medaillon{position:relative;width:60px;height:60px;border-radius:50%;background:var(--saison-pale);display:flex;align-items:center;justify-content:center}
+.medaillon .vig{width:42px;height:42px}
+.medaillon .vig + .vig{position:absolute;right:-6px;bottom:-4px;width:30px;height:30px;background:var(--carte);border-radius:50%;padding:2px;box-shadow:0 0 0 2px var(--carte)}
+.nouveautes h3{font:600 17px/1.25 var(--texte);margin:2px 0 4px}
+.nouveautes .lien{display:inline-flex;align-items:center;gap:4px;min-height:44px;margin:-6px 0 -10px;color:var(--saison-texte);font-weight:600;font-size:15px;text-decoration:none}
+.nouveautes .lien svg{width:18px;height:18px}
+</style>
+</helmet>
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 900px">
+<main class="defile" aria-hidden="true">
+  <header style="display: flex; flex-direction: column; gap: 10px; padding-top: 8px">
+    <p class="etiq">Automne · semaine 41</p>
+    <h1 class="display t-mois">Octobre</h1>
+    <div class="etal" aria-hidden="true"><img class="vig" src="./icons/courge.svg" alt=""><img class="vig" src="./icons/poireau.svg" alt=""><img class="vig" src="./icons/celeri.svg" alt=""><img class="vig" src="./icons/choudebruxelles.svg" alt=""><img class="vig" src="./icons/panais.svg" alt=""><img class="vig" src="./icons/chataigne.svg" alt=""><img class="vig" src="./icons/coing.svg" alt=""></div>
+    <p class="marche">Courge, poireau, céleri, chou de Bruxelles, panais, châtaigne, coing <span>et 26 autres.</span></p>
+    <a class="btn btn-texte" href="Calendrier.dc.html" style="align-self: flex-start; margin-left: -12px">Voir tout ce qui est de saison
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </header>
+
+  <section aria-labelledby="titre-semaine" style="display: flex; flex-direction: column; gap: 16px">
+    <div class="entete">
+      <h2 id="titre-semaine" class="display t-section">Ma semaine</h2>
+      <span class="doux petit">5 – 11 oct. · 7 soirs</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <button class="btn btn-plein btn-large" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg>
+        Générer ma semaine</button>
+      <p class="petit doux" style="text-align: center">Les 2 repas gardés restent en place.</p>
+    </div>
+    <ul class="bilan" aria-label="Équilibre de la semaine">
+      <li class="atteinte"><img class="vig" src="./icons/boeuf.svg" alt="">Viande 2 <span>/ 2</span></li>
+      <li><img class="vig" src="./icons/cabillaud.svg" alt="">Poisson 1</li>
+      <li><img class="vig" src="./icons/pates.svg" alt="">Féculents 2 <span>/ 3</span></li>
+      <li><img class="vig" src="./icons/laitue.svg" alt="">Végé 3</li>
+    </ul>
+
+    <ol class="slots" style="gap: 10px">
+      <li class="jour passe">
+        <div class="date"><span class="num">5</span><span class="etiq">lundi</span></div>
+        <div class="slot">
+          <div class="corps">
+            <a class="nom" href="RecetteDetail.dc.html">Gratin de poireaux au comté</a>
+            <div class="meta"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span><span class="pictos" role="img" aria-label="Féculents, Végé"><img class="vig" src="./icons/pates.svg" alt=""><img class="vig" src="./icons/laitue.svg" alt=""></span></div>
+          </div>
+          <button class="ico" type="button" aria-label="Je mange dehors lundi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v6.5a2 2 0 0 0 4 0V3M9 11.5V21"/><path d="M17 21V3c-2.4 1.4-3.5 4.6-3.5 8.5H17"/></svg></button>
+          <button class="ico" type="button" aria-pressed="false" aria-label="Garder le repas de lundi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></button>
+          <button class="ico" type="button" aria-label="Changer la recette de lundi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></button>
+        </div>
+      </li>
+      <li class="jour passe">
+        <div class="date"><span class="num">6</span><span class="etiq">mardi</span></div>
+        <div class="slot dehors">
+          <div class="corps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M7 3v6.5a2 2 0 0 0 4 0V3M9 11.5V21"/><path d="M17 21V3c-2.4 1.4-3.5 4.6-3.5 8.5H17"/></svg><span>Repas dehors</span></div>
+          <a class="btn btn-texte" href="#" style="min-height: 44px">À la maison</a>
+        </div>
+      </li>
+      <li class="jour passe">
+        <div class="date"><span class="num">7</span><span class="etiq">mercredi</span></div>
+        <div class="slot">
+          <div class="corps">
+            <a class="nom" href="RecetteDetail.dc.html">Soupe panais-carotte au gingembre</a>
+            <div class="meta"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span><span class="pictos" role="img" aria-label="Végé"><img class="vig" src="./icons/laitue.svg" alt=""></span></div>
+          </div>
+          <button class="ico" type="button" aria-label="Je mange dehors mercredi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v6.5a2 2 0 0 0 4 0V3M9 11.5V21"/><path d="M17 21V3c-2.4 1.4-3.5 4.6-3.5 8.5H17"/></svg></button>
+          <button class="ico" type="button" aria-pressed="false" aria-label="Garder le repas de mercredi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></button>
+          <button class="ico" type="button" aria-label="Changer la recette de mercredi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></button>
+        </div>
+      </li>
+      <li class="jour auj">
+        <div class="date"><span class="num">8</span><span class="etiq">jeudi</span><span class="auj-tag">aujourd’hui</span></div>
+        <div class="slot garde">
+          <div class="corps">
+            <a class="nom" href="RecetteDetail.dc.html">Velouté de potiron aux châtaignes</a>
+            <div class="meta"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span><span class="petit doux">Gardé</span><span class="pictos" role="img" aria-label="Végé"><img class="vig" src="./icons/laitue.svg" alt=""></span></div>
+          </div>
+          <button class="ico" type="button" aria-label="Je mange dehors jeudi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v6.5a2 2 0 0 0 4 0V3M9 11.5V21"/><path d="M17 21V3c-2.4 1.4-3.5 4.6-3.5 8.5H17"/></svg></button>
+          <button class="ico" type="button" aria-pressed="true" aria-label="Garder le repas de jeudi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+          <button class="ico" type="button" aria-disabled="true" aria-label="Changer la recette de jeudi soir (repas gardé)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></button>
+        </div>
+      </li>
+      <li class="jour">
+        <div class="date"><span class="num">9</span><span class="etiq">vendredi</span></div>
+        <div class="slot">
+          <div class="corps">
+            <a class="nom" href="RecetteDetail.dc.html">Risotto de courge et sauge</a>
+            <div class="meta"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span><span class="pictos" role="img" aria-label="Féculents, Végé"><img class="vig" src="./icons/pates.svg" alt=""><img class="vig" src="./icons/laitue.svg" alt=""></span></div>
+          </div>
+          <button class="ico" type="button" aria-label="Je mange dehors vendredi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v6.5a2 2 0 0 0 4 0V3M9 11.5V21"/><path d="M17 21V3c-2.4 1.4-3.5 4.6-3.5 8.5H17"/></svg></button>
+          <button class="ico" type="button" aria-pressed="false" aria-label="Garder le repas de vendredi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></button>
+          <button class="ico" type="button" aria-label="Changer la recette de vendredi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></button>
+        </div>
+      </li>
+      <li class="jour">
+        <div class="date"><span class="num">10</span><span class="etiq">samedi</span></div>
+        <div class="slot garde">
+          <div class="corps">
+            <a class="nom" href="RecetteDetail.dc.html">Salade de chou rouge, pomme et noix</a>
+            <div class="meta"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span><span class="petit doux">Gardé</span><span class="pictos" role="img" aria-label="Végé"><img class="vig" src="./icons/laitue.svg" alt=""></span></div>
+          </div>
+          <button class="ico" type="button" aria-label="Je mange dehors samedi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v6.5a2 2 0 0 0 4 0V3M9 11.5V21"/><path d="M17 21V3c-2.4 1.4-3.5 4.6-3.5 8.5H17"/></svg></button>
+          <button class="ico" type="button" aria-pressed="true" aria-label="Garder le repas de samedi soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+          <button class="ico" type="button" aria-disabled="true" aria-label="Changer la recette de samedi soir (repas gardé)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></button>
+        </div>
+      </li>
+      <li class="jour">
+        <div class="date"><span class="num">11</span><span class="etiq">dimanche</span></div>
+        <div class="slot">
+          <div class="corps">
+            <a class="nom" href="RecetteDetail.dc.html">Tarte fine aux poireaux et chèvre</a>
+            <div class="meta"><span class="badge b-pleine"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="currentColor"/></svg>De saison</span><span class="pictos" role="img" aria-label="Féculents, Végé"><img class="vig" src="./icons/pates.svg" alt=""><img class="vig" src="./icons/laitue.svg" alt=""></span></div>
+          </div>
+          <button class="ico" type="button" aria-label="Je mange dehors dimanche soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v6.5a2 2 0 0 0 4 0V3M9 11.5V21"/><path d="M17 21V3c-2.4 1.4-3.5 4.6-3.5 8.5H17"/></svg></button>
+          <button class="ico" type="button" aria-pressed="false" aria-label="Garder le repas de dimanche soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></button>
+          <button class="ico" type="button" aria-label="Changer la recette de dimanche soir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg></button>
+        </div>
+      </li>
+    </ol>
+  </section>
+</main>
+<nav class="barre" aria-label="Navigation principale">
+  <a class="onglet" href="Main.dc.html" aria-current="page"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>Semaine</a>
+  <a class="onglet" href="Recettes.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5v17M12 8h4M12 11.5h4"/></svg></span>Recettes</a>
+  <a class="onglet" href="Calendrier.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v-8"/><path d="M12 12c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></svg></span>Saisons</a>
+  <a class="onglet" href="Reglages.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>Réglages</a>
+</nav>
+<div class="voile"></div>
+<section class="feuille" role="dialog" aria-modal="true" aria-labelledby="n-titre" style="gap: 18px">
+  <span class="poignee"></span>
+  <div style="display: flex; align-items: center; gap: 10px"><span class="nouveau">Nouveau</span><span class="petit doux">10 octobre 2026</span></div>
+  <div style="display: flex; flex-direction: column; gap: 6px; margin-top: -6px">
+    <h2 id="n-titre" class="display" style="font-size: 30px; line-height: 1.1">Quoi de neuf</h2>
+    <p class="doux">Trois nouveautés pour cuisiner encore plus de saison.</p>
+  </div>
+  <ul class="nouveautes">
+    <li><span class="medaillon" aria-hidden="true"><img class="vig" src="./icons/sardine.svg" alt=""><img class="vig" src="./icons/saintjacques.svg" alt=""></span><div><h3>Les poissons ont leur saison</h3><p class="petit doux">Sardine, sole, Saint-Jacques… 26 poissons et fruits de mer comptent désormais dans la saison de vos recettes.</p><a class="lien" href="CalendrierPoissons.dc.html">Voir le calendrier<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></li>
+    <li><span class="medaillon" aria-hidden="true"><img class="vig" src="./icons/canard.svg" alt=""><img class="vig" src="./icons/merguez.svg" alt=""></span><div><h3>41 nouveaux produits</h3><p class="petit doux">Dinde, canard, merguez, lotte, poulpe… tous dessinés, prêts à cocher dans vos recettes.</p></div></li>
+    <li><span class="medaillon" aria-hidden="true"><img class="vig" src="./icones/feuille-automne.svg" alt=""></span><div><h3>Des idées de saison</h3><p class="petit doux">Une semaine incomplète ? L’app propose des plats du moment, faits avec ce qui est de saison.</p><a class="lien" href="SemaineHorsSaison.dc.html">Voir les idées<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></li>
+  </ul>
+  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px">
+    <a class="btn btn-plein btn-large" href="Main.dc.html">C’est noté</a>
+    <p class="petit doux" style="text-align: center">À relire dans Réglages › Quoi de neuf.</p>
+  </div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>

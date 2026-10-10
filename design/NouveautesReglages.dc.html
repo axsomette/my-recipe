@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Réglages — quoi de neuf</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}
+.medaillon{width:44px;height:44px;border-radius:50%;background:var(--saison-pale);display:flex;align-items:center;justify-content:center;flex:none}
+.historique{display:flex;flex-direction:column;gap:2px;padding:0 4px}
+.historique li{display:grid;grid-template-columns:118px minmax(0,1fr);gap:10px;padding:10px 0;border-bottom:1px solid var(--trait);font-size:14px;line-height:1.4}
+.historique li:last-child{border-bottom:0}
+.historique b{font-weight:600}
+.historique span{color:var(--encre-2)}
+</style>
+</helmet>
+<div class="ecran {{saison}} {{theme}}" style="width: 375px; height: 812px">
+<main class="defile" style="gap: 28px">
+  <h1 class="display t-ecran" style="padding-top: 8px">Réglages</h1>
+
+  <section aria-labelledby="r-app" style="display: flex; flex-direction: column; gap: 10px">
+    <h2 id="r-app" class="etiq">L’app</h2>
+    <div class="bloc" style="padding: 4px 10px 4px 18px">
+      <a class="ligne" href="Nouveautes.dc.html" style="text-decoration: none; color: inherit">
+        <div style="display: flex; align-items: center; gap: 12px"><span class="medaillon" aria-hidden="true" style="width: 44px; height: 44px"><img class="vig" src="./icons/sardine.svg" alt="" style="width: 32px; height: 32px"></span><div><p class="label">Quoi de neuf</p><p class="petit doux">Poissons de saison, 41 produits, idées de saison</p></div></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width: 22px; height: 22px; color: var(--encre-2)"><path d="m9 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+    <ol class="nue historique">
+      <li><b>10 octobre 2026</b><span>Poissons de saison, 41 nouveaux produits, idées de saison</span></li>
+      <li><b>9 octobre 2026</b><span>Équilibre de la semaine, repas pris dehors</span></li>
+      <li><b>8 octobre 2026</b><span>Première version : semaine de saison, calendrier, hors connexion</span></li>
+    </ol>
+  </section>
+
+  <p class="petit doux">Saisons : ADEME (Impact CO₂) et Agenda des Chefs METRO (Licence Ouverte), mis à jour le 1<sup>er</sup> octobre 2026. Illustrations dessinées pour l’app.</p>
+</main>
+<nav class="barre" aria-label="Navigation principale">
+  <a class="onglet" href="Main.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>Semaine</a>
+  <a class="onglet" href="Recettes.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5v17M12 8h4M12 11.5h4"/></svg></span>Recettes</a>
+  <a class="onglet" href="Calendrier.dc.html"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v-8"/><path d="M12 12c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></svg></span>Saisons</a>
+  <a class="onglet" href="Reglages.dc.html" aria-current="page"><span class="pastille"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>Réglages</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":375,"height":812}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>
