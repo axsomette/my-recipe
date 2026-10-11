@@ -42,6 +42,9 @@ ce fichier garde ce que le README ne dit pas : nos règles de travail, où sont 
 - `pkill -f <motif>` dans une commande qui contient elle-même le motif tue le shell : l'éviter.
 - Animations : la règle générale `img { max-width: 100% }` écrase une image dans un conteneur de largeur nulle
   (la gerbe) : lui donner une taille fixe et `max-width: none`.
+- Les classes CSS sont globales : avant d'en créer une, vérifier qu'elle n'existe pas déjà (`grep` dans `styles.css`
+  et `src/`). La coche des idées s'appelait `.case`, comme les cases de la frise des mois : elle a cassé le calendrier
+  (renommée `.case-cocher`).
 - Gestes tactiles sur iPhone : retenir (`preventDefault`) dès le **premier** `touchmove`, sinon Safari lance son
   défilement élastique et ignore la suite. Le Chromium headless ne le montre pas : vérifier que le premier mouvement
   est bien retenu (`defaultPrevented`). Une app installée et restée en mémoire garde l'ancien code : la fermer

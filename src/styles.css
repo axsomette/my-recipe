@@ -324,11 +324,11 @@
 @keyframes gerbe { from { opacity: 0; transform: scale(0.3); } 15% { opacity: 1; } 70% { opacity: 1; } to { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)); } }
 
 /* 6. Cocher une idée : la coche se dessine trait par trait, les produits saluent. */
-.case { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--trait-fort); transition: background-color 0.15s, border-color 0.15s; }
-.case path { stroke: var(--papier); stroke-dasharray: 22; stroke-dashoffset: 22; transition: stroke-dashoffset 0.24s var(--sortie) 0.04s; }
-input:checked + .case { background: var(--encre); border-color: var(--encre); }
-input:checked + .case path { stroke-dashoffset: 0; }
-input:focus-visible + .case { outline: 3px solid var(--encre); outline-offset: 3px; }
+.case-cocher { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--trait-fort); transition: background-color 0.15s, border-color 0.15s; }
+.case-cocher path { stroke: var(--papier); stroke-dasharray: 22; stroke-dashoffset: 22; transition: stroke-dashoffset 0.24s var(--sortie) 0.04s; }
+input:checked + .case-cocher { background: var(--encre); border-color: var(--encre); }
+input:checked + .case-cocher path { stroke-dashoffset: 0; }
+input:focus-visible + .case-cocher { outline: 3px solid var(--encre); outline-offset: 3px; }
 label:has(input:checked) .vedette { transform-origin: 50% 100%; animation: saute 0.35s var(--rebond) 0.12s; }
 label:has(input:checked) .vedette + .vedette { animation-delay: 0.2s; }
 
