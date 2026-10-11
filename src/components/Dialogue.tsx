@@ -48,10 +48,12 @@ export function Dialogue({ ouvert, onFermer, titreId, alerte = false, children }
     let depart: { y: number; t: number } | null = null;
     let decalage = 0;
     let glisse = false;
+    let fige = false;
     let traces: { y: number; t: number }[] = [];
 
     const surTelephone = () => !matchMedia('(min-width: 768px)').matches;
     const debut = (e: TouchEvent) => {
+      fige = false;
       if (!surTelephone() || e.touches.length !== 1) return;
       if ((e.target as Element).closest('input[type="text"], input[type="search"], textarea')) return;
       depart = { y: e.touches[0]!.clientY, t: e.timeStamp };
@@ -60,6 +62,7 @@ export function Dialogue({ ouvert, onFermer, titreId, alerte = false, children }
       traces = [];
     };
     const deplace = (e: TouchEvent) => {
+      if (fige) return e.preventDefault();
       if (!depart) return;
       const delta = e.touches[0]!.clientY - depart.y;
       if (!glisse) {
@@ -69,6 +72,11 @@ export function Dialogue({ ouvert, onFermer, titreId, alerte = false, children }
         if (delta === 0) return;
         if (delta < 0 || dialogue.scrollTop > 0) {
           depart = null;
+          // Contenu trop court pour défiler : le geste ne doit rien faire bouger, surtout pas la page derrière.
+          if (dialogue.scrollHeight <= dialogue.clientHeight) {
+            fige = true;
+            e.preventDefault();
+          }
           return;
         }
         glisse = true;

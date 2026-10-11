@@ -242,6 +242,10 @@
     animation: feuille-monte 0.22s ease-out;
     overscroll-behavior: contain; /* le défilement ne passe pas à la page derrière */
   }
+  /* Sur téléphone, la page derrière une feuille ouverte ne défile pas. */
+  @media (max-width: 767px) {
+    html:has(dialog.feuille[open]) { overflow: hidden; }
+  }
   /* La poignée ne fait jamais défiler : un geste qui part d'elle tire toujours la feuille. */
   .poignee { touch-action: none; }
   .feuille::backdrop { background: rgb(22 18 23 / 0.45); animation: voile 0.22s ease-out; }
