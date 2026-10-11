@@ -262,9 +262,11 @@
 .cascade > :nth-child(6) { animation-delay: 175ms; }
 .cascade > :nth-child(7) { animation-delay: 210ms; }
 .cascade > :nth-child(n + 8) { animation-delay: 245ms; }
-/* Onglet actif : la pastille s'ouvre depuis le centre. */
-.pastille-active { animation: pastille 0.24s cubic-bezier(0.2, 0.8, 0.2, 1); }
-@keyframes pastille { from { transform: scaleX(0.5); opacity: 0; } }
+/* Onglet actif : la pastille s'étire comme une goutte, puis se pose ; l'icône fait un petit bond. */
+.pastille-active { animation: pastille 0.3s cubic-bezier(0.645, 0.045, 0.355, 1); }
+@keyframes pastille { from { transform: scaleX(0.4); opacity: 0; } 60% { transform: scaleX(1.15); opacity: 1; } }
+.pastille-active svg { animation: bond 0.35s var(--rebond) 0.08s; }
+@keyframes bond { 40% { transform: translateY(-4px); } }
 /* Changement de mois dans le calendrier : le nom glisse, les barres suivent. */
 .glisse { animation: glisse 0.22s ease-out both; }
 @keyframes glisse { from { opacity: 0; transform: translateY(4px); } }
@@ -272,6 +274,66 @@
 .apparait { animation: apparait 0.18s ease-out both; }
 @keyframes apparait { from { opacity: 0; transform: translateX(-8px); } }
 @keyframes feuille-monte { from { transform: translateY(24px); opacity: 0; } }
+
+/* ---- App vivante (planche « Animations » de la maquette) ----
+   Les illustrations jouent (sauts, rebonds) ; l'interface reste posée et rapide.
+   Chaque animation ne joue qu'une fois, au moment de l'action. */
+:root { --rebond: cubic-bezier(0.34, 1.56, 0.64, 1); --sortie: cubic-bezier(0.165, 0.84, 0.44, 1); }
+@keyframes saute { 40% { transform: translateY(-8px) scale(1.1, 0.9); } 70% { transform: translateY(0) scale(0.95, 1.05); } }
+
+/* 1. L'étal du mois : les produits sautent un à un dans l'en-tête, puis se balancent deux fois. */
+.etal-vivant > * { transform-origin: 50% 100%; animation: etal-saute 0.45s var(--rebond) calc(var(--i) * 60ms) both, etal-balance 3.6s ease-in-out calc(0.7s + var(--i) * 60ms) 2; }
+@keyframes etal-saute { from { opacity: 0; transform: translateY(16px) scale(0.6); } 60% { opacity: 1; transform: translateY(-5px) scale(1.06, 0.94); } }
+@keyframes etal-balance { 30% { transform: rotate(-4deg); } 70% { transform: rotate(3deg); } }
+
+/* 2. Cocher un ingrédient : l'illustration saute, trois étincelles de saison s'échappent. */
+.chip { position: relative; }
+.chip[aria-pressed='true'] .vignette { transform-origin: 50% 100%; animation: saute 0.35s var(--rebond); }
+.chip[aria-pressed='true']::after {
+  content: ''; position: absolute; left: 20px; top: 8px; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; opacity: 0;
+  box-shadow: -10px -12px 0 var(--saison), 6px -17px 0 var(--saison), 18px -9px 0 var(--saison);
+  animation: etincelles 0.5s var(--sortie);
+}
+@keyframes etincelles { from { opacity: 1; transform: scale(0.4); } to { opacity: 0; transform: translateY(-6px) scale(1.6); } }
+/* Un ingrédient choisi rejoint la liste en sautant. */
+.chip-retirer { animation: pop 0.3s var(--rebond) both; }
+@keyframes pop { from { opacity: 0; transform: scale(0.7); } }
+
+/* 3. Générer la semaine : l'icône fait un tour, les repas arrivent comme des cartes distribuées. */
+.tourne-une-fois { animation: tour 0.6s cubic-bezier(0.645, 0.045, 0.355, 1); }
+@keyframes tour { to { transform: rotate(360deg); } }
+.donne { animation: donne 0.38s var(--rebond) both; }
+@keyframes donne { from { opacity: 0; transform: translateX(48px) rotate(4deg); } }
+
+/* 4. Garder un repas : l'anse du cadenas se referme d'un coup sec. */
+.cadenas[aria-pressed='true'] svg { animation: clac 0.26s var(--rebond); }
+@keyframes clac { from { transform: translateY(-3px) scale(0.9); } 60% { transform: translateY(1px); } }
+
+/* 5. Semaine complète : une gerbe de produits de saison jaillit, une seule fois. */
+.gerbe { position: absolute; left: 50%; top: 24px; width: 0; height: 0; pointer-events: none; z-index: 5; }
+.gerbe img { position: absolute; left: -20px; top: -20px; width: 40px; height: 40px; max-width: none; animation: gerbe 0.9s var(--sortie) both; animation-delay: var(--d); }
+@keyframes gerbe { from { opacity: 0; transform: scale(0.3); } 15% { opacity: 1; } 70% { opacity: 1; } to { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)); } }
+
+/* 6. Cocher une idée : la coche se dessine trait par trait, les produits saluent. */
+.case { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--trait-fort); transition: background-color 0.15s, border-color 0.15s; }
+.case path { stroke: var(--papier); stroke-dasharray: 22; stroke-dashoffset: 22; transition: stroke-dashoffset 0.24s var(--sortie) 0.04s; }
+input:checked + .case { background: var(--encre); border-color: var(--encre); }
+input:checked + .case path { stroke-dashoffset: 0; }
+input:focus-visible + .case { outline: 3px solid var(--encre); outline-offset: 3px; }
+label:has(input:checked) .vedette { transform-origin: 50% 100%; animation: saute 0.35s var(--rebond) 0.12s; }
+label:has(input:checked) .vedette + .vedette { animation-delay: 0.2s; }
+
+/* 7. Changer de mois : la feuille se tourne quand la saison change ; la barre du mois glisse. */
+.feuille-tourne { transform-origin: 50% 28%; animation: feuille-tourne 0.42s cubic-bezier(0.55, 0.05, 0.6, 1) both; }
+@keyframes feuille-tourne { from { opacity: 0.2; transform: perspective(300px) rotateX(-100deg); } }
+
+/* 8. Confirmation : monte avec un léger rebond, la coche se dessine, s'efface plus vite qu'elle n'est venue. */
+.toast-entre { animation: toast-entre 0.32s var(--rebond) both; }
+@keyframes toast-entre { from { opacity: 0; transform: translateY(24px) scale(0.96); } }
+.toast-entre path { stroke-dasharray: 22; stroke-dashoffset: 22; animation: trace 0.3s var(--sortie) 0.12s forwards; }
+@keyframes trace { to { stroke-dashoffset: 0; } }
+.toast-sort { animation: toast-sort 0.2s ease-in forwards; }
+@keyframes toast-sort { to { opacity: 0; transform: translateY(16px); } }
 @keyframes voile { from { opacity: 0; } }
 
 /* En sombre, les illustrations sont posées sur une assiette claire pour garder leur contour lisible. */

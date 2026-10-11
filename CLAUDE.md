@@ -40,6 +40,8 @@ ce fichier garde ce que le README ne dit pas : nos règles de travail, où sont 
   (colonnes `category_fr`, `product_fr`, `month_count`, `jan`…`dec`). Si le CSV devient illisible,
   la synchro garde les poissons déjà connus et l'écrit en avertissement dans l'Action.
 - `pkill -f <motif>` dans une commande qui contient elle-même le motif tue le shell : l'éviter.
+- Animations : la règle générale `img { max-width: 100% }` écrase une image dans un conteneur de largeur nulle
+  (la gerbe) : lui donner une taille fixe et `max-width: none`.
 - Sauvegarde utilisateur versionnée (version 3) : tout nouveau champ = migration dans `src/lib/stockage.ts`
   et vérification dans `scripts/verifier/index.mts`.
 
@@ -60,10 +62,18 @@ ce fichier garde ce que le README ne dit pas : nos règles de travail, où sont 
     (ou dès le premier lancement), choisie selon la saison, les limites et la variété.
   - Fenêtre « Quoi de neuf » après une mise à jour + Réglages › L'app (historique) ; sauvegarde v3 (`nouveautesVue`).
   - Synchro METRO vérifiée sur GitHub : CSV bien lu, données identiques.
+- **11 oct. 2026** :
+  - Vidéo promotionnelle de 30 s (1080×1920) validée : sources dans `scripts/video/` (`promo.html` rendu image par
+    image, `son.py` pour la musique et les bruitages synthétisés, `capturer.mjs` pour les vrais écrans de l'app).
+    Le MP4 reste hors du dépôt (`presentation/`, ignoré) ; il se partage à part.
+  - App vivante : neuf animations validées sur la planche `design/Animations.dc.html` (étal du mois, puces qui
+    sautent, semaine distribuée, cadenas, gerbe de la semaine complète, coches dessinées, feuille qui se tourne,
+    confirmations, onglets). Pas de son dans l'app pour l'instant (un réglage « Sons » reste possible).
 
 ## Pistes proposées, pas encore faites
 
 - Liste de courses générée depuis la semaine (regroupée par rayon, à cocher).
 - Recettes plus complètes : quantités et nombre de personnes, étapes, temps, lien vers la source.
 - Partage entre appareils ou dans le foyer (aujourd'hui : export et import JSON).
+- Réglage « Sons » (désactivé par défaut) pour les bruitages de la vidéo.
 - Favoris, « déjà cuisiné le… ».

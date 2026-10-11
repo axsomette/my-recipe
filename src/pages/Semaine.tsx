@@ -4,6 +4,7 @@ import { Dialogue } from '../components/Dialogue';
 import { BilanSemaine, PictosTypes } from '../components/Equilibre';
 import { Icone } from '../components/Icone';
 import { FenetreNouveautes } from '../components/Nouveautes';
+import { Toast } from '../components/Toast';
 import { BadgeSaison } from '../components/Saison';
 import { Vignette } from '../components/Vignette';
 import { MOIS_ABREGES, NOMS_JOURS, NOMS_MOIS, NOMS_SAISONS, deMois, majuscule, moisCourant, saisonDuMois, semaineIso } from '../lib/calendrier';
@@ -40,9 +41,11 @@ function EnCeMoment({ monde, mois }: { monde: Monde; mois: number }) {
   const reste = produits.length - une.length;
   return (
     <>
-      <div class="flex flex-wrap gap-1" aria-hidden="true">
-        {une.map((p) => (
-          <Vignette key={p.id} icone={p.icone} />
+      <div class="etal-vivant flex flex-wrap gap-1" aria-hidden="true">
+        {une.map((p, i) => (
+          <span key={p.id} class="flex" style={{ '--i': i }}>
+            <Vignette icone={p.icone} />
+          </span>
         ))}
       </div>
       <p class="display text-[22px] leading-snug">
@@ -96,18 +99,58 @@ function PremierLancement({ onIdees }: { onIdees: (() => void) | null }) {
 /** « Courge » → « courge », mais « Saint-Jacques » reste un nom propre. */
 const enMinuscule = (nom: string) => (/^Saint-/.test(nom) ? nom : nom.charAt(0).toLowerCase() + nom.slice(1));
 
+// Gerbe de la semaine complète : six produits de saison jaillissent du bouton, chacun dans sa direction.
+const JAILLISSEMENTS = [[-150, -70, -30], [140, -80, 25], [-90, -120, -12], [80, -125, 14], [-175, 10, -20], [170, 5, 22]] as const;
+
+function Gerbe({ produits, onFin }: { produits: Legume[]; onFin: () => void }) {
+  const calme = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  useEffect(() => {
+    const fin = setTimeout(onFin, calme ? 0 : 1300);
+    return () => clearTimeout(fin);
+  }, []);
+  if (calme) return null;
+  return (
+    <span class="gerbe" aria-hidden="true">
+      {produits.map((p, i) => {
+        const [x, y, r] = JAILLISSEMENTS[i % JAILLISSEMENTS.length]!;
+        return (
+          <span key={p.id} style={{ '--x': `${x}px`, '--y': `${y}px`, '--r': `${r}deg`, '--d': `${i * 40}ms` }}>
+            <Vignette icone={p.icone} taille={40} />
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
+/** Case à cocher dont la coche se dessine (l'input natif reste, pour le clavier et les lecteurs d'écran). */
+function CaseACocher({ coche, onChange }: { coche: boolean; onChange: () => void }) {
+  return (
+    <>
+      <input type="checkbox" class="peer sr-only" checked={coche} onChange={onChange} />
+      <span class="case" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m5 12.5 4.5 4.5L19 7.5" />
+        </svg>
+      </span>
+    </>
+  );
+}
+
 /** Une idée de saison à cocher : son nom, ses produits du moment et ses types. */
 function LigneIdee({ proposee, coche, onBasculer }: { proposee: IdeeProposee; coche: boolean; onBasculer: () => void }) {
   const { idee, vedettes, types } = proposee;
   return (
     <label class="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-trait bg-carte px-3.5 py-2.5">
-      <input type="checkbox" class="size-5 shrink-0 accent-[var(--encre)]" checked={coche} onChange={onBasculer} />
+      <CaseACocher coche={coche} onChange={onBasculer} />
       <span class="flex min-w-0 flex-1 flex-col gap-1">
         <span class="font-semibold leading-snug">{idee.nom}</span>
         <span class="flex items-center gap-2 text-sm text-encre-2">
           <span class="flex shrink-0" aria-hidden="true">
             {vedettes.slice(0, 3).map((l) => (
-              <Vignette key={l.id} icone={l.icone} taille={24} />
+              <span key={l.id} class="vedette flex">
+                <Vignette icone={l.icone} taille={24} />
+              </span>
             ))}
           </span>
           <span>{majuscule(listeNaturelle(vedettes.map((l) => enMinuscule(l.nom.replace(/ \(.*\)$/, '')))))}</span>
@@ -125,6 +168,8 @@ interface PropsRepas {
   afficherMoment: boolean;
   delai: number;
   peutChanger: boolean;
+  /** La semaine vient d'être générée : le repas arrive comme une carte distribuée. */
+  distribue: boolean;
   choisi: boolean;
   dehors: boolean;
   types: TypeRepas[];
@@ -142,7 +187,7 @@ function BoutonDehors({ libelle, onDehors }: { libelle: string; onDehors: () => 
   );
 }
 
-function Repas({ slot, mois, libelle, afficherMoment, delai, peutChanger, choisi, dehors, types, onGarder, onChanger, onDehors, onChoisir }: PropsRepas) {
+function Repas({ slot, mois, libelle, afficherMoment, delai, peutChanger, distribue, choisi, dehors, types, onGarder, onChanger, onDehors, onChoisir }: PropsRepas) {
   const { donnees } = useDonnees();
   const recette = slot.recetteId ? donnees.recettes.find((r) => r.id === slot.recetteId) : undefined;
   // Chaque repas s'adapte à sa propre largeur (requête de conteneur) : étroit, comme dans les deux
@@ -183,12 +228,13 @@ function Repas({ slot, mois, libelle, afficherMoment, delai, peutChanger, choisi
   const changementImpossible = slot.verrouille || !peutChanger;
   return (
     <div
-      class={`@container relative rounded-2xl bg-carte ${
+      class={`@container relative rounded-2xl bg-carte transition-[border-color] duration-200 ${distribue ? 'donne' : ''} ${
         choisi ? 'border-[1.5px] border-saison bg-saison-pale' : slot.verrouille ? 'border-[1.5px] border-encre' : 'border border-trait'
       }`}
+      style={distribue ? { animationDelay: `${delai}ms` } : undefined}
     >
       <div class="flex h-full min-h-18 flex-col gap-1 py-3 pr-1.5 pl-3.5 @xs:flex-row @xs:items-center @xs:gap-1.5">
-        <div key={recette.id} class="apparait flex min-w-0 flex-1 flex-col gap-1" style={{ animationDelay: `${delai}ms` }}>
+        <div key={recette.id} class={`${distribue ? '' : 'apparait'} flex min-w-0 flex-1 flex-col gap-1`}>
           {afficherMoment && <span class="etiq text-xs">{MOMENTS[slot.moment]}</span>}
           {onChoisir ? (
             <button type="button" class="display text-left text-lg leading-tight after:absolute after:inset-0" aria-pressed={choisi} onClick={onChoisir}>
@@ -209,7 +255,7 @@ function Repas({ slot, mois, libelle, afficherMoment, delai, peutChanger, choisi
           <BoutonDehors libelle={libelle} onDehors={onDehors} />
           <button
             type="button"
-            class={`ico relative z-[1] ${slot.verrouille ? 'bg-encre text-papier' : ''}`}
+            class={`ico cadenas relative z-[1] ${slot.verrouille ? 'bg-encre text-papier' : ''}`}
             aria-pressed={slot.verrouille}
             aria-label={`Garder le repas de ${libelle}`}
             onClick={onGarder}
@@ -255,12 +301,16 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
   } | null>(null);
   // Retour d'une recette créée depuis cette fenêtre.
   const [message] = useState(prendreMessage);
+  // Semaine complète : la gerbe (clé qui change à chaque fête) et le message de confirmation.
+  const [fete, setFete] = useState(0);
+  const [toast, setToast] = useState<string | null>(null);
   // « Quoi de neuf » : présenté une fois par version, quand l'écran de lancement est parti.
   const [nouveautes, setNouveautes] = useState<Version | null>(null);
 
   useEffect(() => {
     if (!cascade) return;
-    const fin = setTimeout(() => setCascade(false), 800);
+    // Assez long pour que la dernière carte distribuée (14 repas × 80 ms) ait fini d'arriver.
+    const fin = setTimeout(() => setCascade(false), 1600);
     return () => clearTimeout(fin);
   }, [cascade]);
 
@@ -341,7 +391,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
     });
     const places = Math.min(choisies.length + manque.coches.length, manque.repas);
     const carnet = `${pluriel(choisies.length, 'nouvelle recette', 'nouvelles recettes')} dans le carnet.`;
-    setAnnonce(places === 0 ? majuscule(carnet) : `${pluriel(places, 'repas')} ${places > 1 ? 'ajoutés' : 'ajouté'} à la semaine` + (choisies.length > 0 ? `, ${carnet}` : '.'));
+    setToast(places === 0 ? majuscule(carnet) : `${pluriel(places, 'repas', 'repas')} ${places > 1 ? 'ajoutés' : 'ajouté'} à la semaine` + (choisies.length > 0 ? `, ${carnet}` : '.'));
     setManque(null);
   };
 
@@ -355,8 +405,15 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
     const { planning: nouveau, manquants, ecartees } = genererSemaine({ ...contexte, semaine: cle, actuel: planning });
     enregistrer(nouveau);
     setCascade(true);
-    setAnnonce(manquants > 0 ? `Semaine générée, ${manquants} repas sans recette de saison.` : `Semaine générée : ${nouveau.slots.length} repas.`);
-    if (manquants > 0) proposer(nouveau, manquants, ecartees);
+    const prevus = nouveau.slots.filter((x) => x.recetteId).length;
+    if (manquants > 0) {
+      setAnnonce(`Semaine générée, ${manquants} repas sans recette de saison.`);
+      proposer(nouveau, manquants, ecartees);
+    } else if (prevus > 0) {
+      // Moment rare, donc fêté : tous les repas sont trouvés.
+      setFete(Date.now());
+      setToast(`Semaine complète : ${pluriel(prevus, 'repas prévu', 'repas prévus')}.`);
+    }
   };
 
   const changer = (s: Slot) => {
@@ -442,12 +499,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
                 const coche = manque.coches.includes(id);
                 return (
                   <label key={id} class="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-trait bg-carte px-3.5 py-2.5">
-                    <input
-                      type="checkbox"
-                      class="size-5 shrink-0 accent-[var(--encre)]"
-                      checked={coche}
-                      onChange={() => setManque({ ...manque, coches: coche ? manque.coches.filter((c) => c !== id) : [...manque.coches, id] })}
-                    />
+                    <CaseACocher coche={coche} onChange={() => setManque({ ...manque, coches: coche ? manque.coches.filter((c) => c !== id) : [...manque.coches, id] })} />
                     <span class="flex min-w-0 flex-1 flex-col">
                       <span class="font-semibold">{recette.nom}</span>
                       <span class="text-sm text-encre-2">Saison : {libelleSaison(recette.scoreParMois)}</span>
@@ -499,6 +551,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
           {annonce}
         </p>
         {fenetre}
+        <Toast message={toast} onFin={() => setToast(null)} />
       </>
     );
   }
@@ -515,9 +568,10 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
       </div>
 
       <div class="flex flex-col gap-2">
-        <button type="button" class="btn btn-plein w-full" onClick={generer}>
-          <Icone nom="changer" taille={22} />
+        <button type="button" class="btn btn-plein relative w-full" onClick={generer}>
+          <Icone nom="changer" taille={22} class={cascade ? 'tourne-une-fois' : ''} />
           Générer ma semaine
+          {fete > 0 && <Gerbe key={fete} produits={aLaUne(deSaison(monde.legumes, mois)).slice(0, 6)} onFin={() => setFete(0)} />}
         </button>
         {gardes > 0 && (
           <p class="text-center text-sm text-encre-2">
@@ -572,6 +626,7 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
 
       {fenetre}
       <FenetreNouveautes version={nouveautes} onFermer={fermerNouveautes} onLien={suivreNouveaute} />
+      <Toast message={toast} onFin={() => setToast(null)} />
 
       {enregistre && (
         <ol class={`flex flex-col gap-2.5 ${deuxMoments ? 'md:gap-2' : ''}`}>
@@ -600,7 +655,8 @@ function MaSemaine({ monde, large }: { monde: Monde; large: boolean }) {
                     mois={mois}
                     libelle={libelleJour(s)}
                     afficherMoment={deuxMoments}
-                    delai={cascade ? (j * slots.length + i) * 40 : 0}
+                    delai={cascade ? (j * slots.length + i) * 80 : 0}
+                    distribue={cascade}
                     peutChanger={disponiblesPourChanger}
                     choisi={large && s.recetteId !== null && s.recetteId === idChoisi}
                     onGarder={() => garder(s)}

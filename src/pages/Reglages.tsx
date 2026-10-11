@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
 import { Dialogue } from '../components/Dialogue';
 import { FenetreNouveautes } from '../components/Nouveautes';
 import { Icone } from '../components/Icone';
+import { Toast } from '../components/Toast';
 import { Vignette } from '../components/Vignette';
 import { MOIS_ABREGES, NOMS_JOURS } from '../lib/calendrier';
 import { urlPublique } from '../lib/catalogue';
@@ -37,24 +38,6 @@ const resumeMois = (l: Legume) =>
     : plagesDeMois(l.mois)
         .map(([a, b]) => (a === b ? MOIS_ABREGES[a - 1] : `${MOIS_ABREGES[a - 1]} à ${MOIS_ABREGES[b - 1]}`))
         .join(', ');
-
-function Toast({ message, onFin }: { message: string | null; onFin: () => void }) {
-  useEffect(() => {
-    if (!message) return;
-    const minuteur = setTimeout(onFin, 6000);
-    return () => clearTimeout(minuteur);
-  }, [message]);
-  return (
-    <div role="status" class="pointer-events-none fixed inset-x-4 bottom-[100px] z-30 flex justify-center md:bottom-8">
-      {message && (
-        <p class="apparait pointer-events-auto flex max-w-md items-center gap-3 rounded-2xl bg-encre px-4 py-3.5 text-[15px] text-papier">
-          <Icone nom="coche" taille={22} class="shrink-0" />
-          {message}
-        </p>
-      )}
-    </div>
-  );
-}
 
 const APPARENCES: [Apparence, string][] = [
   ['auto', 'Automatique'],

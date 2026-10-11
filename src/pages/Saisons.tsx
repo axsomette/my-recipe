@@ -3,8 +3,8 @@ import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
 import { Icone } from '../components/Icone';
 import { Frise } from '../components/Saison';
 import { Vignette } from '../components/Vignette';
-import { INITIALES_MOIS, NOMS_MOIS, majuscule, moisCourant } from '../lib/calendrier';
-import { deSaison } from '../lib/catalogue';
+import { INITIALES_MOIS, NOMS_MOIS, majuscule, moisCourant, saisonDuMois } from '../lib/calendrier';
+import { deSaison, urlPublique } from '../lib/catalogue';
 import { NOMS_CATEGORIES, NOMS_COURTS_CATEGORIES, ORDRE_CATEGORIES, estDuGardeManger } from '../lib/categories';
 import { plagesDeMois } from '../lib/saison';
 import type { CategorieId, Legume } from '../lib/types';
@@ -75,8 +75,17 @@ function ParMois({ monde }: { monde: Monde }) {
           <button type="button" class="ico" aria-label={`Mois précédent : ${NOMS_MOIS[moisPrecedent(mois) - 1]}`} onClick={() => setMois(moisPrecedent)}>
             <Icone nom="retour" />
           </button>
-          <div class="text-center" aria-live="polite">
-            <div key={mois} class="glisse">
+          <div class="flex items-center gap-3" aria-live="polite">
+            {/* La feuille du mois se tourne quand la saison change. */}
+            <img
+              key={saisonDuMois(mois)}
+              class="feuille-tourne size-12 shrink-0"
+              src={urlPublique(`icones/feuille-${saisonDuMois(mois)}.svg`)}
+              alt=""
+              width="48"
+              height="48"
+            />
+            <div key={mois} class="glisse text-center">
               <p class="display text-[26px]">{majuscule(NOMS_MOIS[mois - 1] ?? '')}</p>
               <p class="text-sm text-encre-2">{duMois.length} produits de saison</p>
             </div>
@@ -92,7 +101,11 @@ function ParMois({ monde }: { monde: Monde }) {
         >
           <div class="grid h-16 grid-cols-12 items-end gap-1">
             {parMois.map((n, i) => (
-              <span key={i} class={`block rounded-t-[3px] ${i + 1 === mois ? 'bg-saison' : 'bg-trait'}`} style={{ height: `${(n / maximum) * 100}%` }} />
+              <span
+                key={i}
+                class={`block rounded-t-[3px] transition-colors duration-300 ${i + 1 === mois ? 'bg-saison' : 'bg-trait'}`}
+                style={{ height: `${(n / maximum) * 100}%` }}
+              />
             ))}
           </div>
           <div class="grid grid-cols-12 gap-1 text-center font-etiq text-[11px] font-bold text-encre-2" aria-hidden="true">

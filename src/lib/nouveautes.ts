@@ -29,6 +29,28 @@ const produit = (id: string) => `legumes/icones/${id}.svg`;
 
 export const VERSIONS: Version[] = [
   {
+    id: '2026-10-11',
+    resume: 'Une app plus vivante : dessins animés, semaine distribuée, gestes plus doux',
+    nouveautes: [
+      {
+        titre: 'Des dessins qui bougent',
+        texte: 'Les produits du mois sautent dans l’en-tête et saluent quand vous les cochez.',
+        illustrations: [produit('courge'), produit('poireau')],
+      },
+      {
+        titre: 'Une semaine qui se distribue',
+        texte: 'Les repas arrivent comme des cartes, et une semaine complète se fête.',
+        illustrations: ['feuille-du-mois'],
+      },
+      {
+        titre: 'Des gestes plus doux',
+        texte: 'Onglets, confirmations et calendrier suivent votre doigt, sans jamais vous ralentir.',
+        illustrations: [produit('pomme'), produit('raisin')],
+        lien: 'calendrier',
+      },
+    ],
+  },
+  {
     id: '2026-10-10',
     resume: 'Poissons de saison, 41 nouveaux produits, idées de saison',
     nouveautes: [

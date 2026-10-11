@@ -123,6 +123,10 @@ Installée, l'app échappe à l'effacement des données de Safari après 7 jours
 - Lighthouse mobile (build de production) : performance 98 à 100, accessibilité 100,
   bonnes pratiques 100 sur les quatre écrans principaux.
 - Non référencé : la page demande aux moteurs de recherche de ne pas l'indexer (`noindex`).
+- Animations : neuf micro-interactions (planche `design/Animations.dc.html`) : les illustrations sautent et
+  rebondissent, l'interface reste rapide (moins de 300 ms) et ne rebondit jamais à l'ouverture. Chacune ne joue
+  qu'au moment de l'action ; seuls `transform` et `opacity` bougent. Tout s'arrête si l'appareil demande moins
+  d'animations.
 - Accessibilité : contrastes AA en clair et en sombre pour les quatre saisons, cibles tactiles de 44 px,
   navigation au clavier, focus visible et replacé à chaque écran, fenêtres en `<dialog>` natif,
   graphiques décrits pour les lecteurs d'écran, animations coupées si l'appareil le demande,
