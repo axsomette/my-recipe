@@ -103,6 +103,8 @@
     outline: 3px solid var(--encre);
     outline-offset: 3px;
   }
+  /* Titre focalisé par programme (ouverture d'une fenêtre ou d'un écran) : pas de cadre. */
+  [tabindex='-1']:focus { outline: none; }
   ::placeholder {
     color: var(--encre-2);
     opacity: 1;

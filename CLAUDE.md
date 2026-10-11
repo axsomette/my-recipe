@@ -69,6 +69,9 @@ ce fichier garde ce que le README ne dit pas : nos règles de travail, où sont 
   - App vivante : neuf animations validées sur la planche `design/Animations.dc.html` (étal du mois, puces qui
     sautent, semaine distribuée, cadenas, gerbe de la semaine complète, coches dessinées, feuille qui se tourne,
     confirmations, onglets). Pas de son dans l'app pour l'instant (un réglage « Sons » reste possible).
+  - Fenêtres (`Dialogue.tsx`) : sur téléphone, on les ferme en les glissant vers le bas (depuis la poignée, ou de
+    n'importe où quand le contenu est tout en haut ; geste vif ou plus de 30 % de la hauteur). À l'ouverture, le focus
+    va au titre et non plus à la première case (plus de cadre de focus au doigt).
 
 ## Pistes proposées, pas encore faites
 
