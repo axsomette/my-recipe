@@ -237,7 +237,7 @@ poser(pop(420), 0.88, 0.35 * B)  # la pile de pages arrive
 for i, t in enumerate((1.55, 2.05, 2.55)):
     poser(page(), t, 0.6 * B, pan=-0.2 + i * 0.2)  # les saisons passées se tournent
 poser(souffle(0.6), 3.4, 0.5 * B)  # sortie de l'accroche
-poser(pop(320), 3.9, 0.55 * B)  # la feuille du mois
+poser(souffle(0.8), 3.45, 0.3 * B)  # la feuille monte au centre
 for i, t in enumerate((4.77, 5.02, 5.27)):
     poser(plouf(), t, 0.55 * B, pan=-0.3 + i * 0.3)  # les produits tombent dans le bol
 for i, n in enumerate((84, 88, 91, 96, 100)):
