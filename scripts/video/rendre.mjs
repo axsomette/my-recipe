@@ -1,6 +1,6 @@
 // Rend la vidéo image par image : node scripts/video/rendre.mjs <dossier> [fps] [temps…]
 // Sans temps : toutes les images (30 s × fps). Avec des temps : seulement ces instants (contrôle).
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 const require = createRequire('/opt/node-tools/node_modules/');
@@ -12,6 +12,10 @@ mkdirSync(dossier, { recursive: true });
 const nav = await chromium.launch({ args: ['--allow-file-access-from-files'] });
 const page = await nav.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
 await page.goto(`file://${fileURLToPath(new URL('promo.html', import.meta.url))}`);
+// Le logo animé vient de l'écran de lancement de l'app (index.html, entre logo:debut et logo:fin).
+const indexHtml = readFileSync(new URL('../../index.html', import.meta.url), 'utf8');
+const logo = indexHtml.match(/<!-- logo:debut[^>]*-->([\s\S]*?)<!-- logo:fin -->/)[1];
+await page.evaluate((html) => window.installerLogo(html), logo);
 await page.evaluate(() => window.pret);
 const instants = temps.length ? temps.map(Number) : Array.from({ length: Math.round(30 * fps) }, (_, i) => i / fps);
 for (const [i, t] of instants.entries()) {

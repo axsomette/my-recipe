@@ -33,6 +33,11 @@
   .mois { position: absolute; width: 56px; text-align: center; font-family: 'Sofia Sans Extra Condensed', sans-serif; font-weight: 700; font-size: 30px; color: var(--encre-2); }
   .vig { position: absolute; width: 150px; height: 150px; }
   .lettre { display: inline-block; }
+  /* Le vrai logo de l'écran de lancement (index.html), en calques : bloc, pages, produits, anneaux. */
+  .l-feuillet { position: relative; width: 540px; height: 540px; perspective: 2200px; }
+  .l-feuillet > svg:not([width]) { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .l-page { transform-origin: 50% 28%; backface-visibility: hidden; }
+  .l-prod { transform-box: fill-box; transform-origin: 50% 100%; }
 </style>
 </head>
 <body>
@@ -41,7 +46,6 @@
 // Chaque image est calculée à partir du temps t (en secondes) : rendu image par image, sans saccade.
 const DUREE = 30;
 const ICO = (id) => `../../public/legumes/icones/${id}.svg`;
-const FEUILLE = (s) => `../../public/icones/feuille-${s}.svg`;
 const ECRAN = (n) => `ecrans/${n}.png`;
 
 // Courbes : une signature (sortie « quart ») pour 80 % des mouvements, un rebond pour les illustrations.
@@ -79,13 +83,32 @@ const rond2 = el('', 'width:760px;height:760px;left:520px;top:1380px;background:
 const s1Etiq = el('Automne · semaine 41', 'top:520px;font-size:40px', 'abs etiq centre');
 const s1L1 = el('On mange quoi', 'top:600px;font-size:120px', 'abs display centre');
 const s1L2 = el('cette semaine ?', 'top:735px;font-size:120px', 'abs display centre');
-const pages = ['hiver', 'printemps', 'ete', 'automne'].map((s, i) => img(FEUILLE(s), `left:300px;top:1000px;width:480px;height:480px;z-index:${10 - i};transform-origin:50% 12%`));
+// La feuille du mois : un seul logo, de l'accroche au titre (installé par installerLogo).
+const logo = el('', 'left:270px;top:0;width:540px;height:540px;z-index:6');
+let pages = [], produits = [];
+window.installerLogo = (html) => {
+  // Seulement la feuille : le titre et le mois de l'écran de lancement sont redessinés en grand ici.
+  const modele = document.createElement('template');
+  modele.innerHTML = html.replace(/<style>[\s\S]*?<\/style>/, '');
+  logo.replaceChildren(modele.content.querySelector('.l-feuillet'));
+  const ordre = ['hiver', 'printemps', 'ete', 'automne'];
+  pages = ordre.map((s) => logo.querySelector(`.l-p-${s}`));
+  pages.forEach((p, i) => (p.style.zIndex = 4 - i));
+  logo.querySelector('.l-anneaux').style.zIndex = 9;
+  produits = [1, 2, 3].map((k) => logo.querySelector(`.l-p-automne .l-prod-${k}`));
+};
+// Aperçu direct dans un navigateur (servi en http) : on lit le logo dans index.html.
+try {
+  const x = new XMLHttpRequest();
+  x.open('GET', '../../index.html', false);
+  x.send();
+  const m = x.responseText.match(/<!-- logo:debut[^>]*-->([\s\S]*?)<!-- logo:fin -->/);
+  if (m) window.installerLogo(m[1]);
+} catch {}
 
 // ---------- 2. Titre (4–8 s) ----------
-const s2Feuille = img(FEUILLE('automne'), 'left:270px;top:430px;width:540px;height:540px;z-index:6');
-const tombes = ['courge', 'poireau', 'chataigne'].map((id) => img(ICO(id), 'left:470px;top:0;width:140px;height:140px;z-index:7'));
 const titre = 'Recettes de saison';
-const s2Titre = el([...titre].map((c) => `<span class="lettre">${c === ' ' ? '&nbsp;' : c}</span>`).join(''), 'top:1060px;font-size:118px', 'abs display centre');
+const s2Titre = el([...titre].map((c) => `<span class="lettre">${c === ' ' ? '&nbsp;' : c}</span>`).join(''), 'top:1070px;font-size:104px', 'abs display centre');
 const lettres = [...s2Titre.querySelectorAll('.lettre')];
 const s2Tag = el('Vos repas de la semaine,<br>de saison d’abord.', 'top:1230px;font-size:52px;line-height:1.3;color:var(--encre-2)', 'abs centre');
 
@@ -154,13 +177,32 @@ function rendre(t) {
     poser(s1Etiq, { y: (1 - sortie(seg(t, 0.05, 0.55))) * 30 + monte, o: seg(t, 0.05, 0.4) * o });
     poser(s1L1, { y: (1 - sortie(seg(t, 0.15, 0.75))) * 70 + monte, o: seg(t, 0.15, 0.55) * o });
     poser(s1L2, { y: (1 - sortie(seg(t, 0.35, 0.95))) * 70 + monte, o: seg(t, 0.35, 0.75) * o });
+  }
+
+  // La feuille du mois : arrive sous l'accroche, ses pages se tournent, puis elle monte au centre
+  // et grandit pour le titre ; les produits de l'automne tombent alors dans le bol vide.
+  if (t < 8.2 && pages.length) {
     const arrivee = rebond(seg(t, 0.85, 1.35));
+    const vers = entreeSortie(seg(t, 3.45, 4.25));
+    const part = accel(seg(t, 7.55, 7.95));
+    poser(logo, {
+      y: lerp(1000 + (1 - arrivee) * 140, 420, vers) - part * 220,
+      s: lerp(0.88 + arrivee * 0.04, 1.06, vers) * (1 + Math.sin(t * 2.2) * 0.008 * vers),
+      o: seg(t, 0.85, 1.1) * (1 - part),
+    });
     pages.forEach((p, i) => {
-      // Les pages des saisons passées se tournent sur leurs anneaux.
-      const tourne = i < 3 ? entreeSortie(seg(t, 1.5 + i * 0.5, 1.95 + i * 0.5)) : 0;
-      p.style.transform = `translateY(${(1 - arrivee) * 160 + monte * 0.6 + tourne * -120}px) perspective(1400px) rotateX(${tourne * 100}deg) scale(${0.9 + arrivee * 0.1})`;
-      p.style.opacity = seg(t, 0.85, 1.1) * (1 - seg(tourne, 0.75, 1)) * o;
-      p.style.visibility = p.style.opacity > 0 ? 'visible' : 'hidden';
+      // Courbe de l'écran de lancement : cubic-bezier(.55, .05, .6, 1), demi-tour sur les anneaux.
+      const tourne = i < 3 ? accel(seg(t, 1.5 + i * 0.5, 1.95 + i * 0.5)) * 0.4 + entreeSortie(seg(t, 1.5 + i * 0.5, 1.95 + i * 0.5)) * 0.6 : 0;
+      p.style.transform = `rotateX(${tourne * 178}deg)`;
+    });
+    produits.forEach((g, i) => {
+      // Chute avec gravité, puis petit écrasement en touchant le bol.
+      const a = 4.35 + i * 0.25;
+      const p = seg(t, a, a + 0.42);
+      const apres = Math.max(0, t - a - 0.42);
+      const ecrase = p >= 1 ? Math.exp(-apres * 12) * Math.sin(apres * 28) * 0.14 : 0;
+      g.style.opacity = seg(t, a, a + 0.06);
+      g.style.transform = `translateY(${-30 + 30 * p * p}px) scale(${1 + ecrase}, ${1 - ecrase})`;
     });
   }
 
@@ -168,15 +210,6 @@ function rendre(t) {
   if (t >= 3.8 && t < 8.2) {
     const o = 1 - accel(seg(t, 7.55, 7.95));
     const monte = -accel(seg(t, 7.55, 7.95)) * 220;
-    poser(s2Feuille, { s: lerp(0.7, 1, rebond(seg(t, 3.85, 4.4), 1.4)) * (1 + Math.sin(t * 2.2) * 0.01), o: seg(t, 3.85, 4.1) * o, y: monte });
-    tombes.forEach((e, i) => {
-      // Chute avec gravité, petit écrasement à l'arrivée dans le bol.
-      const a = 4.35 + i * 0.25;
-      const chute = seg(t, a, a + 0.42);
-      const y = lerp(-180, 640 + i * 6, chute * chute);
-      const ecrase = t > a + 0.42 ? Math.exp(-(t - a - 0.42) * 14) * Math.sin((t - a - 0.42) * 30) * 0.12 : 0;
-      poser(e, { x: (i - 1) * 70, y: y + monte, r: (1 - chute) * (i - 1) * 40, sx: 1 + ecrase, sy: 1 - ecrase, o: seg(t, a, a + 0.05) * o * (t > a + 0.9 ? 1 - seg(t, a + 0.9, a + 1.1) : 1) });
-    });
     lettres.forEach((l, i) => {
       const a = 5.25 + i * 0.045;
       const x = seg(t, a, a + 0.4);
