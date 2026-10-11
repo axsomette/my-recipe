@@ -64,7 +64,9 @@ export function Dialogue({ ouvert, onFermer, titreId, alerte = false, children }
       const delta = e.touches[0]!.clientY - depart.y;
       if (!glisse) {
         // On ne prend la main que vers le bas, et seulement si le contenu ne peut plus remonter.
-        if (Math.abs(delta) < 6) return;
+        // Décision dès le premier mouvement : sur iPhone, un mouvement laissé au navigateur lance son
+        // propre défilement (l'effet élastique), et les mouvements suivants ne peuvent plus être retenus.
+        if (delta === 0) return;
         if (delta < 0 || dialogue.scrollTop > 0) {
           depart = null;
           return;
@@ -122,7 +124,7 @@ export function Dialogue({ ouvert, onFermer, titreId, alerte = false, children }
       }}
     >
       {/* Poignée : on peut tirer la feuille vers le bas pour la fermer. */}
-      <span class="-mt-2 mb-0.5 flex h-6 items-center justify-center md:hidden" aria-hidden="true">
+      <span class="poignee -mx-5 -mt-2.5 mb-0.5 flex h-8 items-center justify-center md:hidden" aria-hidden="true">
         <span class="block h-[5px] w-10 rounded-full bg-trait-fort opacity-50" />
       </span>
       {ouvert && children}
