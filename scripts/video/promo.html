@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Recettes de saison — vidéo promotionnelle</title>
+<style>
+  @font-face { font-family: 'Young Serif'; src: url('../../public/fonts/young-serif.woff2') format('woff2'); }
+  @font-face { font-family: 'Hanken Grotesk'; src: url('../../public/fonts/hanken-grotesk.woff2') format('woff2'); font-weight: 100 900; }
+  @font-face { font-family: 'Sofia Sans Extra Condensed'; src: url('../../public/fonts/sofia-sans-extra-condensed-700.woff2') format('woff2'); font-weight: 700; }
+  :root {
+    --papier: #EEF0E7; --carte: #F9FAF5; --creux: #E3E6DA; --encre: #221A20; --encre-2: #5A5158; --trait: #D6D9CD;
+    --saison: #A9480F; --saison-texte: #8E3B0B; --saison-pale: #F2DECB;
+    --hiver: #6E2A63; --printemps: #3B6B1F; --ete: #B3261E;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--papier); }
+  #scene { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--papier); font-family: 'Hanken Grotesk', sans-serif; color: var(--encre); }
+  .abs { position: absolute; will-change: transform, opacity; }
+  .display { font-family: 'Young Serif', Georgia, serif; font-weight: 400; letter-spacing: -0.01em; line-height: 1.04; }
+  .etiq { font-family: 'Sofia Sans Extra Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--encre-2); }
+  .centre { left: 0; right: 0; text-align: center; }
+  .rond { position: absolute; border-radius: 50%; filter: blur(2px); }
+  .pastille { display: inline-flex; align-items: center; gap: 14px; padding: 12px 26px 12px 14px; border-radius: 999px; background: var(--creux); font-weight: 600; font-size: 38px; }
+  .pastille img { width: 58px; height: 58px; }
+  .nouveau { display: inline-block; padding: 12px 18px 10px; border-radius: 12px; background: var(--saison); color: #fff; font-family: 'Sofia Sans Extra Condensed', sans-serif; font-weight: 700; font-size: 34px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .telephone { position: absolute; width: 656px; height: 1378px; border-radius: 92px; background: #1c171b; padding: 18px; box-shadow: 0 40px 80px rgb(34 26 32 / 0.28), 0 8px 20px rgb(34 26 32 / 0.18); }
+  .telephone .ecran { position: relative; width: 620px; height: 1342px; border-radius: 76px; overflow: hidden; background: var(--papier); }
+  .telephone .ecran img { position: absolute; left: 0; top: 0; width: 620px; }
+  .telephone .ilot { position: absolute; top: 34px; left: 50%; width: 170px; height: 46px; margin-left: -85px; border-radius: 30px; background: #1c171b; z-index: 3; }
+  .doigt { position: absolute; width: 96px; height: 96px; margin: -48px 0 0 -48px; border-radius: 50%; background: rgb(34 26 32 / 0.18); border: 4px solid rgb(255 255 255 / 0.9); z-index: 5; }
+  .onde { position: absolute; width: 96px; height: 96px; margin: -48px 0 0 -48px; border-radius: 50%; border: 5px solid var(--saison); z-index: 4; }
+  .barre { position: absolute; bottom: 0; width: 56px; border-radius: 10px 10px 4px 4px; background: var(--trait); transform-origin: bottom; }
+  .mois { position: absolute; width: 56px; text-align: center; font-family: 'Sofia Sans Extra Condensed', sans-serif; font-weight: 700; font-size: 30px; color: var(--encre-2); }
+  .vig { position: absolute; width: 150px; height: 150px; }
+  .lettre { display: inline-block; }
+</style>
+</head>
+<body>
+<div id="scene"></div>
+<script>
+// Chaque image est calculée à partir du temps t (en secondes) : rendu image par image, sans saccade.
+const DUREE = 30;
+const ICO = (id) => `../../public/legumes/icones/${id}.svg`;
+const FEUILLE = (s) => `../../public/icones/feuille-${s}.svg`;
+const ECRAN = (n) => `ecrans/${n}.png`;
+
+// Courbes : une signature (sortie « quart ») pour 80 % des mouvements, un rebond pour les illustrations.
+const borne = (x) => Math.max(0, Math.min(1, x));
+const seg = (t, a, b) => borne((t - a) / (b - a));
+const sortie = (x) => 1 - Math.pow(1 - x, 4);
+const sortieDouce = (x) => 1 - Math.pow(1 - x, 3);
+const entreeSortie = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const accel = (x) => x * x * x;
+const rebond = (x, s = 1.6) => 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2);
+const lerp = (a, b, x) => a + (b - a) * x;
+
+const scene = document.getElementById('scene');
+function el(html, style = '', classe = 'abs') {
+  const e = document.createElement('div');
+  e.className = classe;
+  e.innerHTML = html;
+  e.style.cssText = style;
+  scene.appendChild(e);
+  return e;
+}
+const img = (src, style = '', classe = 'abs') => el(`<img src="${src}" alt="" style="width:100%;height:100%;display:block">`, style, classe);
+function poser(e, { x = 0, y = 0, s = 1, r = 0, o = 1, sx, sy }) {
+  e.style.opacity = o;
+  e.style.transform = `translate(${x}px, ${y}px) rotate(${r}deg) scale(${sx ?? s}, ${sy ?? s})`;
+  e.style.visibility = o <= 0.001 ? 'hidden' : 'visible';
+}
+const cacher = (...els) => els.forEach((e) => poser(e, { o: 0 }));
+
+// ---------- Ambiance : deux grands ronds de saison qui dérivent, tout le long ----------
+const rond1 = el('', 'width:900px;height:900px;left:-300px;top:-260px;background:var(--saison-pale);opacity:.55', 'rond');
+const rond2 = el('', 'width:760px;height:760px;left:520px;top:1380px;background:#E3E6DA;opacity:.8', 'rond');
+
+// ---------- 1. Accroche (0–4 s) ----------
+const s1Etiq = el('Automne · semaine 41', 'top:520px;font-size:40px', 'abs etiq centre');
+const s1L1 = el('On mange quoi', 'top:600px;font-size:120px', 'abs display centre');
+const s1L2 = el('cette semaine ?', 'top:735px;font-size:120px', 'abs display centre');
+const pages = ['hiver', 'printemps', 'ete', 'automne'].map((s, i) => img(FEUILLE(s), `left:300px;top:1000px;width:480px;height:480px;z-index:${10 - i};transform-origin:50% 12%`));
+
+// ---------- 2. Titre (4–8 s) ----------
+const s2Feuille = img(FEUILLE('automne'), 'left:270px;top:430px;width:540px;height:540px;z-index:6');
+const tombes = ['courge', 'poireau', 'chataigne'].map((id) => img(ICO(id), 'left:470px;top:0;width:140px;height:140px;z-index:7'));
+const titre = 'Recettes de saison';
+const s2Titre = el([...titre].map((c) => `<span class="lettre">${c === ' ' ? '&nbsp;' : c}</span>`).join(''), 'top:1060px;font-size:118px', 'abs display centre');
+const lettres = [...s2Titre.querySelectorAll('.lettre')];
+const s2Tag = el('Vos repas de la semaine,<br>de saison d’abord.', 'top:1230px;font-size:52px;line-height:1.3;color:var(--encre-2)', 'abs centre');
+
+// ---------- 3. Calendrier (8–12 s) ----------
+const s3Etiq = el('Le calendrier des saisons', 'top:250px;font-size:40px', 'abs etiq centre');
+const s3Titre = el('Ce qui est de saison,<br>mois par mois', 'top:320px;font-size:96px', 'abs display centre');
+const COMPTES = [37, 33, 25, 14, 17, 31, 33, 34, 45, 45, 43, 37];
+const barres = COMPTES.map((n, i) => el('', `left:${132 + i * 70}px;top:640px;height:${n * 7}px;margin-top:${(45 - n) * 7}px;${i === 9 ? 'background:var(--saison)' : ''}`, 'barre'));
+const moisL = 'JFMAMJJASOND'.split('').map((m, i) => el(m, `left:${132 + i * 70}px;top:978px;${i === 9 ? 'color:var(--encre)' : ''}`, 'mois'));
+const s3Compteur = el('', 'top:1050px;font-size:60px', 'abs display centre');
+const PRODUITS = ['courge', 'poireau', 'chataigne', 'brocoli', 'coing', 'figue', 'raisin', 'potiron', 'mache', 'celeri', 'haricotvert', 'echalote'];
+const grille = PRODUITS.map((id, i) => img(ICO(id), `left:${120 + (i % 4) * 225}px;top:${1190 + Math.floor(i / 4) * 210}px;width:165px;height:165px`));
+
+// ---------- 4. Poissons (12–16 s) ----------
+const s4Nouveau = el('<span class="nouveau">Nouveau</span>', 'top:250px', 'abs centre');
+const s4Titre = el('Les poissons<br>ont leur saison', 'top:345px;font-size:104px', 'abs display centre');
+const s4Sous = el('26 poissons et fruits de mer, avec leurs mois', 'top:590px;font-size:42px;color:var(--encre-2)', 'abs centre');
+const POISSONS = ['sardine', 'bar', 'rougetbarbet', 'sole', 'saintjacques', 'langoustine', 'thonrouge', 'calmar', 'maquereau'];
+const banc = POISSONS.map((id) => img(ICO(id), 'left:0;top:0;width:190px;height:190px'));
+const s4Tel = el(`<div class="ilot"></div><div class="ecran"><img src="${ECRAN('calendrier-poissons-liste')}"></div>`, 'left:212px;top:0', 'telephone');
+
+// ---------- 5. Idées de saison (16–22 s) ----------
+const s5Nouveau = el('<span class="nouveau">Nouveau</span>', 'top:150px', 'abs centre');
+const s5Titre = el('Une semaine incomplète ?', 'top:240px;font-size:84px', 'abs display centre');
+const s5Sous = el('L’app propose des idées de saison.', 'top:350px;font-size:46px;color:var(--encre-2)', 'abs centre');
+const s5Tel = el(
+  `<div class="ilot"></div><div class="ecran">${['idees-0', 'idees-1', 'idees-2', 'idees-3', 'semaine'].map((n) => `<img data-n="${n}" src="${ECRAN(n)}">`).join('')}</div>`,
+  'left:212px;top:470px',
+  'telephone',
+);
+const s5Imgs = Object.fromEntries([...s5Tel.querySelectorAll('img')].map((i) => [i.dataset.n, i]));
+const doigt = el('', '', 'doigt');
+const onde = el('', '', 'onde');
+const s5Badge = el('<span class="pastille" style="background:var(--saison);color:#fff;box-shadow:0 18px 40px rgb(34 26 32 / .3)">✓&nbsp; 3 repas ajoutés à la semaine</span>', 'top:1680px', 'abs centre');
+
+// ---------- 6. Équilibre et nouveaux produits (22–26 s) ----------
+const s6Titre = el('Une semaine équilibrée', 'top:250px;font-size:92px', 'abs display centre');
+const TYPES = [['boeuf', 'Viande', 2], ['cabillaud', 'Poisson', 3], ['pates', 'Féculents', 1], ['laitue', 'Végé', 2]];
+const pastilles = TYPES.map(([ic, nom], i) => el(`<span class="pastille"><img src="${ICO(ic)}" alt="">${nom} <b data-n>0</b></span>`, `left:${i % 2 === 0 ? 110 : 560}px;top:${420 + Math.floor(i / 2) * 120}px`));
+const s6Gros = el('', 'top:760px;font-size:150px', 'abs display centre');
+const s6Legende = el('nouveaux produits, tous dessinés', 'top:930px;font-size:48px;color:var(--encre-2)', 'abs centre');
+const NOUVEAUX = ['dinde', 'canard', 'veau', 'lapin', 'pintade', 'steakhache', 'merguez', 'chorizo', 'boudinnoir', 'sardine', 'bar', 'sole', 'lieunoir', 'merlu', 'saintjacques', 'huitre', 'crabe', 'poulpe', 'langoustine', 'maquereau'];
+const pluie = NOUVEAUX.map((id, i) => img(ICO(id), `left:${70 + (i % 5) * 190}px;top:${1070 + Math.floor(i / 5) * 190}px;width:150px;height:150px`));
+
+// ---------- 7. Fin (26–30 s) ----------
+const s7Icone = img('../../public/icones/app.svg', 'left:360px;top:500px;width:360px;height:360px;border-radius:80px;overflow:hidden;box-shadow:0 30px 60px rgb(34 26 32 / .22)');
+const s7Titre = el('Recettes de saison', 'top:950px;font-size:116px', 'abs display centre');
+const s7Tag = el('Cuisinez de saison,<br>sans y penser.', 'top:1110px;font-size:62px;line-height:1.25', 'abs centre');
+const s7Plus = el('Sans compte · Hors connexion · Sur l’écran d’accueil', 'top:1330px;font-size:40px', 'abs etiq centre');
+const DECOR = [['tomate', 80, 220, -12], ['poireau', 860, 250, 10], ['fraise', 470, 140, 6], ['sardine', 90, 1560, 8], ['courge', 850, 1580, -8], ['asperge', 470, 1640, -6]];
+const decor = DECOR.map(([id, x, y]) => img(ICO(id), `left:${x}px;top:${y}px;width:140px;height:140px`));
+
+const tous = [...scene.children];
+
+function rendre(t) {
+  for (const e of tous) if (e !== rond1 && e !== rond2) cacher(e);
+  // Ambiance : dérive lente, sinusoïdale.
+  poser(rond1, { x: Math.sin(t * 0.35) * 60, y: Math.cos(t * 0.27) * 50, s: 1 + Math.sin(t * 0.4) * 0.04, o: 0.55 });
+  poser(rond2, { x: Math.cos(t * 0.3) * 70, y: Math.sin(t * 0.33) * 40, o: 0.8 });
+
+  // 1. Accroche
+  if (t < 4.2) {
+    const sortieS = accel(seg(t, 3.45, 3.95));
+    const monte = -sortieS * 260;
+    const o = 1 - sortieS;
+    poser(s1Etiq, { y: (1 - sortie(seg(t, 0.05, 0.55))) * 30 + monte, o: seg(t, 0.05, 0.4) * o });
+    poser(s1L1, { y: (1 - sortie(seg(t, 0.15, 0.75))) * 70 + monte, o: seg(t, 0.15, 0.55) * o });
+    poser(s1L2, { y: (1 - sortie(seg(t, 0.35, 0.95))) * 70 + monte, o: seg(t, 0.35, 0.75) * o });
+    const arrivee = rebond(seg(t, 0.85, 1.35));
+    pages.forEach((p, i) => {
+      // Les pages des saisons passées se tournent sur leurs anneaux.
+      const tourne = i < 3 ? entreeSortie(seg(t, 1.5 + i * 0.5, 1.95 + i * 0.5)) : 0;
+      p.style.transform = `translateY(${(1 - arrivee) * 160 + monte * 0.6 + tourne * -120}px) perspective(1400px) rotateX(${tourne * 100}deg) scale(${0.9 + arrivee * 0.1})`;
+      p.style.opacity = seg(t, 0.85, 1.1) * (1 - seg(tourne, 0.75, 1)) * o;
+      p.style.visibility = p.style.opacity > 0 ? 'visible' : 'hidden';
+    });
+  }
+
+  // 2. Titre
+  if (t >= 3.8 && t < 8.2) {
+    const o = 1 - accel(seg(t, 7.55, 7.95));
+    const monte = -accel(seg(t, 7.55, 7.95)) * 220;
+    poser(s2Feuille, { s: lerp(0.7, 1, rebond(seg(t, 3.85, 4.4), 1.4)) * (1 + Math.sin(t * 2.2) * 0.01), o: seg(t, 3.85, 4.1) * o, y: monte });
+    tombes.forEach((e, i) => {
+      // Chute avec gravité, petit écrasement à l'arrivée dans le bol.
+      const a = 4.35 + i * 0.25;
+      const chute = seg(t, a, a + 0.42);
+      const y = lerp(-180, 640 + i * 6, chute * chute);
+      const ecrase = t > a + 0.42 ? Math.exp(-(t - a - 0.42) * 14) * Math.sin((t - a - 0.42) * 30) * 0.12 : 0;
+      poser(e, { x: (i - 1) * 70, y: y + monte, r: (1 - chute) * (i - 1) * 40, sx: 1 + ecrase, sy: 1 - ecrase, o: seg(t, a, a + 0.05) * o * (t > a + 0.9 ? 1 - seg(t, a + 0.9, a + 1.1) : 1) });
+    });
+    lettres.forEach((l, i) => {
+      const a = 5.25 + i * 0.045;
+      const x = seg(t, a, a + 0.4);
+      l.style.transform = `translateY(${(1 - rebond(x, 2.2)) * 60}px)`;
+      l.style.opacity = seg(t, a, a + 0.12);
+    });
+    poser(s2Titre, { o, y: monte });
+    poser(s2Tag, { y: (1 - sortie(seg(t, 6.25, 6.85))) * 40 + monte, o: seg(t, 6.25, 6.6) * o });
+  }
+
+  // 3. Calendrier
+  if (t >= 7.9 && t < 12.2) {
+    const part = sortie(seg(t, 11.55, 12.0));
+    const dx = -part * 1080;
+    poser(s3Etiq, { x: dx + (1 - sortie(seg(t, 7.95, 8.45))) * 120, o: seg(t, 7.95, 8.3) });
+    poser(s3Titre, { x: dx + (1 - sortie(seg(t, 8.05, 8.6))) * 160, o: seg(t, 8.05, 8.4) });
+    barres.forEach((b, i) => {
+      const x = sortie(seg(t, 8.35 + i * 0.04, 8.95 + i * 0.04));
+      b.style.transform = `translateX(${dx}px) scaleY(${x})`;
+      b.style.opacity = 1;
+      b.style.visibility = 'visible';
+    });
+    moisL.forEach((m, i) => poser(m, { x: dx, o: seg(t, 8.35 + i * 0.04, 8.6 + i * 0.04) }));
+    const n = Math.round(45 * sortieDouce(seg(t, 9.0, 9.9)));
+    s3Compteur.innerHTML = `<span style="color:var(--saison-texte)">${n}</span> produits de saison en octobre`;
+    poser(s3Compteur, { x: dx, o: seg(t, 8.95, 9.2) });
+    grille.forEach((g, i) => {
+      const a = 9.35 + i * 0.06;
+      const x = seg(t, a, a + 0.35);
+      poser(g, { x: dx, y: Math.sin(t * 2 + i) * 6, s: rebond(x, 1.9) * 0.98, r: (1 - x) * -20, o: seg(t, a, a + 0.1) });
+    });
+  }
+
+  // 4. Poissons
+  if (t >= 11.8 && t < 16.2) {
+    const part = accel(seg(t, 15.55, 15.95));
+    const o = 1 - part;
+    const arrive = (1 - sortie(seg(t, 11.85, 12.35))) * 1080;
+    poser(s4Nouveau, { x: arrive, s: rebond(seg(t, 12.0, 12.35), 2.4), o: seg(t, 12.0, 12.1) * o });
+    poser(s4Titre, { x: arrive, y: (1 - sortie(seg(t, 12.1, 12.6))) * 50, o: seg(t, 12.1, 12.4) * o });
+    poser(s4Sous, { x: arrive, o: seg(t, 12.45, 12.8) * o });
+    banc.forEach((f, i) => {
+      // Le banc traverse de droite à gauche, en vagues, chacun avec son ondulation.
+      const rang = i < 5 ? 0 : 1, a = 12.4 + i * 0.09;
+      const place = rang === 0 ? 50 + i * 196 : 148 + (i - 5) * 196;
+      const x = lerp(1180, place, sortieDouce(seg(t, a, a + 0.9))) - Math.max(0, t - a - 0.9) * 18;
+      const y = 680 + rang * 190 + Math.sin(t * 3 + i * 1.3) * 12;
+      poser(f, { x, y: y - part * 300, r: Math.sin(t * 3 + i) * 4, o: seg(t, a, a + 0.15) * o });
+    });
+    poser(s4Tel, { y: lerp(1960, 1150, sortie(seg(t, 13.6, 14.3))) - part * 200, o });
+  }
+
+  // 5. Idées de saison
+  if (t >= 15.8 && t < 22.2) {
+    const part = accel(seg(t, 21.6, 22.0));
+    const o = 1 - part;
+    poser(s5Nouveau, { s: rebond(seg(t, 16.0, 16.35), 2.4), o: seg(t, 16.0, 16.1) * o });
+    poser(s5Titre, { y: (1 - sortie(seg(t, 16.1, 16.6))) * 50, o: seg(t, 16.1, 16.4) * o });
+    poser(s5Sous, { y: (1 - sortie(seg(t, 16.35, 16.85))) * 40, o: seg(t, 16.35, 16.7) * o });
+    poser(s5Tel, { y: (1 - sortie(seg(t, 16.4, 17.1))) * 1500 - part * 160, o });
+    // Écran : cases cochées une à une, puis la semaine.
+    const etats = [['idees-0', 0], ['idees-1', 17.65], ['idees-2', 18.25], ['idees-3', 18.85], ['semaine', 19.75]];
+    let courant = 'idees-0';
+    for (const [n, a] of etats) if (t >= a) courant = n;
+    for (const [n, im] of Object.entries(s5Imgs)) {
+      im.style.opacity = n === courant ? 1 : 0;
+      im.style.transform = n === 'semaine' ? `translateY(${(1 - sortie(seg(t, 19.75, 20.25))) * 260}px)` : 'none';
+    }
+    // Doigt : touche les trois cases, puis le bouton « Ajouter ».
+    const K = 620 / 390, X0 = 212 + 18, Y0 = 470 + 18;
+    const cibles = [[17.55, 45, 312.9], [18.15, 45, 392.9], [18.75, 45, 483.9], [19.55, 195, 812]];
+    let pos = null, appui = 0;
+    for (let i = 0; i < cibles.length; i++) {
+      const [a, cx, cy] = cibles[i];
+      const [pa, px, py] = i ? cibles[i - 1] : [a - 0.5, cx + 60, cy + 160];
+      if (t >= pa && t < a + 0.35) {
+        const m = entreeSortie(seg(t, pa + 0.12, a));
+        pos = [lerp(px, cx, m), lerp(py, cy, m)];
+        appui = t >= a ? 1 - seg(t, a, a + 0.3) : 0;
+        if (t >= a) {
+          const r = seg(t, a, a + 0.45);
+          poser(onde, { x: X0 + cx * K, y: Y0 + cy * K - part * 160, s: 0.6 + r * 1.4, o: (1 - r) * o });
+        }
+      }
+    }
+    if (pos && t < 19.95) poser(doigt, { x: X0 + pos[0] * K, y: Y0 + pos[1] * K, s: 1 - appui * 0.18, o: seg(t, 17.05, 17.25) * (1 - seg(t, 19.75, 19.95)) * o });
+    poser(s5Badge, { y: (1 - rebond(seg(t, 20.3, 20.75), 1.7)) * 80, s: 0.9 + 0.1 * sortie(seg(t, 20.3, 20.7)), o: seg(t, 20.3, 20.45) * o });
+  }
+
+  // 6. Équilibre et nouveaux produits
+  if (t >= 21.8 && t < 26.2) {
+    const part = accel(seg(t, 25.55, 25.95));
+    const o = 1 - part, monte = -part * 200;
+    poser(s6Titre, { y: (1 - sortie(seg(t, 22.0, 22.5))) * 60 + monte, o: seg(t, 22.0, 22.3) * o });
+    pastilles.forEach((p, i) => {
+      const a = 22.35 + i * 0.09;
+      poser(p, { y: monte, s: rebond(seg(t, a, a + 0.35), 1.8), o: seg(t, a, a + 0.1) * o });
+      p.querySelector('[data-n]').textContent = Math.round(TYPES[i][2] * seg(t, a + 0.2, a + 0.8));
+    });
+    const n = Math.round(41 * sortieDouce(seg(t, 23.45, 24.3)));
+    s6Gros.innerHTML = `<span style="color:var(--saison-texte)">${n}</span>`;
+    poser(s6Gros, { y: monte, s: 0.9 + 0.1 * rebond(seg(t, 23.4, 23.8)), o: seg(t, 23.4, 23.55) * o });
+    poser(s6Legende, { y: monte + (1 - sortie(seg(t, 23.6, 24.0))) * 30, o: seg(t, 23.6, 23.9) * o });
+    pluie.forEach((g, i) => {
+      // Pluie en cascade : chute puis petit rebond, colonne par colonne.
+      const a = 23.6 + (i % 5) * 0.05 + Math.floor(i / 5) * 0.12;
+      const x = seg(t, a, a + 0.5);
+      poser(g, { y: (1 - rebond(x, 1.3)) * -420 + monte + Math.sin(t * 2.4 + i) * 5, r: (1 - x) * 25 * (i % 2 ? 1 : -1), o: seg(t, a, a + 0.1) * o });
+    });
+  }
+
+  // 7. Fin
+  if (t >= 25.8) {
+    const fin = 1 - seg(t, 29.3, 30);
+    poser(s7Icone, { s: rebond(seg(t, 26.0, 26.55), 1.5) * (1 + Math.sin(t * 2) * 0.008), r: (1 - sortie(seg(t, 26.0, 26.6))) * -8, o: seg(t, 26.0, 26.15) * fin });
+    poser(s7Titre, { y: (1 - sortie(seg(t, 26.45, 27.0))) * 50, o: seg(t, 26.45, 26.8) * fin });
+    poser(s7Tag, { y: (1 - sortie(seg(t, 26.85, 27.4))) * 40, o: seg(t, 26.85, 27.2) * fin });
+    poser(s7Plus, { o: seg(t, 27.4, 27.8) * fin });
+    decor.forEach((d, i) => {
+      const a = 26.2 + i * 0.08;
+      poser(d, { y: Math.sin(t * 1.4 + i * 1.7) * 14 + (1 - sortie(seg(t, a, a + 0.6))) * 60, r: DECOR[i][3] + Math.sin(t * 1.1 + i) * 4, s: rebond(seg(t, a, a + 0.5), 1.5), o: seg(t, a, a + 0.2) * 0.9 * fin });
+    });
+  }
+}
+
+window.rendre = rendre;
+window.DUREE = DUREE;
+window.pret = Promise.all([document.fonts.ready, ...[...document.images].map((i) => i.decode().catch(() => undefined))]);
+// Aperçu dans un navigateur : lecture en boucle.
+if (!navigator.webdriver) {
+  const debut = performance.now();
+  const boucle = () => { rendre(((performance.now() - debut) / 1000) % DUREE); requestAnimationFrame(boucle); };
+  window.pret.then(boucle);
+}
+</script>
+</body>
+</html>
