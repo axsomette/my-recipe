@@ -8,3 +8,6 @@ dist/
 
 # Vidéo de présentation (fichier lourd, partagé à part)
 /presentation/
+
+# Vidéo promotionnelle : captures de l’app (régénérées par scripts/video/capturer.mjs)
+/scripts/video/ecrans/
