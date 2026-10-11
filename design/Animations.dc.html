@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animations de l’app</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./rs.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Sofia+Sans+Extra+Condensed:wght@700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}
+.planche{display:block;padding:56px 60px 64px}
+.grille-anim{display:grid;grid-template-columns:repeat(3,420px);gap:30px;margin-top:40px}
+.cas{display:flex;flex-direction:column;gap:14px}
+.scene{position:relative;height:400px;border-radius:28px;background:var(--papier);border:1px solid var(--trait);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px}
+.cas h2{font:400 24px/1.15 var(--display);margin:0}
+.cas .quand{font-size:15px;color:var(--encre-2);line-height:1.4}
+.cas .reglage{font:700 13px/1 var(--etiq);letter-spacing:.06em;text-transform:uppercase;color:var(--saison-texte)}
+.principes{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:52px}
+.principes div{background:var(--carte);border:1px solid var(--trait);border-radius:20px;padding:20px 22px;font-size:15px;line-height:1.45}
+.principes b{display:block;font:400 20px/1.2 var(--display);margin-bottom:6px}
+
+/* Courbes de l'app : « sortie » pour l'interface, « rebond » pour les illustrations. */
+.ecran{--sortie:cubic-bezier(.165,.84,.44,1);--rebond:cubic-bezier(.34,1.56,.64,1);--balance:cubic-bezier(.45,0,.55,1)}
+
+/* 1. L'étal du mois : les produits sautent dans l'en-tête, puis se balancent doucement. */
+.etal-anim{display:flex;gap:6px}
+.etal-anim img{width:46px;height:46px;animation:etal 5s var(--rebond) infinite both}
+.etal-anim img:nth-child(2){animation-delay:.06s}.etal-anim img:nth-child(3){animation-delay:.12s}.etal-anim img:nth-child(4){animation-delay:.18s}
+.etal-anim img:nth-child(5){animation-delay:.24s}.etal-anim img:nth-child(6){animation-delay:.30s}.etal-anim img:nth-child(7){animation-delay:.36s}
+@keyframes etal{0%{opacity:0;transform:translateY(18px) scale(.6)}8%{opacity:1;transform:translateY(-6px) scale(1.06,.94)}12%{transform:none}30%{transform:rotate(-4deg)}50%{transform:rotate(3deg)}70%{transform:rotate(-2deg)}88%{opacity:1;transform:none}96%,100%{opacity:0;transform:translateY(6px)}}
+.mois-anim{font:400 52px/1 var(--display);animation:mot 5s var(--sortie) infinite both}
+@keyframes mot{0%{opacity:0;transform:translateY(10px)}10%{opacity:1;transform:none}90%{opacity:1}100%{opacity:0}}
+
+/* 2. Cocher un ingrédient : la puce se remplit, l'illustration fait un petit saut, trois étincelles. */
+.chip-anim{position:relative;animation:chip 2.8s ease infinite}
+@keyframes chip{0%,22%{background:var(--carte);color:var(--encre);border-color:var(--trait-fort);transform:none}24%{transform:scale(.96)}30%,84%{background:var(--encre);color:var(--papier);border-color:var(--encre);transform:none}90%,100%{background:var(--carte);color:var(--encre);border-color:var(--trait-fort)}}
+.chip-anim img{width:30px;height:30px;margin-left:-8px;animation:saut 2.8s var(--rebond) infinite;transform-origin:50% 100%}
+@keyframes saut{0%,26%{transform:none}32%{transform:translateY(-10px) scale(1.1,.92)}40%{transform:translateY(0) scale(.94,1.06)}46%,100%{transform:none}}
+.etincelle{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--saison);left:22px;top:6px;opacity:0;animation:etincelle 2.8s var(--sortie) infinite}
+.etincelle.e2{animation-name:etincelle2}.etincelle.e3{animation-name:etincelle3}
+@keyframes etincelle{0%,28%{opacity:0;transform:none}32%{opacity:1}52%,100%{opacity:0;transform:translate(-16px,-22px) scale(.4)}}
+@keyframes etincelle2{0%,28%{opacity:0;transform:none}32%{opacity:1}52%,100%{opacity:0;transform:translate(4px,-28px) scale(.4)}}
+@keyframes etincelle3{0%,28%{opacity:0;transform:none}32%{opacity:1}52%,100%{opacity:0;transform:translate(22px,-18px) scale(.4)}}
+
+/* 3. Générer la semaine : l'icône fait un tour, les repas arrivent comme des cartes qu'on distribue. */
+.gen-btn svg{animation:tour 3.6s var(--balance) infinite}
+@keyframes tour{0%,6%{transform:none}24%,100%{transform:rotate(360deg)}}
+.donne{width:100%;display:flex;flex-direction:column;gap:8px}
+.donne .slot{min-height:58px;animation:donne 3.6s var(--rebond) infinite both}
+.donne .slot:nth-child(2){animation-delay:.08s}.donne .slot:nth-child(3){animation-delay:.16s}
+@keyframes donne{0%,18%{opacity:0;transform:translateX(60px) rotate(5deg)}30%{opacity:1;transform:none}88%{opacity:1;transform:none}96%,100%{opacity:0;transform:translateY(-6px)}}
+.donne .badge{animation:pop 3.6s var(--rebond) infinite both;animation-delay:inherit}
+@keyframes pop{0%,28%{transform:scale(.6);opacity:0}36%{transform:none;opacity:1}100%{opacity:1}}
+
+/* 4. Garder un repas : le cadenas se ferme d'un coup sec, la carte se cerne. */
+.garde-anim{width:100%;animation:cerne 2.6s ease infinite}
+@keyframes cerne{0%,30%{border-color:var(--trait);border-width:1px}36%,84%{border-color:var(--encre);border-width:1.5px}92%,100%{border-color:var(--trait);border-width:1px}}
+.cadenas{animation:fond 2.6s ease infinite}
+@keyframes fond{0%,30%{background:transparent;color:var(--encre-2)}34%,84%{background:var(--encre);color:var(--papier)}92%,100%{background:transparent;color:var(--encre-2)}}
+.cadenas .anse{animation:anse 2.6s var(--rebond) infinite}
+@keyframes anse{0%,28%{transform:translateY(-3px) rotate(-18deg);transform-origin:16px 11px}36%{transform:translateY(1px)}42%,86%{transform:none}94%,100%{transform:translateY(-3px) rotate(-18deg);transform-origin:16px 11px}}
+
+/* 5. Semaine complète : moment rare, une petite gerbe de produits de saison. */
+.gerbe{position:relative;width:100%;display:flex;justify-content:center}
+.gerbe img{position:absolute;left:50%;top:50%;width:38px;height:38px;margin:-19px 0 0 -19px;opacity:0;animation:gerbe 3.6s var(--sortie) infinite}
+@keyframes gerbe{0%,30%{opacity:0;transform:scale(.3)}36%{opacity:1}70%{opacity:1}86%,100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(1)}}
+.complete{font:400 30px/1.1 var(--display);animation:complete 3.6s var(--rebond) infinite both}
+@keyframes complete{0%,28%{opacity:0;transform:scale(.7)}38%{opacity:1;transform:none}86%{opacity:1}96%,100%{opacity:0}}
+.bilan-anim li{animation:pop 3.6s var(--rebond) infinite both}
+.bilan-anim li:nth-child(2){animation-delay:.07s}.bilan-anim li:nth-child(3){animation-delay:.14s}.bilan-anim li:nth-child(4){animation-delay:.21s}
+
+/* 6. Cocher une idée de saison : la coche se dessine, les produits saluent. */
+.idee{width:100%;display:flex;align-items:center;gap:12px;min-height:72px;padding:10px 14px;border-radius:16px;border:1px solid var(--trait);background:var(--carte)}
+.case-anim{width:24px;height:24px;border-radius:7px;border:2px solid var(--trait-fort);display:flex;align-items:center;justify-content:center;flex:none;animation:case 2.8s ease infinite}
+@keyframes case{0%,24%{background:transparent;border-color:var(--trait-fort)}28%,86%{background:var(--encre);border-color:var(--encre)}94%,100%{background:transparent;border-color:var(--trait-fort)}}
+.case-anim path{stroke:var(--papier);stroke-dasharray:22;stroke-dashoffset:22;animation:trace 2.8s var(--sortie) infinite}
+@keyframes trace{0%,26%{stroke-dashoffset:22}38%,86%{stroke-dashoffset:0}94%,100%{stroke-dashoffset:22}}
+.idee .vedettes img{width:26px;height:26px;transform-origin:50% 100%;animation:saut 2.8s var(--rebond) infinite;animation-delay:.12s}
+.idee .vedettes img + img{animation-delay:.2s}
+
+/* 7. Changer de mois : la feuille du mois se tourne, la barre du mois glisse. */
+.feuille-anim{position:relative;width:120px;height:120px;perspective:500px}
+.feuille-anim img{position:absolute;inset:0;width:120px;height:120px;backface-visibility:hidden;transform-origin:50% 28%}
+.feuille-anim .avant{animation:tourne 3.2s cubic-bezier(.55,.05,.6,1) infinite}
+@keyframes tourne{0%,30%{transform:none}50%,92%{transform:rotateX(178deg)}100%{transform:none}}
+.histo-anim{position:relative;display:grid;grid-template-columns:repeat(12,14px);gap:5px;align-items:end;height:70px}
+.histo-anim span{display:block;background:var(--trait);border-radius:3px 3px 0 0}
+.histo-anim .curseur{position:absolute;bottom:0;left:0;width:14px;height:100%;border-radius:3px 3px 0 0;background:var(--saison);animation:curseur 3.2s cubic-bezier(.645,.045,.355,1) infinite}
+@keyframes curseur{0%,30%{transform:translateX(190px);height:93%}50%,92%{transform:translateX(209px);height:82%}100%{transform:translateX(190px)}}
+
+/* 8. Confirmation : le message monte, la coche se dessine, puis il s'efface plus vite qu'il n'est venu. */
+.toast-anim{position:relative;inset:auto;width:100%;animation:toast 3s infinite both}
+@keyframes toast{0%,10%{opacity:0;transform:translateY(40px)}22%{opacity:1;transform:translateY(-4px);animation-timing-function:ease-out}28%{transform:none}80%{opacity:1;transform:none;animation-timing-function:ease-in}88%,100%{opacity:0;transform:translateY(16px)}}
+.toast-anim path{stroke-dasharray:22;stroke-dashoffset:22;animation:trace2 3s var(--sortie) infinite}
+@keyframes trace2{0%,20%{stroke-dashoffset:22}34%,100%{stroke-dashoffset:0}}
+
+/* 9. Onglets : la pastille s'étire vers l'onglet choisi, l'icône fait un petit bond. */
+.barre-anim{position:relative;width:100%;display:grid;grid-template-columns:repeat(4,1fr);background:var(--carte);border:1px solid var(--trait);border-radius:20px;padding:8px 4px}
+.barre-anim .on{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--encre-2);position:relative;z-index:1}
+.barre-anim svg{width:24px;height:24px}
+.barre-anim .p{position:absolute;top:8px;left:calc(4px + (100% - 8px) / 8 - 28px);width:56px;height:30px;border-radius:15px;background:var(--saison-pale);animation:pastille-anim 3s cubic-bezier(.645,.045,.355,1) infinite}
+@keyframes pastille-anim{0%,30%{transform:none}38%{transform:translateX(48px) scaleX(1.5)}46%,86%{transform:translateX(97px)}94%{transform:translateX(48px) scaleX(1.5)}100%{transform:none}}
+.barre-anim .o1{animation:actif1 3s ease infinite}.barre-anim .o2{animation:actif2 3s ease infinite}
+@keyframes actif1{0%,34%{color:var(--saison-texte)}40%,92%{color:var(--encre-2)}100%{color:var(--saison-texte)}}
+@keyframes actif2{0%,38%{color:var(--encre-2)}44%,88%{color:var(--saison-texte)}96%,100%{color:var(--encre-2)}}
+.barre-anim .o2 svg{animation:bond 3s var(--rebond) infinite}
+@keyframes bond{0%,40%{transform:none}46%{transform:translateY(-5px)}54%,100%{transform:none}}
+</style>
+</helmet>
+<div class="ecran planche {{saison}} {{theme}}" style="width: 1440px; min-height: 2240px">
+  <p class="etiq">Mouvement</p>
+  <h1 class="display" style="font-size: 48px; margin-top: 10px">Une app qui bouge comme la vidéo</h1>
+  <p class="doux" style="max-width: 860px; margin-top: 12px; font-size: 17px">Neuf petites animations, chacune avec une raison d’être : montrer ce qui change, répondre au doigt, ou fêter un moment rare. Les illustrations sont joueuses (petits sauts, rebonds) ; l’interface reste posée et rapide. Toutes les planches tournent en boucle pour la démonstration ; dans l’app, chaque animation ne joue qu’une fois, au moment où l’action a lieu.</p>
+
+  <div class="grille-anim">
+    <section class="cas">
+      <div class="scene" aria-hidden="true">
+        <p class="etiq">Automne · semaine 41</p>
+        <p class="mois-anim">Octobre</p>
+        <div class="etal-anim"><img src="./icons/courge.svg" alt=""><img src="./icons/poireau.svg" alt=""><img src="./icons/celeri.svg" alt=""><img src="./icons/choudebruxelles.svg" alt=""><img src="./icons/panais.svg" alt=""><img src="./icons/chataigne.svg" alt=""><img src="./icons/coing.svg" alt=""></div>
+      </div>
+      <h2>L’étal du mois</h2>
+      <p class="quand">À l’ouverture de la semaine : les produits du mois sautent dans l’en-tête, puis se balancent très doucement.</p>
+      <p class="reglage">60 ms entre chaque · 450 ms · rebond</p>
+    </section>
+
+    <section class="cas">
+      <div class="scene" aria-hidden="true">
+        <p class="doux petit">Cochez les ingrédients</p>
+        <span class="chip chip-anim"><img src="./icons/courge.svg" alt="">Courge<span class="etincelle"></span><span class="etincelle e2"></span><span class="etincelle e3"></span></span>
+      </div>
+      <h2>Cocher un ingrédient</h2>
+      <p class="quand">La puce se remplit, l’illustration fait un petit saut et trois étincelles de saison s’échappent.</p>
+      <p class="reglage">Appui 120 ms · saut 350 ms · rebond</p>
+    </section>
+
+    <section class="cas">
+      <div class="scene" aria-hidden="true" style="justify-content: flex-start; padding-top: 34px">
+        <span class="btn btn-plein btn-large gen-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg>Générer ma semaine</span>
+        <div class="donne">
+          <div class="slot"><div class="corps"><span class="nom">Velouté de potiron</span><div class="meta"><span class="badge b-pleine">De saison</span></div></div></div>
+          <div class="slot"><div class="corps"><span class="nom">Sardines et courgettes</span><div class="meta"><span class="badge b-pleine">De saison</span></div></div></div>
+          <div class="slot"><div class="corps"><span class="nom">Pintade aux raisins</span><div class="meta"><span class="badge b-pleine">De saison</span></div></div></div>
+        </div>
+      </div>
+      <h2>Générer la semaine</h2>
+      <p class="quand">L’icône fait un tour, puis les repas arrivent comme des cartes qu’on distribue, de saison en tête.</p>
+      <p class="reglage">80 ms entre chaque · 380 ms · rebond léger</p>
+    </section>
+
+    <section class="cas">
+      <div class="scene" aria-hidden="true">
+        <div class="slot garde-anim"><div class="corps"><span class="nom">Gratin de poireaux</span><div class="meta"><span class="badge b-pleine">De saison</span></div></div>
+          <span class="ico cadenas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path class="anse" d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        </div>
+      </div>
+      <h2>Garder un repas</h2>
+      <p class="quand">L’anse du cadenas se referme d’un coup sec et la carte se cerne : ce repas ne bougera plus.</p>
+      <p class="reglage">220 ms · rebond court</p>
+    </section>
+
+    <section class="cas">
+      <div class="scene" aria-hidden="true">
+        <div class="gerbe">
+          <p class="complete">Semaine complète !</p>
+          <img src="./icons/courge.svg" alt="" style="--x:-130px;--y:-80px;--r:-30deg"><img src="./icons/pomme.svg" alt="" style="--x:120px;--y:-90px;--r:25deg"><img src="./icons/chataigne.svg" alt="" style="--x:-150px;--y:20px;--r:-15deg"><img src="./icons/raisin.svg" alt="" style="--x:150px;--y:10px;--r:20deg"><img src="./icons/poire.svg" alt="" style="--x:-60px;--y:-110px;--r:10deg"><img src="./icons/sardine.svg" alt="" style="--x:70px;--y:-115px;--r:-12deg">
+        </div>
+        <ul class="bilan bilan-anim"><li><img src="./icons/boeuf.svg" alt="">Viande 2</li><li><img src="./icons/cabillaud.svg" alt="">Poisson 3</li><li><img src="./icons/laitue.svg" alt="">Végé 2</li></ul>
+      </div>
+      <h2>Semaine complète</h2>
+      <p class="quand">Moment rare, donc fêté : quand tous les repas sont trouvés, une petite gerbe de produits de saison jaillit.</p>
+      <p class="reglage">Une fois par génération · 900 ms · sortie douce</p>
+    </section>
+
+    <section class="cas">
+      <div class="scene" aria-hidden="true">
+        <div class="idee">
+          <span class="case-anim"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+          <span style="flex: 1; display: flex; flex-direction: column; gap: 4px"><b style="font-weight: 600">Rougets et fenouil rôti</b><span class="vedettes" style="display: flex; gap: 4px; align-items: center"><img src="./icons/rougetbarbet.svg" alt=""><img src="./icons/fenouil.svg" alt=""><span class="petit doux">Rouget et fenouil</span></span></span>
+        </div>
+      </div>
+      <h2>Cocher une idée</h2>
+      <p class="quand">La coche se dessine trait par trait, puis les produits de l’idée font un petit salut.</p>
+      <p class="reglage">Coche 240 ms · salut 350 ms · sortie</p>
+    </section>
+
+    <section class="cas">
+      <div class="scene" aria-hidden="true">
+        <div class="feuille-anim"><img src="./icones/feuille-hiver.svg" alt=""><img class="avant" src="./icones/feuille-automne.svg" alt=""></div>
+        <div class="histo-anim"><span style="height: 82%"></span><span style="height: 73%"></span><span style="height: 56%"></span><span style="height: 31%"></span><span style="height: 38%"></span><span style="height: 69%"></span><span style="height: 73%"></span><span style="height: 76%"></span><span style="height: 100%"></span><span style="height: 97%"></span><span style="height: 93%"></span><span style="height: 82%"></span><i class="curseur"></i></div>
+      </div>
+      <h2>Changer de mois</h2>
+      <p class="quand">Dans le calendrier, la barre du mois glisse jusqu’au suivant ; quand la saison change (ici, de novembre à décembre), la feuille se tourne sur ses anneaux.</p>
+      <p class="reglage">420 ms · demi-tour · glissé 300 ms</p>
+    </section>
+
+    <section class="cas">
+      <div class="scene" aria-hidden="true" style="justify-content: flex-end; padding-bottom: 40px">
+        <div class="toast toast-anim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>3 repas ajoutés à la semaine</div>
+      </div>
+      <h2>Confirmation</h2>
+      <p class="quand">Le message monte avec un léger rebond, la coche se dessine, puis il s’efface plus vite qu’il n’est venu.</p>
+      <p class="reglage">Entrée 320 ms · sortie 200 ms</p>
+    </section>
+
+    <section class="cas">
+      <div class="scene" aria-hidden="true">
+        <nav class="barre-anim"><i class="p"></i>
+          <span class="on o1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Semaine</span>
+          <span class="on o2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5v17M12 8h4M12 11.5h4"/></svg>Recettes</span>
+          <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-8"/><path d="M12 12c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></svg>Saisons</span>
+          <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Réglages</span>
+        </nav>
+      </div>
+      <h2>Onglets</h2>
+      <p class="quand">La pastille s’étire comme une goutte vers l’onglet choisi, et son icône fait un petit bond.</p>
+      <p class="reglage">300 ms · entrée-sortie</p>
+    </section>
+  </div>
+
+  <div class="principes">
+    <div><b>Joueur pour les dessins, posé pour l’interface</b>Les illustrations sautent et rebondissent ; boutons, fenêtres et listes restent rapides (moins de 300 ms) et ne rebondissent jamais à l’ouverture.</div>
+    <div><b>Toujours une raison</b>Chaque mouvement montre ce qui change ou répond à un geste. Rien ne bouge pendant qu’on tape ou qu’on fait défiler, et les fêtes restent rares.</div>
+    <div><b>Mouvement réduit respecté</b>Si le téléphone demande moins d’animations, tout est immobile : seuls de courts fondus restent. Seuls transform et opacity bougent, pour rester fluide.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"saison":{"editor":"enum","options":["automne","hiver","printemps","ete"],"default":"automne"},"sombre":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":2240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { saison: this.props.saison ?? 'automne', theme: this.props.sombre ? 'sombre' : '' };
+  }
+}
+</script>
+</body>
+</html>
