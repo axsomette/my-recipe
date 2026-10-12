@@ -47,8 +47,8 @@ ce fichier garde ce que le README ne dit pas : nos règles de travail, où sont 
   (renommée `.case-cocher`).
 - Gestes tactiles sur iPhone : retenir (`preventDefault`) dès le **premier** `touchmove`, sinon Safari lance son
   défilement élastique et ignore la suite. Le Chromium headless ne le montre pas : vérifier que le premier mouvement
-  est bien retenu (`defaultPrevented`). Une app installée et restée en mémoire garde l'ancien code : la fermer
-  complètement (sélecteur d'apps) pour voir une mise à jour.
+  est bien retenu (`defaultPrevented`). Une app installée restée en mémoire se met
+  maintenant à jour seule (`miseAJour.ts`) ; les versions d'avant le 12 oct. doivent être fermées une fois à la main.
 - Sauvegarde utilisateur versionnée (version 3) : tout nouveau champ = migration dans `src/lib/stockage.ts`
   et vérification dans `scripts/verifier/index.mts`.
 
@@ -79,6 +79,11 @@ ce fichier garde ce que le README ne dit pas : nos règles de travail, où sont 
   - Fenêtres (`Dialogue.tsx`) : sur téléphone, on les ferme en les glissant vers le bas (depuis la poignée, ou de
     n'importe où quand le contenu est tout en haut ; geste vif ou plus de 30 % de la hauteur). À l'ouverture, le focus
     va au titre et non plus à la première case (plus de cadre de focus au doigt).
+  - Fenêtres sur iPhone : le glissé vers le bas prend la main dès le premier mouvement, la page derrière est figée.
+  - Calendrier : la frise des mois réparée (conflit de classe `.case` avec la coche des idées).
+- **12 oct. 2026** : mise à jour automatique (`src/lib/miseAJour.ts`) : au retour dans l'app, une nouvelle version
+  se charge seule, tout de suite ou à la prochaine sortie, jamais pendant une saisie. Rien de visible : pas d'entrée
+  « Quoi de neuf ».
 
 ## Pistes proposées, pas encore faites
 

@@ -5,6 +5,7 @@ import { chargerCatalogue } from './lib/catalogue';
 import { FournisseurDonnees } from './lib/donnees';
 import { suivreInstallation } from './lib/installation';
 import { signalerFinLancement } from './lib/lancement';
+import { suivreMisesAJour } from './lib/miseAJour';
 import './styles.css';
 
 suivreInstallation();
@@ -45,12 +46,16 @@ function fermerLancement() {
 fermerLancement();
 
 // Hors connexion : service worker (en production seulement, le serveur de dev sert des fichiers non figés).
+// Une nouvelle version mise en ligne se charge toute seule (src/lib/miseAJour.ts).
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, { scope: import.meta.env.BASE_URL }).catch(() => {
-      /* sans service worker, l'app marche en ligne comme avant */
+  const enregistrement = new Promise<ServiceWorkerRegistration | undefined>((fini) => {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register(`${import.meta.env.BASE_URL}sw.js`, { scope: import.meta.env.BASE_URL })
+        .then(fini, () => fini(undefined)); // sans service worker, l'app marche en ligne comme avant
     });
   });
+  suivreMisesAJour(enregistrement);
 }
 
 // Demande au navigateur de ne pas effacer les données sous pression de stockage (accordé surtout aux apps installées).

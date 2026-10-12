@@ -118,6 +118,12 @@ chaque build : un déploiement remplace l'ancien cache. Le manifeste (`public/ma
 et les icônes rendent l'app installable sur iPhone (Partager › Sur l'écran d'accueil) et Android.
 Installée, l'app échappe à l'effacement des données de Safari après 7 jours sans visite.
 
+**Mise à jour automatique** (`src/lib/miseAJour.ts`) : une app installée peut rester des jours en mémoire.
+À chaque retour au premier plan (et toutes les 30 min), elle compare le script de `index.html` en ligne
+(requête `no-store`, que le service worker laisse passer au réseau) à celui qu'elle affiche. Si une version
+est plus récente, elle recharge aussitôt quand la personne vient d'arriver (6 s), sinon à sa prochaine sortie
+de l'app ; jamais pendant une saisie (formulaire de recette, fenêtre ouverte, champ actif).
+
 ## Qualité
 
 - Lighthouse mobile (build de production) : performance 98 à 100, accessibilité 100,

@@ -78,6 +78,8 @@ self.addEventListener('fetch', (evenement) => {
   const { request } = evenement;
   const url = new URL(request.url);
   if (request.method !== 'GET' || url.origin !== self.location.origin || !url.pathname.startsWith(BASE)) return;
+  // Une requête qui refuse tout cache (la recherche de mise à jour) va droit au réseau.
+  if (request.cache === 'no-store') return;
 
   // Seule la page de l'app sert de coquille hors connexion : un fichier ouvert dans un onglet
   // (legumes.json, une icône…) ne doit pas la remplacer dans le cache.
