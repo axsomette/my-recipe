@@ -1,19 +1,18 @@
 import { useRef, useState } from 'preact/hooks';
 import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
 import { Dialogue } from '../components/Dialogue';
-import { FenetreNouveautes } from '../components/Nouveautes';
+import { FenetreNouveautes, IllustrationNouveaute } from '../components/Nouveautes';
 import { Icone } from '../components/Icone';
 import { Toast } from '../components/Toast';
 import { Vignette } from '../components/Vignette';
 import { MOIS_ABREGES, NOMS_JOURS } from '../lib/calendrier';
-import { urlPublique } from '../lib/catalogue';
 import { NOMS_CATEGORIES } from '../lib/categories';
 import { useApparence } from '../lib/apparence';
 import { useDonnees } from '../lib/donnees';
 import { ICONES_TYPES, NOMS_TYPES } from '../lib/equilibre';
 import { useInstallation } from '../lib/installation';
 import { demanderIdees } from '../lib/intention';
-import { VERSION_ACTUELLE, VERSIONS, cheminIllustration, dateDeVersion, type Nouveaute, type Version } from '../lib/nouveautes';
+import { VERSION_ACTUELLE, VERSIONS, dateDeVersion, type Nouveaute, type Version } from '../lib/nouveautes';
 import { naviguer } from '../lib/routeur';
 import { plagesDeMois } from '../lib/saison';
 import { analyserImport, contenuExport, fusionner, nomFichierExport, remplacer, supprimerLegumePerso, type AnalyseImport } from '../lib/sauvegarde';
@@ -532,7 +531,7 @@ function QuoiDeNeuf() {
       <button type="button" class="bloc flex min-h-16 w-full items-center justify-between gap-3 py-2.5 pr-2.5 pl-4.5 text-left" onClick={() => setOuverte(derniere)}>
         <span class="flex items-center gap-3">
           <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-saison-pale" aria-hidden="true">
-            {illustration && <img class="vignette size-8" src={urlPublique(cheminIllustration(illustration))} alt="" width="32" height="32" />}
+            {illustration && <IllustrationNouveaute illustration={illustration} taille={32} class="size-8" />}
           </span>
           <span>
             <span class="block font-semibold">Quoi de neuf</span>

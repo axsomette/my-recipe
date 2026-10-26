@@ -27,6 +27,14 @@ ecrire('public/icones/logo-blanc.svg', svgLogo({ mois: MOIS_ICONE, mono: '#FFFFF
 for (const f of ['app', 'app-adaptable', 'favicon', 'logo', 'logo-noir', 'logo-blanc']) ecrire(`design/icones/${f}.svg`, lire(`public/icones/${f}.svg`));
 for (const mois of [1, 4, 7, 10]) ecrire(`design/icones/logo-mois-${mois}.svg`, svgLogo({ mois }) + '\n');
 ecrire('design/icones/logo-sombre.svg', svgLogo({ mois: MOIS_ICONE, couleurs: COULEURS_LOGO_SOMBRE, encre: '#ECEAE1', fond: '#211B22' }) + '\n');
+// Planche des animations : l'anneau et la cuillère à part, pour la faire tourner de novembre à décembre.
+const enDeux = (mois: number) => {
+  const dessin = dessinLogo({ mois });
+  const coupure = dessin.indexOf('<g class="l-cuillere"');
+  return { anneau: dessin.slice(0, coupure), cuillere: dessin.slice(coupure) };
+};
+for (const mois of [11, 12]) ecrire(`design/icones/logo-anneau-${mois}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">${enDeux(mois).anneau}</svg>\n`);
+ecrire('design/icones/logo-cuillere.svg', `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">${enDeux(12).cuillere}</svg>\n`);
 
 // --- Écran de lancement ---
 // Les douze mois apparaissent un à un, la cuillère fait un tour complet et s'arrête sur le mois en cours,

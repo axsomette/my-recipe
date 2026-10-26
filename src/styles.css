@@ -335,9 +335,9 @@ input:focus-visible + .case-cocher { outline: 3px solid var(--encre); outline-of
 label:has(input:checked) .vedette { transform-origin: 50% 100%; animation: saute 0.35s var(--rebond) 0.12s; }
 label:has(input:checked) .vedette + .vedette { animation-delay: 0.2s; }
 
-/* 7. Changer de mois : la feuille se tourne quand la saison change ; la barre du mois glisse. */
-.feuille-tourne { transform-origin: 50% 28%; animation: feuille-tourne 0.42s cubic-bezier(0.55, 0.05, 0.6, 1) both; }
-@keyframes feuille-tourne { from { opacity: 0.2; transform: perspective(300px) rotateX(-100deg); } }
+/* 7. Changer de mois : la cuillère du cadran va jusqu'au mois ; la barre du mois glisse. */
+.cadran-pointe .l-cuillere { transform-box: view-box; transform-origin: 128px 128px; animation: cadran-pointe 0.42s var(--rebond) both; }
+@keyframes cadran-pointe { from { transform: rotate(calc(var(--arrivee) - var(--pas, 0deg))); } to { transform: rotate(var(--arrivee)); } }
 
 /* 8. Confirmation : monte avec un léger rebond, la coche se dessine, s'efface plus vite qu'elle n'est venue. */
 .toast-entre { animation: toast-entre 0.32s var(--rebond) both; }

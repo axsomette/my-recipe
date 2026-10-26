@@ -82,11 +82,13 @@
 .idee .vedettes img{width:26px;height:26px;transform-origin:50% 100%;animation:saut 2.8s var(--rebond) infinite;animation-delay:.12s}
 .idee .vedettes img + img{animation-delay:.2s}
 
-/* 7. Changer de mois : la feuille du mois se tourne, la barre du mois glisse. */
-.feuille-anim{position:relative;width:120px;height:120px;perspective:500px}
-.feuille-anim img{position:absolute;inset:0;width:120px;height:120px;backface-visibility:hidden;transform-origin:50% 28%}
-.feuille-anim .avant{animation:tourne 3.2s cubic-bezier(.55,.05,.6,1) infinite}
-@keyframes tourne{0%,30%{transform:none}50%,92%{transform:rotateX(178deg)}100%{transform:none}}
+/* 7. Changer de mois : la cuillère du cadran va jusqu'au mois, la barre du mois glisse. */
+.cadran-anim{position:relative;width:120px;height:120px}
+.cadran-anim img{position:absolute;inset:0;width:120px;height:120px;max-width:none}
+.cadran-anim .avant{animation:apparait 3.2s infinite}
+.cadran-anim .cuillere{animation:pointe 3.2s infinite}
+@keyframes apparait{0%,36%{opacity:0}46%,92%{opacity:1}100%{opacity:0}}
+@keyframes pointe{0%,30%{transform:rotate(-30deg);animation-timing-function:var(--rebond)}43%,92%{transform:rotate(0deg)}100%{transform:rotate(-30deg)}}
 .histo-anim{position:relative;display:grid;grid-template-columns:repeat(12,14px);gap:5px;align-items:end;height:70px}
 .histo-anim span{display:block;background:var(--trait);border-radius:3px 3px 0 0}
 .histo-anim .curseur{position:absolute;bottom:0;left:0;width:14px;height:100%;border-radius:3px 3px 0 0;background:var(--saison);animation:curseur 3.2s cubic-bezier(.645,.045,.355,1) infinite}
@@ -190,12 +192,12 @@
 
     <section class="cas">
       <div class="scene" aria-hidden="true">
-        <div class="feuille-anim"><img src="./icones/feuille-hiver.svg" alt=""><img class="avant" src="./icones/feuille-automne.svg" alt=""></div>
+        <div class="cadran-anim"><img src="./icones/logo-anneau-11.svg" alt=""><img class="avant" src="./icones/logo-anneau-12.svg" alt=""><img class="cuillere" src="./icones/logo-cuillere.svg" alt=""></div>
         <div class="histo-anim"><span style="height: 82%"></span><span style="height: 73%"></span><span style="height: 56%"></span><span style="height: 31%"></span><span style="height: 38%"></span><span style="height: 69%"></span><span style="height: 73%"></span><span style="height: 76%"></span><span style="height: 100%"></span><span style="height: 97%"></span><span style="height: 93%"></span><span style="height: 82%"></span><i class="curseur"></i></div>
       </div>
       <h2>Changer de mois</h2>
-      <p class="quand">Dans le calendrier, la barre du mois glisse jusqu’au suivant ; quand la saison change (ici, de novembre à décembre), la feuille se tourne sur ses anneaux.</p>
-      <p class="reglage">420 ms · demi-tour · glissé 300 ms</p>
+      <p class="quand">Dans le calendrier, la barre du mois glisse jusqu’au suivant ; la cuillère du cadran suit, d’un cran par mois (ici, de novembre à décembre), et le segment du mois s’épaissit.</p>
+      <p class="reglage">Cuillère 420 ms · rebond · glissé 300 ms</p>
     </section>
 
     <section class="cas">

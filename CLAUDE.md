@@ -85,6 +85,11 @@ ce fichier garde ce que le README ne dit pas : nos règles de travail, où sont 
   se charge seule, tout de suite ou à la prochaine sortie, jamais pendant une saisie. Rien de visible : pas d'entrée
   « Quoi de neuf ».
 
+- **26 oct. 2026** : nouveau logo « le cadran des saisons » (remplace la feuille du mois) : douze segments-mois aux
+  couleurs de leur saison, une cuillère pour aiguille sur le mois en cours, dont le segment s'épaissit. Source unique
+  `src/lib/logo.ts`, générée par `npm run logo` (icônes, écran de lancement, planches). Dans le calendrier, la cuillère
+  suit le mois parcouru ; dans « Quoi de neuf », le cadran remplace la feuille.
+
 ## Pistes proposées, pas encore faites
 
 - Liste de courses générée depuis la semaine (regroupée par rayon, à cocher).

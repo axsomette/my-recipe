@@ -1,10 +1,11 @@
-import { useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import { AvecCatalogue, type Monde } from '../components/AvecCatalogue';
 import { Icone } from '../components/Icone';
+import { Logo } from '../components/Logo';
 import { Frise } from '../components/Saison';
 import { Vignette } from '../components/Vignette';
-import { INITIALES_MOIS, NOMS_MOIS, majuscule, moisCourant, saisonDuMois } from '../lib/calendrier';
-import { deSaison, urlPublique } from '../lib/catalogue';
+import { INITIALES_MOIS, NOMS_MOIS, majuscule, moisCourant } from '../lib/calendrier';
+import { deSaison } from '../lib/catalogue';
 import { NOMS_CATEGORIES, NOMS_COURTS_CATEGORIES, ORDRE_CATEGORIES, estDuGardeManger } from '../lib/categories';
 import { plagesDeMois } from '../lib/saison';
 import type { CategorieId, Legume } from '../lib/types';
@@ -56,6 +57,10 @@ function Filtres({ choix, onChoisir, compte }: { choix: CategorieId | 'tout'; on
 /** Téléphone et tablette portrait : les produits de saison d'un mois, mois par mois. */
 function ParMois({ monde }: { monde: Monde }) {
   const [mois, setMois] = useState(moisCourant);
+  // Écart avec le mois affiché juste avant, par le plus court : la cuillère part de là.
+  const moisAvant = useRef(mois);
+  const ecart = ((mois - moisAvant.current + 18) % 12) - 6;
+  moisAvant.current = mois;
   const [categorie, setCategorie] = useState<CategorieId | 'tout'>('tout');
   const saisonniers = monde.legumes.filter((l) => !l.touteLannee);
   const duMois = deSaison(monde.legumes, mois);
@@ -76,15 +81,8 @@ function ParMois({ monde }: { monde: Monde }) {
             <Icone nom="retour" />
           </button>
           <div class="flex items-center gap-3" aria-live="polite">
-            {/* La feuille du mois se tourne quand la saison change. */}
-            <img
-              key={saisonDuMois(mois)}
-              class="feuille-tourne size-12 shrink-0"
-              src={urlPublique(`icones/feuille-${saisonDuMois(mois)}.svg`)}
-              alt=""
-              width="48"
-              height="48"
-            />
+            {/* Le cadran suit le mois parcouru : la cuillère tourne jusqu'à lui. */}
+            <Logo mois={mois} taille={48} class="cadran-pointe shrink-0" style={`--pas:${ecart * 30}deg`} />
             <div key={mois} class="glisse text-center">
               <p class="display text-[26px]">{majuscule(NOMS_MOIS[mois - 1] ?? '')}</p>
               <p class="text-sm text-encre-2">{duMois.length} produits de saison</p>

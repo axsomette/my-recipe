@@ -1,7 +1,15 @@
 import { urlPublique } from '../lib/catalogue';
-import { cheminIllustration as chemin, dateDeVersion, type Illustration, type Nouveaute, type Version } from '../lib/nouveautes';
+import { moisCourant } from '../lib/calendrier';
+import { dateDeVersion, type Illustration, type Nouveaute, type Version } from '../lib/nouveautes';
 import { Dialogue } from './Dialogue';
 import { Icone } from './Icone';
+import { Logo } from './Logo';
+
+/** Illustration d'une nouveauté : un dessin du catalogue, ou le cadran sur le mois en cours. */
+export function IllustrationNouveaute({ illustration, taille, class: classe = '' }: { illustration: Illustration; taille: number; class?: string }) {
+  if (illustration === 'cadran-du-mois') return <Logo mois={moisCourant()} taille={taille} fond="var(--saison-pale)" class={classe} />;
+  return <img class={`vignette ${classe}`} src={urlPublique(illustration)} alt="" width={taille} height={taille} />;
+}
 
 const LIBELLES_LIENS: Record<NonNullable<Nouveaute['lien']>, string> = { calendrier: 'Voir le calendrier', idees: 'Voir les idées' };
 
@@ -10,9 +18,9 @@ function Medaillon({ illustrations }: { illustrations: Illustration[] }) {
   const [principale, seconde] = illustrations;
   return (
     <span class="relative flex size-15 shrink-0 items-center justify-center rounded-full bg-saison-pale" aria-hidden="true">
-      {principale && <img class="vignette size-10.5" src={urlPublique(chemin(principale))} alt="" width="42" height="42" />}
+      {principale && <IllustrationNouveaute illustration={principale} taille={42} class="size-10.5" />}
       {seconde && (
-        <img class="vignette absolute -right-1.5 -bottom-1 size-7.5 rounded-full bg-carte p-0.5 ring-2 ring-carte" src={urlPublique(chemin(seconde))} alt="" width="30" height="30" />
+        <IllustrationNouveaute illustration={seconde} taille={30} class="absolute -right-1.5 -bottom-1 size-7.5 rounded-full bg-carte p-0.5 ring-2 ring-carte" />
       )}
     </span>
   );

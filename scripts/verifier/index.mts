@@ -16,7 +16,7 @@ import { lien, lireRoute } from '../../src/lib/routeur.ts';
 import { alignerPlanning, basculerDehors, basculerGarde, changerRecette, classer, creneaux, estDehors, genererSemaine, propositionsHorsSaison, rangerPlanning, remplirVides, semainePrecedente } from '../../src/lib/planning.ts';
 import { calculerScores, libelleSaison, niveauSaison, plagesDeMois } from '../../src/lib/saison.ts';
 import { analyserImport, contenuExport, fusionner, nomFichierExport, remplacer, supprimerLegumePerso } from '../../src/lib/sauvegarde.ts';
-import { VERSION_ACTUELLE, VERSIONS, cheminIllustration, versionAPresenter } from '../../src/lib/nouveautes.ts';
+import { VERSION_ACTUELLE, VERSIONS, versionAPresenter } from '../../src/lib/nouveautes.ts';
 import { existsSync } from 'node:fs';
 import { donneesVides, limitesLibres, lireDonnees } from '../../src/lib/stockage.ts';
 import { compteVide, typesRecette } from '../../src/lib/equilibre.ts';
@@ -209,7 +209,7 @@ eq(versionAPresenter({ nouveautesVue: null, recettes: [] }), null, 'carnet vide 
 eq(versionAPresenter({ ...habitue, nouveautesVue: VERSIONS[1]!.id })?.id, VERSION_ACTUELLE, 'version précédente vue : la nouvelle est présentée');
 eq(VERSIONS.every((v, i) => /^\d{4}-\d{2}-\d{2}$/.test(v.id) && (i === 0 || v.id < VERSIONS[i - 1]!.id)), true, 'versions datées, la plus récente en tête');
 eq(VERSIONS.every((v) => v.nouveautes.length >= 1 && v.nouveautes.length <= 3 && v.resume.length > 0), true, 'une à trois nouveautés par version');
-eq(VERSIONS.flatMap((v) => v.nouveautes.flatMap((n) => n.illustrations.map((i) => cheminIllustration(i, 10)))).filter((c) => !existsSync(new URL(`../../public/${c}`, import.meta.url))), [], 'illustrations des nouveautés présentes');
+eq(VERSIONS.flatMap((v) => v.nouveautes.flatMap((n) => n.illustrations.filter((i) => i !== 'cadran-du-mois'))).filter((c) => !existsSync(new URL(`../../public/${c}`, import.meta.url))), [], 'illustrations des nouveautés présentes');
 eq(remplacer({ ...donneesVides(), nouveautesVue: 'x' }, { ...donneesVides(), nouveautesVue: null }, cat).donnees.nouveautesVue, 'x', 'remplacer garde les nouveautés vues sur l’appareil');
 
 console.log(echecs ? `\n${echecs} échec(s)` : '\nTout est bon.');

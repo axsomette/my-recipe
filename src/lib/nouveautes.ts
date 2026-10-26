@@ -1,11 +1,10 @@
 // « Quoi de neuf » : ce qui change dans l'app, version par version.
 // Pour annoncer une mise à jour, ajouter une entrée EN TÊTE de VERSIONS : la fenêtre s'ouvre
 // une fois chez les personnes qui utilisaient déjà l'app, puis reste à relire dans les réglages.
-import { moisCourant, saisonDuMois } from './calendrier';
 import type { Donnees } from './types';
 
-/** Illustration du catalogue (`legumes/icones/<id>.svg`), ou la feuille du mois aux couleurs de la saison. */
-export type Illustration = string | 'feuille-du-mois';
+/** Illustration du catalogue (`legumes/icones/<id>.svg`), ou le logo de l'app (le cadran, sur le mois en cours). */
+export type Illustration = string | 'cadran-du-mois';
 
 export interface Nouveaute {
   titre: string;
@@ -29,6 +28,18 @@ const produit = (id: string) => `legumes/icones/${id}.svg`;
 
 export const VERSIONS: Version[] = [
   {
+    id: '2026-10-26',
+    resume: 'Un nouveau logo : le cadran des saisons',
+    nouveautes: [
+      {
+        titre: 'Un nouveau logo',
+        texte: 'Le cadran des saisons : la cuillère montre le mois en cours, aux couleurs de sa saison. Dans le calendrier, elle suit les mois que vous parcourez.',
+        illustrations: ['cadran-du-mois'],
+        lien: 'calendrier',
+      },
+    ],
+  },
+  {
     id: '2026-10-11',
     resume: 'Une app plus vivante : dessins animés, semaine distribuée, gestes plus doux',
     nouveautes: [
@@ -40,7 +51,7 @@ export const VERSIONS: Version[] = [
       {
         titre: 'Une semaine qui se distribue',
         texte: 'Les repas arrivent comme des cartes, et une semaine complète se fête.',
-        illustrations: ['feuille-du-mois'],
+        illustrations: ['cadran-du-mois'],
       },
       {
         titre: 'Des gestes plus doux',
@@ -68,7 +79,7 @@ export const VERSIONS: Version[] = [
       {
         titre: 'Des idées de saison',
         texte: 'Une semaine incomplète ? L’app propose des plats du moment, faits avec ce qui est de saison.',
-        illustrations: ['feuille-du-mois'],
+        illustrations: ['cadran-du-mois'],
         lien: 'idees',
       },
     ],
@@ -101,7 +112,7 @@ export const VERSIONS: Version[] = [
       {
         titre: 'Votre semaine de saison',
         texte: 'Notez vos recettes : l’app calcule leurs mois de saison et compose vos repas, de saison d’abord.',
-        illustrations: ['feuille-du-mois'],
+        illustrations: ['cadran-du-mois'],
       },
       {
         titre: 'Le calendrier des saisons',
@@ -129,10 +140,6 @@ export function versionAPresenter(donnees: Pick<Donnees, 'nouveautesVue' | 'rece
   if (!derniere || donnees.nouveautesVue === derniere.id || donnees.recettes.length === 0) return null;
   return derniere;
 }
-
-/** Chemin de l'illustration dans public/ ; la feuille du mois prend la couleur de la saison. */
-export const cheminIllustration = (illustration: Illustration, mois = moisCourant()) =>
-  illustration === 'feuille-du-mois' ? `icones/feuille-${saisonDuMois(mois)}.svg` : illustration;
 
 /** « 10 octobre 2026 ». */
 export const dateDeVersion = (id: string) => new Date(`${id}T12:00:00`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
