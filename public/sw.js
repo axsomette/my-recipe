@@ -4,7 +4,7 @@ const VERSION = '__VERSION__';
 const CACHE = `recettes-de-saison-${VERSION}`;
 const BASE = new URL('./', self.location).pathname; // /my-recipe/
 
-const COQUILLE = ['', 'index.html', 'legumes.json', 'manifest.webmanifest', 'icones/favicon.svg', 'icones/feuille-hiver.svg', 'icones/feuille-printemps.svg', 'icones/feuille-ete.svg', 'icones/feuille-automne.svg', 'icones/apple-touch-icon.png', 'icones/icone-192.png', 'fonts/young-serif.woff2', 'fonts/hanken-grotesk.woff2', 'fonts/sofia-sans-extra-condensed-700.woff2'];
+const COQUILLE = ['', 'index.html', 'legumes.json', 'manifest.webmanifest', 'icones/favicon.svg', 'icones/apple-touch-icon.png', 'icones/icone-192.png', 'fonts/young-serif.woff2', 'fonts/hanken-grotesk.woff2', 'fonts/sofia-sans-extra-condensed-700.woff2'];
 
 /** Fichiers du build cités par index.html (noms avec empreinte, différents à chaque version). */
 async function fichiersDuBuild() {

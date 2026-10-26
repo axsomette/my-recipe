@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "sync:legumes": "node scripts/fetch-legumes.mjs",
+    "logo": "node --experimental-strip-types --no-warnings --import ./scripts/verifier/chargeur.mjs scripts/dessiner-logo.mts",
     "verifier": "node --experimental-strip-types --no-warnings --import ./scripts/verifier/chargeur.mjs scripts/verifier/index.mts"
   },
   "dependencies": {

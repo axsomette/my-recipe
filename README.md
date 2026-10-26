@@ -182,26 +182,29 @@ la [charte des illustrations](design/ILLUSTRATIONS.md).
 
 ## Icône et écran de lancement
 
-L'emblème est « la feuille du mois » : une page d'éphéméride dont le bandeau prend la couleur de la
-saison, avec le produit de saison servi dans un bol (poireau, asperge, tomate, potiron). L'icône
-d'écran d'accueil garde la tomate d'été, la plus lisible en petit ; dans l'app, la feuille suit la
-saison (rail sur tablette, écran de lancement).
+L'emblème est « le cadran des saisons » : douze segments, un par mois, chacun à la couleur de sa
+saison (hiver aubergine, printemps vert, été rouge, automne cuivre), et une cuillère pour aiguille
+qui montre le mois en cours, dont le segment s'épaissit. Le cadran se lit comme une horloge :
+décembre à midi, janvier à 1 h, octobre à 10 h. L'icône d'écran d'accueil montre octobre ; en dessous
+de 32 px (favicon), le dessin passe à quatre arcs de saison et une cuillère plus épaisse.
 
-Tout sort de `scripts/dessiner-logo.mjs`, à partir des illustrations de `scripts/icones-maison/` :
-les SVG de `public/icones/` et le bloc de l'écran de lancement dans `index.html` (entre les repères
-`logo:debut` et `logo:fin`). Après une modification, régénérer puis rendre les PNG depuis `app.svg`
-et `app-adaptable.svg` (512 px, puis 192 et 180 px pour Android et iPhone) :
+Le dessin a une seule source, `src/lib/logo.ts`, utilisée par l'app (rail sur tablette, au mois du
+jour et aux couleurs du thème) et par `scripts/dessiner-logo.mts`, qui écrit les SVG de
+`public/icones/` et de `design/icones/` et le bloc de l'écran de lancement dans `index.html` et
+`design/Lancement.dc.html` (entre les repères `logo:debut` et `logo:fin`). Après une modification,
+régénérer puis rendre les PNG depuis `app.svg` et `app-adaptable.svg` (512 px, puis 192 et 180 px
+pour Android et iPhone) :
 
 ```bash
-node scripts/dessiner-logo.mjs
+npm run logo
 ```
 
-L'écran de lancement, écrit dans `index.html` pour s'afficher avant le JavaScript, empile les quatre
-pages de l'année : les trois autres saisons se tournent sur leurs anneaux, trois produits de la saison
-en cours tombent dans le bol, puis le titre arrive lettre par lettre avec un rebond. Il couvre le
-chargement des légumes et des polices (1,6 s au plus tôt, 4 s au plus tard) et reste immobile si
+L'écran de lancement, écrit dans `index.html` pour s'afficher avant le JavaScript, pose les douze
+mois un à un, puis la cuillère fait un tour complet et s'arrête sur le mois en cours, dont le segment
+s'épaissit ; le titre arrive lettre par lettre avec un rebond, puis le nom du mois. Il couvre le
+chargement des légumes et des polices (1,7 s au plus tôt, 4 s au plus tard) et reste immobile si
 l'appareil demande de réduire les animations, comme toutes les animations de l'app. La même
-chronologie, générée par le script, tourne en boucle dans la maquette (`design/Lancement.dc.html`).
+chronologie tourne en boucle dans la maquette (`design/Lancement.dc.html`), une saison par tour.
 
 ## Maquette
 

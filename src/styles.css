@@ -35,6 +35,8 @@
   --ok: #2f6a3a;
   --ok-pale: #dcebd9;
   --sur-danger: #ffffff;
+  /* Logo (src/lib/logo.ts) */
+  --logo-hiver: #6e2a63; --logo-printemps: #3b6b1f; --logo-ete: #b3261e; --logo-automne: #a9480f; --logo-encre: #221a20;
   color-scheme: light;
 }
 
@@ -57,6 +59,7 @@
     --ok: #9dd3a2;
     --ok-pale: #1e3322;
     --sur-danger: #221a20;
+    --logo-hiver: #d9a0cc; --logo-printemps: #a6d17e; --logo-ete: #f2877c; --logo-automne: #f09a5b; --logo-encre: #eceae1;
     color-scheme: dark;
 }
 [data-theme='sombre'].automne { --saison: #f09a5b; --saison-texte: #f5b184; --saison-pale: #3a271b; --sur-saison: #221a20; }

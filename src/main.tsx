@@ -27,7 +27,7 @@ function fermerLancement() {
   const ecran = document.getElementById('lancement');
   if (!ecran) return signalerFinLancement();
   const mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const dureeMinimale = mouvementReduit ? 250 : 1600; // ms depuis l'ouverture de la page
+  const dureeMinimale = mouvementReduit ? 250 : 1700; // ms depuis l'ouverture de la page
   const pret = Promise.all([chargerCatalogue().catch(() => undefined), document.fonts?.ready]);
   const limite = new Promise((fin) => setTimeout(fin, 4000));
 

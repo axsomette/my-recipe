@@ -1,7 +1,7 @@
-import { urlPublique } from '../lib/catalogue';
 import { MOIS_ABREGES, NOMS_SAISONS, moisCourant, saisonDuMois } from '../lib/calendrier';
 import { lien, type Route } from '../lib/routeur';
 import { Icone, type NomIcone } from './Icone';
+import { Logo } from './Logo';
 
 const ONGLETS: { route: Route; libelle: string; icone: NomIcone }[] = [
   { route: { nom: 'semaine' }, libelle: 'Semaine', icone: 'semaine' },
@@ -23,7 +23,7 @@ export function Navigation({ route, masqueeSurTelephone = false }: { route: Rout
       class={`fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 ${masqueeSurTelephone ? 'max-md:hidden' : ''} border-t border-trait bg-carte px-2 pt-1.5 pb-[max(14px,env(safe-area-inset-bottom))]
         md:inset-y-0 md:right-auto md:flex md:w-24 md:flex-col md:items-center md:gap-1.5 md:border-t-0 md:border-r md:px-2 md:py-5`}
     >
-      <img class="mb-1 hidden size-12 md:block" src={urlPublique(`icones/feuille-${saisonDuMois(mois)}.svg`)} alt="" width="48" height="48" />
+      <Logo mois={mois} taille={52} class="mb-1 hidden md:block" />
       <p class="display mb-4 hidden text-center text-[22px] text-saison-texte md:block" aria-hidden="true">
         {MOIS_ABREGES[mois - 1]}
         <span class="etiq mt-1 block text-xs">{NOMS_SAISONS[saisonDuMois(mois)]}</span>
