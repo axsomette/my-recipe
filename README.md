@@ -1,4 +1,20 @@
-# Recettes de saison
+<p align="center">
+  <a href="https://axsomette.github.io/my-recipe/"><img src="assets/readme/banner.svg" width="100%" alt="Recettes de saison : vos recettes, classées par saison, et vos repas de la semaine composés avec ce qui pousse en ce moment."></a>
+</p>
+
+<p align="center">
+  <a href="https://axsomette.github.io/my-recipe/"><img src="https://img.shields.io/badge/Ouvrir_l'app-A9480F?style=for-the-badge" alt="Ouvrir l'app"></a>
+  &nbsp;
+  <a href="#linstaller-sur-son-téléphone"><img src="https://img.shields.io/badge/L'installer-221A20?style=for-the-badge" alt="L'installer sur son téléphone"></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/hors_ligne-oui-3B6B1F?style=flat-square" alt="Fonctionne hors ligne">
+  <img src="https://img.shields.io/badge/donn%C3%A9es-sur_l'appareil-3B6B1F?style=flat-square" alt="Données sur l'appareil">
+  <img src="https://img.shields.io/badge/produits-160-A9480F?style=flat-square" alt="160 produits">
+  <img src="https://img.shields.io/badge/illustrations-163-A9480F?style=flat-square" alt="163 illustrations">
+  <img src="https://img.shields.io/badge/Lighthouse_accessibilit%C3%A9-100-6E2A63?style=flat-square" alt="Lighthouse accessibilité 100">
+</p>
 
 Une web app pour noter ses recettes en cochant leurs légumes. Elle calcule à quels mois
 chaque recette est de saison en France, puis compose les repas de la semaine en privilégiant
@@ -6,6 +22,48 @@ ce qui est de saison ce mois-ci.
 
 Tout reste sur l'appareil : pas de compte, pas de serveur. Une sauvegarde s'exporte et
 s'importe en fichier JSON. L'app s'installe sur l'écran d'accueil et fonctionne hors ligne.
+
+<p align="center">
+  <img src="assets/readme/feature-1-semaine.svg" width="49%" alt="Ma semaine : les repas de la semaine, de saison d'abord ; on change un seul repas.">
+  <img src="assets/readme/feature-2-saison.svg" width="49%" alt="Calcul de saison : la frise des douze mois d'une recette, calculée à partir de ses légumes.">
+  <img src="assets/readme/feature-3-idees.svg" width="49%" alt="Idées de saison : 135 idées de plats, au moins 35 par mois, à cocher.">
+  <img src="assets/readme/feature-4-hors-ligne.svg" width="49%" alt="Sans compte, même hors ligne : installable, sauvegarde en fichier JSON.">
+</p>
+
+## En images
+
+<p align="center">
+  <img src="assets/readme/mobile-semaine.png" width="24%" alt="Ma semaine, en octobre.">
+  <img src="assets/readme/mobile-recettes.png" width="24%" alt="Mes recettes, les plus de saison d'abord.">
+  <img src="assets/readme/mobile-saisons.png" width="24%" alt="Calendrier des saisons.">
+  <img src="assets/readme/mobile-sombre.png" width="24%" alt="Ma semaine en thème sombre.">
+</p>
+
+<p align="center">
+  <img src="assets/readme/ecran-semaine.png" width="100%" alt="Sur tablette ou ordinateur : la semaine et la fiche d'une recette côte à côte.">
+</p>
+
+<details>
+<summary>Le calendrier des saisons sur grand écran, et un aperçu animé</summary>
+<br>
+<p align="center">
+  <img src="assets/readme/ecran-saisons.png" width="100%" alt="Calendrier des saisons sur grand écran.">
+</p>
+<p align="center">
+  <img src="assets/readme/apercu-mobile.gif" width="320" alt="Aperçu animé : semaine, recettes, saisons, thème sombre.">
+</p>
+</details>
+
+> Captures du site en ligne en octobre, avec une semaine composée à partir des idées de saison de l'app.
+
+## L'installer sur son téléphone
+
+- **iPhone** : ouvrir [l'app](https://axsomette.github.io/my-recipe/) dans Safari, bouton Partager ›
+  **Sur l'écran d'accueil**.
+- **Android** : dans Chrome, menu ⋮ › **Installer l'application** (ou **Ajouter à l'écran d'accueil**).
+
+Une fois installée, elle s'ouvre comme une app, fonctionne sans réseau et échappe à l'effacement des
+données de Safari après 7 jours sans visite.
 
 ## Ce que fait l'app
 
@@ -51,7 +109,7 @@ des recettes et compatibles avec les limites de la semaine. Celles dont un produ
 passent d'abord ; le choix alterne viande, poisson et végé, et évite de montrer deux fois le même produit
 de saison. « Autres idées » en propose de nouvelles. Chaque mois en compte au moins 35.
 
-## Installation
+## Installation pour le développement
 
 Node.js 22 ou plus récent.
 
@@ -74,6 +132,14 @@ L'app s'ouvre sur http://localhost:5173/my-recipe/.
 | `npm run sync:legumes` | Met à jour `public/legumes.json` et les illustrations |
 
 ## Stack
+
+<p>
+  <img src="https://img.shields.io/badge/Vite-221A20?style=flat-square&logo=vite&logoColor=EEF0E7" alt="Vite">
+  <img src="https://img.shields.io/badge/Preact-221A20?style=flat-square&logo=preact&logoColor=EEF0E7" alt="Preact">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-221A20?style=flat-square&logo=tailwindcss&logoColor=EEF0E7" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/TypeScript-221A20?style=flat-square&logo=typescript&logoColor=EEF0E7" alt="TypeScript">
+  <img src="https://img.shields.io/badge/PWA-221A20?style=flat-square&logo=pwa&logoColor=EEF0E7" alt="PWA">
+</p>
 
 Vite, Preact, Tailwind CSS et TypeScript, sans autre dépendance. Pas de routeur ni de bibliothèque
 d'état : le routage par hash (`#/semaine`, `#/recettes`…) tient dans `src/lib/routeur.ts`, car GitHub Pages

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="600" height="340" role="img" aria-labelledby="t"><title id="t">Hors ligne et sauvegarde</title><desc>Fonctionne hors ligne, s’installe sur l’écran d’accueil, se sauvegarde dans un fichier JSON.</desc><style>
+.titre{font-family:'Young Serif',Georgia,'Times New Roman',serif;fill:#221a20}
+.etiq{font-family:'Sofia Sans Extra Condensed','Arial Narrow','Roboto Condensed',sans-serif-condensed,sans-serif;font-weight:700;letter-spacing:.08em;fill:#5a5158}
+.sans{font-family:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif;fill:#5a5158}
+.fort{font-family:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif;fill:#221a20;font-weight:600}
+.monte{animation:monte .4s ease-out both}
+.saute{transform-box:fill-box;transform-origin:50% 100%;animation:saute .5s cubic-bezier(.34,1.56,.64,1) both}
+.pop{transform-box:fill-box;transform-origin:50% 100%;animation:pop .35s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes monte{0%{opacity:0;transform:translateY(8px)}}
+@keyframes saute{0%{opacity:0;transform:translateY(-12px) scale(.9)}55%{opacity:1;transform:translateY(2px) scale(1.05,.95)}100%{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scaleY(.2)}}
+
+.puls{transform-box:fill-box;transform-origin:center;animation:puls 2.4s ease-out 1s infinite both}
+.dl{animation:dl 3.6s ease-in-out 1.2s infinite both}
+@keyframes puls{0%{opacity:.6;transform:scale(1)}60%,100%{opacity:0;transform:scale(2.4)}}
+@keyframes dl{0%,100%{transform:none}20%{transform:translateY(5px)}40%{transform:none}}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important}}</style><rect x=".5" y=".5" width="599" height="339" rx="18" fill="#f9faf5" stroke="#d6d9cd"/><text x="28" y="40" class="etiq" font-size="14">SUR VOTRE APPAREIL</text><text x="28" y="78" class="titre" font-size="28" letter-spacing="-.3">Sans compte, même hors ligne</text><text x="28" y="106" class="sans" font-size="15">Tout reste sur l’appareil. L’app s’installe sur l’écran d’accueil</text><text x="28" y="127" class="sans" font-size="15">et se sauvegarde dans un fichier.</text><g class="monte" style="animation-delay:0.30s"><circle cx="50" cy="174" r="20" fill="#f2decb"/><circle class="puls" cx="50" cy="174" r="6" fill="#3B6B1F"/><circle cx="50" cy="174" r="6" fill="#3B6B1F"/><text x="86" y="170" class="fort" font-size="16">Hors ligne</text><text x="86" y="191" class="sans" font-size="14">Le service worker garde l’app et ses illustrations en cache.</text></g><g class="monte" style="animation-delay:0.45s"><circle cx="50" cy="230" r="20" fill="#f2decb"/><rect x="42" y="217" width="16" height="26" rx="4" fill="none" stroke="#A9480F" stroke-width="2.4"/><circle cx="50" cy="238" r="1.8" fill="#A9480F"/><text x="86" y="226" class="fort" font-size="16">Sur l’écran d’accueil</text><text x="86" y="247" class="sans" font-size="14">iPhone : Partager › Sur l’écran d’accueil. Android aussi.</text></g><g class="monte" style="animation-delay:0.60s"><circle cx="50" cy="286" r="20" fill="#f2decb"/><g class="dl"><path d="M50 275V292M43 285l7 7l7-7" fill="none" stroke="#A9480F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g><path d="M41 297H59" stroke="#A9480F" stroke-width="2.6" stroke-linecap="round"/><text x="86" y="282" class="fort" font-size="16">Sauvegarde</text><text x="86" y="303" class="sans" font-size="14">recettes-de-saison-AAAA-MM-JJ.json, à importer ailleurs.</text></g></svg>
